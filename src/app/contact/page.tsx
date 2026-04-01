@@ -100,10 +100,10 @@ export default function Contact() {
                   <div className="w-12 h-12 rounded-xl bg-bronze/10 flex items-center justify-center text-[22px] mx-auto mb-4">📅</div>
                   <h3 className="font-outfit text-[17px] font-semibold text-white mb-2">Réserve un créneau</h3>
                   <p className="text-sm text-txt-secondary leading-relaxed mb-5">30 minutes pour parler de ton projet. Sans engagement, sans jargon.</p>
-                  <a href="#" className="inline-flex items-center gap-2 px-6 py-3 rounded-[10px] bg-bronze text-[#1a1207] font-semibold text-sm font-dm transition-all hover:brightness-110 hover:-translate-y-0.5">
+                  <a href="https://calendly.com/babferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-[10px] bg-bronze text-[#1a1207] font-semibold text-sm font-dm transition-all hover:brightness-110 hover:-translate-y-0.5">
                     Choisir un créneau →
                   </a>
-                  <p className="text-xs text-txt-muted italic mt-3">Lien Calendly à intégrer</p>
+                  <p className="text-xs text-txt-muted italic mt-3">Appel de 30 min, gratuit et sans engagement</p>
                 </div>
               </div>
 
