@@ -17,10 +17,10 @@ export default function MentionsLegales() {
             <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">1. Éditeur du site</h2>
             <p className="text-[15px] text-txt-secondary leading-[1.8] mb-3">Le site babtech.fr est édité par :</p>
             <p className="text-[15px] text-txt-secondary leading-[1.8]">
-              <strong className="text-txt-primary font-medium">Bastien</strong> <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">NOM DE FAMILLE</span><br />
-              Statut : <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">statut juridique</span><br />
-              SIRET : <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">numéro SIRET</span><br />
-              TVA intracommunautaire : <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">numéro de TVA</span><br />
+              <strong className="text-txt-primary font-medium">Bastien Ferrer</strong><br />
+              Statut : Entreprise individuelle<br />
+              SIRET : <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">en attente</span><br />
+              TVA intracommunautaire : <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">en attente</span><br />
               Adresse : <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">adresse professionnelle</span><br />
               Email : babferrer@icloud.com<br />
               Téléphone : sur demande
@@ -28,7 +28,7 @@ export default function MentionsLegales() {
           </section>
           <section>
             <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">2. Directeur de la publication</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]"><strong className="text-txt-primary font-medium">Bastien</strong> <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">NOM DE FAMILLE</span>, en qualité de dirigeant.</p>
+            <p className="text-[15px] text-txt-secondary leading-[1.8]"><strong className="text-txt-primary font-medium">Bastien Ferrer</strong>, en qualité de dirigeant.</p>
           </section>
           <section>
             <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">3. Hébergement</h2>

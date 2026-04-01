@@ -15,7 +15,7 @@ export default function Confidentialite() {
         <div className="space-y-10">
           <section>
             <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">1. Responsable du traitement</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]"><strong className="text-txt-primary font-medium">Bastien</strong> <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">NOM DE FAMILLE</span><br />Email : babferrer@icloud.com</p>
+            <p className="text-[15px] text-txt-secondary leading-[1.8]"><strong className="text-txt-primary font-medium">Bastien Ferrer</strong> — Entreprise individuelle<br />Email : babferrer@icloud.com</p>
           </section>
           <section>
             <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">2. Données collectées</h2>
