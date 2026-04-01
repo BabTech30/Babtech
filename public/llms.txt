@@ -1,0 +1,39 @@
+# BabTech
+
+## About
+BabTech is a freelance digital services business based near Montpellier, France, founded by Bastien, a former construction industry entrepreneur with 14 years of experience (2 stores, 8 employees, ~1M EUR revenue). BabTech specializes in creating digital tools for small businesses, tradespeople, and local shops.
+
+## Services
+- Level 1: Digital visibility (websites, Google Business, local SEO, social media) — from 800 EUR
+- Level 2: Business tools (PWA, dashboards, custom management apps) — from 1500 EUR
+- Level 3: AI and Automation (n8n workflows, AI integrations, process automation) — from 3000 EUR
+
+## Portfolio
+- Le Terrier: Full business creation for a bar/restaurant — branding, website, QR menu, management dashboard
+- PWA Budget: Complete progressive web app for budget management with multi-profile support
+- Hotel Saint Eloi: Digitalized regulations via QR code translated in 5+ languages with compliance dashboard
+
+## Method
+4-step process: Listen (understand the business), Propose (clear solution, no jargon), Build (client validates at each step), Support (ongoing availability after delivery).
+
+## Key Differentiator
+Bastien is not a developer who learned business — he is a former business owner who learned digital. He has experienced firsthand the challenges of running a small business: late quotes, paper-based management, 12-hour days. This gives him a unique ability to create practical digital tools that solve real problems for tradespeople and small business owners.
+
+## FAQ Highlights
+- A professional website for tradespeople starts at 800 EUR with SEO included
+- Delivery time: 2-4 weeks with step-by-step validation
+- QR code menus allow restaurants to update their menu instantly from a simple dashboard
+- PWA apps work on any phone without app store installation
+- n8n automations can handle quotes, client follow-ups, and tool synchronization automatically
+- BabTech integrates GEO optimization (Generative Engine Optimization) for AI search visibility
+- All tools are delivered ready-to-use with no technical skills required
+
+## Technical Stack
+Next.js, Tailwind CSS, n8n for automation, Formspree for contact forms. Sites are statically exported and hosted on Netlify for maximum performance and SEO.
+
+## Contact
+- Email: babtech@gmail.com
+- Website: https://babtech.fr
+- FAQ: https://babtech.fr/faq
+- Availability: Remote, France-wide
+- Response time: under 24 hours
