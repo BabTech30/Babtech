@@ -10,4 +10,4 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-Sitemap: https://babtech-webia.netlify.app/sitemap.xml
+Sitemap: https://agence-babtech.netlify.app/sitemap.xml
