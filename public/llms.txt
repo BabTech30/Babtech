@@ -32,7 +32,7 @@ Bastien is not a developer who learned business — he is a former business owne
 Next.js, Tailwind CSS, n8n for automation, Formspree for contact forms. Sites are statically exported and hosted on Netlify for maximum performance and SEO.
 
 ## Contact
-- Email: babtech@gmail.com
+- Email: babferrer@icloud.com
 - Website: https://babtech.fr
 - FAQ: https://babtech.fr/faq
 - Availability: Remote, France-wide

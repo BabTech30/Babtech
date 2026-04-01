@@ -30,7 +30,7 @@ export default function Contact() {
               <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-b to-bronze" />
               <h2 className="font-outfit text-[22px] font-semibold text-white tracking-tight mb-2">Envoie-moi un message</h2>
               <p className="text-sm text-txt-secondary mb-8">Décris ton besoin en quelques mots — je reviens vers toi rapidement.</p>
-              <form action="https://formspree.io/f/VOTRE_ID" method="POST" className="space-y-5">
+              <form action="https://formspree.io/f/xykbpjbz" method="POST" className="space-y-5">
                 <div>
                   <label className="block text-[13px] font-medium text-txt-secondary mb-2 tracking-wide">Nom</label>
                   <input type="text" name="name" required placeholder="Ton nom ou celui de ta boîte"
@@ -71,7 +71,7 @@ export default function Contact() {
                     <div className="w-10 h-10 rounded-[10px] bg-emerald-b/[0.12] flex items-center justify-center text-lg shrink-0">✉</div>
                     <div>
                       <span className="text-xs text-txt-muted tracking-wide">Email</span>
-                      <a href="mailto:babtech@gmail.com" className="block text-[15px] text-emerald-b font-medium hover:underline">babtech@gmail.com</a>
+                      <a href="mailto:babferrer@icloud.com" className="block text-[15px] text-emerald-b font-medium hover:underline">babferrer@icloud.com</a>
                     </div>
                   </div>
                   <div className="flex items-start gap-3.5">

@@ -15,7 +15,7 @@ export default function Confidentialite() {
         <div className="space-y-10">
           <section>
             <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">1. Responsable du traitement</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]"><strong className="text-txt-primary font-medium">Bastien</strong> <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">NOM DE FAMILLE</span><br />Email : babtech@gmail.com</p>
+            <p className="text-[15px] text-txt-secondary leading-[1.8]"><strong className="text-txt-primary font-medium">Bastien</strong> <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">NOM DE FAMILLE</span><br />Email : babferrer@icloud.com</p>
           </section>
           <section>
             <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">2. Données collectées</h2>
@@ -54,7 +54,7 @@ export default function Confidentialite() {
           <section>
             <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">7. Tes droits (RGPD)</h2>
             <p className="text-[15px] text-txt-secondary leading-[1.8] mb-3">Tu disposes des droits d&apos;accès, de rectification, de suppression, d&apos;opposition et de portabilité.</p>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]">Pour les exercer : <strong className="text-txt-primary font-medium">babtech@gmail.com</strong></p>
+            <p className="text-[15px] text-txt-secondary leading-[1.8]">Pour les exercer : <strong className="text-txt-primary font-medium">babferrer@icloud.com</strong></p>
             <p className="text-[15px] text-txt-secondary leading-[1.8]">Réclamation : <strong className="text-txt-primary font-medium">cnil.fr</strong></p>
           </section>
           <section>

@@ -22,7 +22,7 @@ export default function MentionsLegales() {
               SIRET : <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">numéro SIRET</span><br />
               TVA intracommunautaire : <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">numéro de TVA</span><br />
               Adresse : <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">adresse professionnelle</span><br />
-              Email : babtech@gmail.com<br />
+              Email : babferrer@icloud.com<br />
               Téléphone : sur demande
             </p>
           </section>

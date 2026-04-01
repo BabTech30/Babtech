@@ -32,7 +32,7 @@ const schemaOrg = {
   name: 'BabTech',
   description: 'Solutions digitales sur mesure pour commerces, artisans et TPE. Sites vitrines, outils métier, automatisations IA.',
   url: 'https://babtech.fr',
-  email: 'babtech@gmail.com',
+  email: 'babferrer@icloud.com',
   founder: {
     '@type': 'Person',
     name: 'Bastien',
