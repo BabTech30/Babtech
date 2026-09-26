@@ -7,7 +7,7 @@ Le site est pensé pour être trouvé **sur Google** (SEO local) **et dans les r
 Gemini, Claude, Copilot…), grâce au GEO (*Generative Engine Optimization*).
 
 - Stack : **Next.js 16** (App Router, export statique), **React 19**, **Tailwind CSS 3**, **TypeScript**
-- Hébergement : **Hostinger** (fichiers statiques + `.htaccess` généré au build) — reste compatible Netlify et tout hébergeur statique
+- Hébergement : **Hostinger** (fichiers statiques + `.htaccess` généré au build)
 - Formulaires : **Formspree** · Rendez-vous : **Calendly** · Mesure d'audience optionnelle et sans cookie : **Plausible** ou **Umami**
 
 ## Démarrer
@@ -31,7 +31,7 @@ npm run dev        # http://localhost:3000
 
 | Je veux modifier… | Fichier |
 |---|---|
-| Nom, email, téléphone, adresse, réseaux sociaux, SIRET | `src/lib/site.ts` |
+| Domaine, nom, email, téléphone, adresse, réseaux sociaux, SIRET | `src/lib/site.ts` |
 | Les services (textes, prix, FAQ) | `src/data/services.ts` |
 | Les pages des villes (zones d'intervention) | `src/data/zones.ts` et `src/data/area.ts` |
 | La FAQ générale | `src/data/faq.ts` |
@@ -77,16 +77,17 @@ et un appel à l'action vers `/contact` ou `/communaute`.
 
 ## Déployer
 
-Le guide pas à pas est dans **[`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md)** : Hostinger (à la main avec
-`npm run build:hostinger`, ou automatiquement via GitHub Actions), migration depuis Netlify avec redirections 301,
-Google Search Console, Bing Webmaster Tools, IndexNow et Google Business Profile.
+Le guide pas à pas est dans **[`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md)**. En résumé :
 
-En résumé : définir `NEXT_PUBLIC_SITE_URL=https://babtech.fr` dans `.env.production`, lancer `npm run build:hostinger`,
-puis importer et extraire `hostinger-site.zip` dans `public_html`.
+1. à chaque mise à jour de `main`, GitHub construit le site : onglet **Actions** → dernière exécution → télécharger
+   **site-hostinger** (zip) — ou, sur ton ordinateur, `npm run build:hostinger` ;
+2. hPanel → Gestionnaire de fichiers → `public_html` → importer le zip → **Extraire**.
+
+En ajoutant tes accès FTP dans les secrets GitHub, l'envoi sur Hostinger devient automatique.
 
 ## Documentation
 
-- [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md) — mise en ligne sur Hostinger, migration depuis Netlify, check-list
+- [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md) — mise en ligne sur Hostinger et check-list après la mise en ligne
 - [`docs/STRATEGIE-SEO-GEO.md`](docs/STRATEGIE-SEO-GEO.md) — positionnement, mots-clés, plan local, GEO, calendrier éditorial
 - [`docs/COMMUNAUTE.md`](docs/COMMUNAUTE.md) — feuille de route et architecture de la future plateforme communautaire
 
@@ -96,7 +97,7 @@ puis importer et extraire `hostinger-site.zip` dans `public_html`.
 content/blog/          Articles en Markdown
 public/                Fichiers servis tels quels (favicon, vérification Google, clé IndexNow)
 scripts/               postbuild.mjs (.htaccess), build-hostinger.mjs, check-build.mjs (contrôle qualité), indexnow.mjs
-.github/workflows/     deploy-hostinger.yml (déploiement automatique par FTP sécurisé)
+.github/workflows/     deploy-hostinger.yml (zip du site à chaque mise à jour, envoi FTP facultatif)
 src/app/               Pages (App Router) + routes générées : sitemap, robots, llms.txt, RSS, images OG, icônes
 src/components/        Composants d'interface (Header, Footer, formulaires, FAQ, cartes…)
 src/data/              Contenus structurés (services, villes, FAQ, communauté…)

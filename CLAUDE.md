@@ -4,9 +4,9 @@ Site vitrine + blog de BabTech (studio digital près de Montpellier). Next.js 16
 React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `docs/` pour la stratégie.
 
 ## Avant de pousser
-- `npm run verify` doit passer (TypeScript, ESLint, build, `scripts/check-build.mjs`). Le déploiement (GitHub Actions
-  vers Hostinger, ou Netlify) est bloqué si le contrôle qualité échoue.
-- Hébergement cible : Hostinger (Apache/LiteSpeed). `trailingSlash: true` : chaque page est exportée en `dossier/index.html`
+- `npm run verify` doit passer (TypeScript, ESLint, build, `scripts/check-build.mjs`). Le workflow GitHub Actions
+  (zip du site + envoi FTP facultatif vers Hostinger) échoue si le contrôle qualité échoue.
+- Hébergement : Hostinger uniquement (Apache/LiteSpeed), domaine défini par `DEFAULT_SITE_URL` dans `src/lib/site.ts`. `trailingSlash: true` : chaque page est exportée en `dossier/index.html`
   et toutes les URL de pages finissent par « / » — construire les URL avec `absoluteUrl()` / `withTrailingSlash()`
   (`src/lib/site.ts`). Le `.htaccess` est généré par `scripts/postbuild.mjs` (ne pas l'écrire à la main dans `public/`).
 - Ne pas créer de route sous `/icons/` : ce chemin est réservé par beaucoup de serveurs Apache (d'où `/brand/`).

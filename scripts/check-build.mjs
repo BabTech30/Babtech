@@ -57,7 +57,7 @@ function badSlash(pathname) {
 }
 const slashRule = trailingSlash ? 'devrait finir par « / »' : 'ne devrait pas finir par « / »'
 
-/** Fichier servi pour un chemin d'URL (comportement des hébergeurs statiques type Netlify). */
+/** Fichier servi pour un chemin d'URL (comportement d'Apache / LiteSpeed chez Hostinger). */
 function fileFor(urlPath) {
   const clean = decodeURIComponent(urlPath.split('#')[0].split('?')[0])
   if (clean === '/' || clean === '') return path.join(OUT, 'index.html')

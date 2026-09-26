@@ -1,15 +1,14 @@
-# Déploiement automatique sur Hostinger à chaque mise à jour de la branche main.
+# Site pour Hostinger, construit par GitHub à chaque mise à jour de la branche main.
 #
-# Désactivé tant que la variable HOSTINGER_DEPLOY ne vaut pas "true".
-# Configuration (GitHub → Settings → Secrets and variables → Actions) :
-#   Secrets   : FTP_SERVER, FTP_USERNAME, FTP_PASSWORD  (hPanel → Fichiers → Comptes FTP)
-#   Variables : HOSTINGER_DEPLOY=true, SITE_URL=https://babtech.fr
-#               facultatives : PHONE, FTP_SERVER_DIR (défaut public_html/), FTP_PROTOCOL (défaut ftps),
-#               FORMSPREE_COMMUNITY_ID, PLAUSIBLE_DOMAIN, UMAMI_WEBSITE_ID,
-#               GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION, CLIENT_SPACE_URL
+# Sans aucune configuration : le site est construit, contrôlé, et le fichier « site-hostinger »
+# (zip, .htaccess compris) est téléchargeable dans l'onglet Actions → dernière exécution → Artifacts.
+# Il suffit de l'importer dans public_html via le gestionnaire de fichiers d'Hostinger et de l'extraire.
+#
+# Envoi automatique (facultatif) : ajouter dans GitHub → Settings → Secrets and variables → Actions
+# les secrets FTP_SERVER, FTP_USERNAME et FTP_PASSWORD (hPanel → Fichiers → Comptes FTP).
 # Détails : docs/DEPLOIEMENT.md
 
-name: Déploiement Hostinger
+name: Site Hostinger
 
 on:
   push:
@@ -17,24 +16,16 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: deploy-hostinger
+  group: hostinger
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    if: vars.HOSTINGER_DEPLOY == 'true'
+  site:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      FTP_SERVER: ${{ secrets.FTP_SERVER }}
     steps:
-      - name: Vérifier la configuration
-        env:
-          SITE_URL: ${{ vars.SITE_URL }}
-        run: |
-          if [ -z "$SITE_URL" ]; then
-            echo "::error::Variable SITE_URL manquante (ex. https://babtech.fr)"
-            exit 1
-          fi
-
       - uses: actions/checkout@v6
 
       - uses: actions/setup-node@v6
@@ -48,7 +39,7 @@ jobs:
         run: npm run build && npm run check
         env:
           NEXT_TELEMETRY_DISABLED: 1
-          NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
+          # Variables facultatives du dépôt (Settings → Secrets and variables → Actions → Variables)
           NEXT_PUBLIC_PHONE: ${{ vars.PHONE }}
           NEXT_PUBLIC_FORMSPREE_COMMUNITY_ID: ${{ vars.FORMSPREE_COMMUNITY_ID }}
           NEXT_PUBLIC_PLAUSIBLE_DOMAIN: ${{ vars.PLAUSIBLE_DOMAIN }}
@@ -57,7 +48,16 @@ jobs:
           NEXT_PUBLIC_BING_SITE_VERIFICATION: ${{ vars.BING_SITE_VERIFICATION }}
           NEXT_PUBLIC_CLIENT_SPACE_URL: ${{ vars.CLIENT_SPACE_URL }}
 
-      - name: Envoyer sur Hostinger
+      - name: Fichier à importer dans Hostinger
+        uses: actions/upload-artifact@v7
+        with:
+          name: site-hostinger
+          path: out/
+          include-hidden-files: true
+          retention-days: 30
+
+      - name: Envoi automatique sur Hostinger (si les accès FTP sont configurés)
+        if: env.FTP_SERVER != ''
         uses: SamKirkland/FTP-Deploy-Action@110f9186c050f71550953127052e77650219c287 # v4.4.0
         with:
           server: ${{ secrets.FTP_SERVER }}

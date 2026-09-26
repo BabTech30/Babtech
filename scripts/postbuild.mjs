@@ -3,13 +3,11 @@
  * Étape lancée automatiquement après `next build` (script npm « postbuild »).
  *
  * 1. Écrit out/.htaccess pour les serveurs Apache / LiteSpeed (Hostinger) : HTTPS forcé,
- *    domaine unique (avec ou sans www selon NEXT_PUBLIC_SITE_URL), page 404, en-têtes de
+ *    domaine unique (avec ou sans www selon le domaine du site), page 404, en-têtes de
  *    sécurité, cache, types de fichiers, robots IA.
  * 2. Écrit out/_next/static/.htaccess : cache long pour les fichiers versionnés de Next.js.
- * 3. Si REDIRECT_SITE_TO est défini (ex. sur l'ancien site Netlify après la migration),
- *    écrit out/_redirects pour rediriger définitivement (301) toutes les pages vers le nouveau site.
  */
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
 const OUT = path.resolve('out')
@@ -125,18 +123,3 @@ const staticDir = path.join(OUT, '_next', 'static')
 mkdirSync(staticDir, { recursive: true })
 writeFileSync(path.join(staticDir, '.htaccess'), staticHtaccess)
 console.log(`postbuild : .htaccess écrit pour ${siteUrl}`)
-
-const redirectTo = process.env.REDIRECT_SITE_TO?.trim().replace(/\/+$/, '')
-if (redirectTo) {
-  if (!/^https:\/\/[^/]+$/.test(redirectTo)) {
-    console.error(`postbuild : REDIRECT_SITE_TO doit être une URL https sans chemin (reçu : ${redirectTo})`)
-    process.exit(1)
-  }
-  // Les fichiers de validation Google Search Console restent servis : la propriété de l'ancien
-  // site doit rester vérifiée pendant le « changement d'adresse ».
-  const keep = readdirSync(OUT)
-    .filter((f) => /^google[0-9a-f]+\.html$/.test(f))
-    .map((f) => `/${f}  /${f}  200`)
-  writeFileSync(path.join(OUT, '_redirects'), [...keep, `/*  ${redirectTo}/:splat  301!`, ''].join('\n'))
-  console.log(`postbuild : toutes les pages redirigent (301) vers ${redirectTo}`)
-}

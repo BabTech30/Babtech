@@ -9,33 +9,17 @@
  * (cohérence Nom / Adresse / Téléphone avec la fiche Google Business Profile).
  */
 
-/** URL publique utilisée tant qu'aucun domaine n'est configuré (ancien site Netlify). */
-const DEFAULT_SITE_URL = 'https://agence-babtech.netlify.app'
+/**
+ * Domaine du site. Si tu choisis un autre nom de domaine, c'est la seule ligne à changer :
+ * canonicals, sitemap, Open Graph, données structurées, RSS, llms.txt et .htaccess suivent.
+ */
+const DEFAULT_SITE_URL = 'https://babtech.fr'
 
 /**
- * URL canonique du site, sans slash final.
- * En production, définir NEXT_PUBLIC_SITE_URL (ex. https://babtech.fr) : dans .env.production
- * pour un build local envoyé sur Hostinger, ou dans les variables du dépôt GitHub pour le
- * déploiement automatique. Canonicals, sitemap, Open Graph, RSS et llms.txt suivent.
+ * URL canonique du site, sans slash final. NEXT_PUBLIC_SITE_URL permet, si besoin, de construire
+ * une version de test pour l'adresse temporaire fournie par Hostinger.
  */
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL).trim().replace(/\/+$/, '')
-
-/**
- * Hébergeur affiché dans les mentions légales (obligation LCEN). Hostinger par défaut ;
- * Netlify est détecté automatiquement quand le site y est construit (variable NETLIFY).
- */
-const HOSTS = {
-  hostinger: {
-    name: 'Hostinger International Ltd',
-    address: '61 Lordou Vironos Street, 6023 Larnaca, Chypre',
-    url: 'https://www.hostinger.com/fr',
-  },
-  netlify: {
-    name: 'Netlify, Inc.',
-    address: '101 2nd Street, San Francisco, CA 94105, États-Unis',
-    url: 'https://www.netlify.com',
-  },
-}
 
 const FORMSPREE_CONTACT_ID = process.env.NEXT_PUBLIC_FORMSPREE_CONTACT_ID || 'xykbpjbz'
 const FORMSPREE_COMMUNITY_ID = process.env.NEXT_PUBLIC_FORMSPREE_COMMUNITY_ID || FORMSPREE_CONTACT_ID
@@ -110,7 +94,11 @@ export const site = {
     /** Adresse de l'établissement ou de domiciliation. */
     postalAddress: '',
     updatedAt: '26 septembre 2026',
-    host: process.env.NETLIFY === 'true' ? HOSTS.netlify : HOSTS.hostinger,
+    host: {
+      name: 'Hostinger International Ltd',
+      address: '61 Lordou Vironos Street, 6023 Larnaca, Chypre',
+      url: 'https://www.hostinger.com/fr',
+    },
   },
 
   /** Clé IndexNow (Bing, Yandex, Seznam…) : le fichier public/<clé>.txt doit exister. */

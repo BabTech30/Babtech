@@ -15,7 +15,7 @@ import { readFile } from 'node:fs/promises'
 // Adresse du site : variable NEXT_PUBLIC_SITE_URL, sinon celle du dernier build (out/sitemap.xml).
 const builtSitemap = new URL('../out/sitemap.xml', import.meta.url)
 const builtUrl = existsSync(builtSitemap) ? readFileSync(builtSitemap, 'utf8').match(/<loc>([^<]+)<\/loc>/)?.[1] : undefined
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || (builtUrl && new URL(builtUrl).origin) || 'https://agence-babtech.netlify.app').replace(/\/+$/, '')
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || (builtUrl && new URL(builtUrl).origin) || 'https://babtech.fr').replace(/\/+$/, '')
 const config = await readFile(new URL('../src/lib/site.ts', import.meta.url), 'utf8')
 const key = config.match(/indexNowKey:\s*'([a-zA-Z0-9-]{8,128})'/)?.[1]
 

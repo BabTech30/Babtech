@@ -4,11 +4,9 @@
  *
  *   npm run build:hostinger
  *
- * 1. construit le site (next build + .htaccess) et lance le contrôle qualité ;
- * 2. vérifie que l'adresse du site est bien le vrai domaine (NEXT_PUBLIC_SITE_URL, à définir
- *    dans .env.production, ex. NEXT_PUBLIC_SITE_URL=https://babtech.fr) ;
- * 3. crée hostinger-site.zip, prêt à envoyer dans public_html (hPanel → Gestionnaire de
- *    fichiers → Importer, puis « Extraire »).
+ * Construit le site (avec son .htaccess), lance le contrôle qualité, puis crée
+ * hostinger-site.zip, prêt à importer dans public_html (hPanel → Gestionnaire de
+ * fichiers → Importer, puis « Extraire »).
  */
 import { execSync } from 'node:child_process'
 import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
@@ -23,17 +21,6 @@ execSync('node scripts/check-build.mjs', { stdio: 'inherit' })
 
 const firstLoc = readFileSync(path.join(OUT, 'sitemap.xml'), 'utf8').match(/<loc>([^<]+)<\/loc>/)?.[1] ?? ''
 const siteUrl = new URL(firstLoc).origin
-if (/\.netlify\.app$/.test(new URL(siteUrl).host)) {
-  console.error(`
-✖ Le site a été construit pour ${siteUrl} (l'ancienne adresse Netlify).
-  Crée un fichier .env.production à la racine du projet contenant par exemple :
-
-    NEXT_PUBLIC_SITE_URL=https://babtech.fr
-
-  puis relance : npm run build:hostinger
-`)
-  process.exit(1)
-}
 
 function walk(dir) {
   return readdirSync(dir).flatMap((name) => {
@@ -52,10 +39,12 @@ const count = Object.keys(files).length
 const size = (statSync(ZIP).size / 1024 / 1024).toFixed(1)
 console.log(`
 ✔ Site prêt pour Hostinger : ${siteUrl}
+  (autre nom de domaine ? change DEFAULT_SITE_URL dans src/lib/site.ts et relance)
+
   ${path.basename(ZIP)} — ${count} fichiers, ${size} Mo (y compris .htaccess)
 
   Mise en ligne :
-  1. hPanel → Sites web → Gestionnaire de fichiers → dossier public_html
+  1. hPanel → Gestionnaire de fichiers → dossier public_html
   2. Supprimer l'ancien contenu (garder le dossier .well-known s'il existe)
   3. Importer ${path.basename(ZIP)}, clic droit → Extraire, puis supprimer le zip
 `)

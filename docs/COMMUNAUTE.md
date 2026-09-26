@@ -52,7 +52,7 @@ s'affiche dès que `NEXT_PUBLIC_CLIENT_SPACE_URL` est renseignée).
 | Application | Next.js (même stack que le site) en rendu serveur | Réutilise le design, les composants et les compétences |
 | Base de données + authentification | Supabase (PostgreSQL, connexion par lien magique, règles d'accès RLS, stockage) | Offre gratuite pour démarrer, hébergement en Europe possible, standard ouvert |
 | Emails | Brevo ou Resend | Notifications, rappels d'événements, lettre d'information |
-| Hébergement | Offre Node.js ou VPS d'Hostinger, ou Vercel / Netlify | Contrairement au site vitrine statique, l'application a besoin d'un serveur Node.js |
+| Hébergement | Offre Node.js ou VPS d'Hostinger | Contrairement au site vitrine statique, l'application a besoin d'un serveur Node.js |
 
 ### Modèle de données (première version)
 
