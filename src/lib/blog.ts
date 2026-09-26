@@ -10,6 +10,7 @@ import rehypeSlug from 'rehype-slug'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeStringify from 'rehype-stringify'
 import { getCategory } from '@/data/blog'
+import { withTrailingSlash } from './site'
 import { rehypeFrenchTypography } from './typography'
 
 const BLOG_DIR = path.join(process.cwd(), 'content/blog')
@@ -68,6 +69,8 @@ function rehypeBabtech(headings: Heading[]) {
           const href = String(node.properties?.href ?? '')
           if (/^https?:\/\//.test(href)) {
             node.properties = { ...node.properties, target: '_blank', rel: 'noopener noreferrer' }
+          } else if (href.startsWith('/') && !href.startsWith('//')) {
+            node.properties = { ...node.properties, href: withTrailingSlash(href) }
           }
         }
         if ((tag === 'h2' || tag === 'h3') && node.properties?.id) {

@@ -16,7 +16,7 @@ import { zones } from '@/data/zones'
 import { getAllPosts } from '@/lib/blog'
 import { faqNode, graph, serviceNode, webPageNode } from '@/lib/schema'
 import { pageMetadata } from '@/lib/seo'
-import { site } from '@/lib/site'
+import { absoluteUrl, site } from '@/lib/site'
 import { fr } from '@/lib/typography'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -66,7 +66,7 @@ export default async function ServicePage({ params }: Props) {
             name: service.metaTitle,
             description: service.metaDescription,
             og: `services/${service.slug}`,
-            about: { '@id': `${site.url}${path}#service` },
+            about: { '@id': `${absoluteUrl(path)}#service` },
           }),
           serviceNode({ service, path }),
           faqNode(path, service.faq),

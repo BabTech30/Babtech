@@ -7,7 +7,7 @@ Le site est pensé pour être trouvé **sur Google** (SEO local) **et dans les r
 Gemini, Claude, Copilot…), grâce au GEO (*Generative Engine Optimization*).
 
 - Stack : **Next.js 16** (App Router, export statique), **React 19**, **Tailwind CSS 3**, **TypeScript**
-- Hébergement : **Netlify** (fichiers statiques : rapide, sûr, quasi gratuit)
+- Hébergement : **Hostinger** (fichiers statiques + `.htaccess` généré au build) — reste compatible Netlify et tout hébergeur statique
 - Formulaires : **Formspree** · Rendez-vous : **Calendly** · Mesure d'audience optionnelle et sans cookie : **Plausible** ou **Umami**
 
 ## Démarrer
@@ -20,7 +20,8 @@ npm run dev        # http://localhost:3000
 | Commande | Rôle |
 |---|---|
 | `npm run dev` | Serveur de développement |
-| `npm run build` | Génère le site statique dans `out/` |
+| `npm run build` | Génère le site statique dans `out/` (avec le `.htaccess` pour Hostinger) |
+| `npm run build:hostinger` | Build + contrôle + archive `hostinger-site.zip` à importer dans `public_html` |
 | `npm run check` | Contrôle qualité du site généré : liens cassés, balises SEO, JSON-LD, sitemap… |
 | `npm run verify` | Tout d'un coup : TypeScript + ESLint + build + contrôle |
 | `npm run preview` | Sert `out/` en local, comme en production |
@@ -76,12 +77,16 @@ et un appel à l'action vers `/contact` ou `/communaute`.
 
 ## Déployer
 
-Le guide pas à pas est dans **[`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md)** : Netlify, domaine personnalisé, variables
-d'environnement, Google Search Console, Bing Webmaster Tools, IndexNow et Google Business Profile.
+Le guide pas à pas est dans **[`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md)** : Hostinger (à la main avec
+`npm run build:hostinger`, ou automatiquement via GitHub Actions), migration depuis Netlify avec redirections 301,
+Google Search Console, Bing Webmaster Tools, IndexNow et Google Business Profile.
+
+En résumé : définir `NEXT_PUBLIC_SITE_URL=https://babtech.fr` dans `.env.production`, lancer `npm run build:hostinger`,
+puis importer et extraire `hostinger-site.zip` dans `public_html`.
 
 ## Documentation
 
-- [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md) — mise en ligne et check-list après déploiement
+- [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md) — mise en ligne sur Hostinger, migration depuis Netlify, check-list
 - [`docs/STRATEGIE-SEO-GEO.md`](docs/STRATEGIE-SEO-GEO.md) — positionnement, mots-clés, plan local, GEO, calendrier éditorial
 - [`docs/COMMUNAUTE.md`](docs/COMMUNAUTE.md) — feuille de route et architecture de la future plateforme communautaire
 
@@ -90,7 +95,8 @@ d'environnement, Google Search Console, Bing Webmaster Tools, IndexNow et Google
 ```
 content/blog/          Articles en Markdown
 public/                Fichiers servis tels quels (favicon, vérification Google, clé IndexNow)
-scripts/               check-build.mjs (contrôle qualité), indexnow.mjs
+scripts/               postbuild.mjs (.htaccess), build-hostinger.mjs, check-build.mjs (contrôle qualité), indexnow.mjs
+.github/workflows/     deploy-hostinger.yml (déploiement automatique par FTP sécurisé)
 src/app/               Pages (App Router) + routes générées : sitemap, robots, llms.txt, RSS, images OG, icônes
 src/components/        Composants d'interface (Header, Footer, formulaires, FAQ, cartes…)
 src/data/              Contenus structurés (services, villes, FAQ, communauté…)

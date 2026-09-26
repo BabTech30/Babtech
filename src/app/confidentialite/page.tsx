@@ -57,7 +57,7 @@ export default function Confidentialite() {
         <ul>
           <li>Formspree (réception des formulaires)&nbsp;;</li>
           <li>Calendly (prise de rendez-vous)&nbsp;;</li>
-          <li>Netlify (hébergement du site)&nbsp;;</li>
+          <li>{site.legal.host.name} (hébergement du site)&nbsp;;</li>
           <li>le cas échéant, l&apos;outil de mesure d&apos;audience sans cookie.</li>
         </ul>
         <p>

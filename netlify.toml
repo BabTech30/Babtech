@@ -12,7 +12,7 @@
 # Les navigateurs demandent /favicon.ico par défaut.
 [[redirects]]
   from = "/favicon.ico"
-  to = "/icons/favicon-48.png"
+  to = "/brand/favicon-48.png"
   status = 200
 
 [[headers]]
@@ -36,7 +36,7 @@
     Cache-Control = "public, max-age=86400"
 
 [[headers]]
-  for = "/icons/*"
+  for = "/brand/*"
   [headers.values]
     Cache-Control = "public, max-age=604800"
 

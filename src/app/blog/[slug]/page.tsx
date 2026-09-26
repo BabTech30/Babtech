@@ -11,7 +11,7 @@ import { TableOfContents } from '@/components/TableOfContents'
 import { formatDate, getAllPosts, getPost, getRelatedPosts } from '@/lib/blog'
 import { blogPostingNode, faqNode, graph, webPageNode } from '@/lib/schema'
 import { pageMetadata } from '@/lib/seo'
-import { site } from '@/lib/site'
+import { absoluteUrl, site } from '@/lib/site'
 import { fr } from '@/lib/typography'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -58,7 +58,7 @@ export default async function PostPage({ params }: Props) {
             og: `blog/${post.slug}`,
             datePublished: post.date,
             dateModified: post.updated,
-            about: { '@id': `${site.url}${path}#article` },
+            about: { '@id': `${absoluteUrl(path)}#article` },
           }),
           blogPostingNode(post),
           faqNode(path, post.faq),

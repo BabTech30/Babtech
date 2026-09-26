@@ -100,7 +100,7 @@ export const services: Service[] = [
     ],
     result:
       'Tes clients te trouvent sur Google et dans les réponses des IA, ton image est pro, tu inspires confiance dès le premier clic.',
-    stack: ['Next.js', 'Tailwind CSS', 'Netlify', 'Schema.org', 'Google Business Profile'],
+    stack: ['Next.js', 'Tailwind CSS', 'Schema.org', 'Google Business Profile', 'Google Search Console'],
     faq: [
       {
         q: 'Combien coûte un site vitrine chez BabTech ?',

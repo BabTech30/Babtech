@@ -9,16 +9,33 @@
  * (cohérence Nom / Adresse / Téléphone avec la fiche Google Business Profile).
  */
 
-/** URL publique utilisée tant qu'aucun domaine personnalisé n'est configuré. */
+/** URL publique utilisée tant qu'aucun domaine n'est configuré (ancien site Netlify). */
 const DEFAULT_SITE_URL = 'https://agence-babtech.netlify.app'
 
 /**
  * URL canonique du site, sans slash final.
- * En production, définir NEXT_PUBLIC_SITE_URL (ex. https://babtech.fr) dans Netlify
- * dès que le domaine personnalisé est branché : canonicals, sitemap, Open Graph,
- * RSS et llms.txt basculent automatiquement.
+ * En production, définir NEXT_PUBLIC_SITE_URL (ex. https://babtech.fr) : dans .env.production
+ * pour un build local envoyé sur Hostinger, ou dans les variables du dépôt GitHub pour le
+ * déploiement automatique. Canonicals, sitemap, Open Graph, RSS et llms.txt suivent.
  */
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL).trim().replace(/\/+$/, '')
+
+/**
+ * Hébergeur affiché dans les mentions légales (obligation LCEN). Hostinger par défaut ;
+ * Netlify est détecté automatiquement quand le site y est construit (variable NETLIFY).
+ */
+const HOSTS = {
+  hostinger: {
+    name: 'Hostinger International Ltd',
+    address: '61 Lordou Vironos Street, 6023 Larnaca, Chypre',
+    url: 'https://www.hostinger.com/fr',
+  },
+  netlify: {
+    name: 'Netlify, Inc.',
+    address: '101 2nd Street, San Francisco, CA 94105, États-Unis',
+    url: 'https://www.netlify.com',
+  },
+}
 
 const FORMSPREE_CONTACT_ID = process.env.NEXT_PUBLIC_FORMSPREE_CONTACT_ID || 'xykbpjbz'
 const FORMSPREE_COMMUNITY_ID = process.env.NEXT_PUBLIC_FORMSPREE_COMMUNITY_ID || FORMSPREE_CONTACT_ID
@@ -93,11 +110,7 @@ export const site = {
     /** Adresse de l'établissement ou de domiciliation. */
     postalAddress: '',
     updatedAt: '26 septembre 2026',
-    host: {
-      name: 'Netlify, Inc.',
-      address: '101 2nd Street, San Francisco, CA 94105, États-Unis',
-      url: 'https://www.netlify.com',
-    },
+    host: process.env.NETLIFY === 'true' ? HOSTS.netlify : HOSTS.hostinger,
   },
 
   /** Clé IndexNow (Bing, Yandex, Seznam…) : le fichier public/<clé>.txt doit exister. */
@@ -106,10 +119,22 @@ export const site = {
 
 export const socialLinks = Object.values(site.social).filter(Boolean)
 
-/** Transforme un chemin en URL absolue (« / » → https://…/). */
+/**
+ * Les pages se terminent par « / » (export en dossier/index.html, cf. `trailingSlash` dans
+ * next.config.js — à garder synchronisés) ; les fichiers (.png, .txt, .xml…) non.
+ * « /services#tarifs » → « /services/#tarifs ».
+ */
+export function withTrailingSlash(path: string) {
+  const [, pathname = '', rest = ''] = path.match(/^([^?#]*)(.*)$/) ?? []
+  const last = pathname.split('/').pop() ?? ''
+  if (!pathname || pathname.endsWith('/') || /\.[a-z0-9]+$/i.test(last)) return path
+  return `${pathname}/${rest}`
+}
+
+/** Transforme un chemin en URL absolue (« /services » → https://…/services/). */
 export function absoluteUrl(path = '/') {
   if (/^https?:\/\//.test(path)) return path
-  return `${SITE_URL}${path.startsWith('/') ? path : `/${path}`}`
+  return `${SITE_URL}${withTrailingSlash(path.startsWith('/') ? path : `/${path}`)}`
 }
 
 export function telLink(phone = site.phone) {

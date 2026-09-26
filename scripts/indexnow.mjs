@@ -7,11 +7,15 @@
  *   npm run indexnow                         → toutes les URLs du sitemap en ligne
  *   npm run indexnow -- /blog/mon-article    → seulement certaines pages
  *
- * L'URL du site est lue dans NEXT_PUBLIC_SITE_URL (sinon l'URL Netlify par défaut).
+ * L'URL du site est lue dans NEXT_PUBLIC_SITE_URL, sinon dans le dernier build (out/sitemap.xml).
  */
+import { existsSync, readFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://agence-babtech.netlify.app').replace(/\/+$/, '')
+// Adresse du site : variable NEXT_PUBLIC_SITE_URL, sinon celle du dernier build (out/sitemap.xml).
+const builtSitemap = new URL('../out/sitemap.xml', import.meta.url)
+const builtUrl = existsSync(builtSitemap) ? readFileSync(builtSitemap, 'utf8').match(/<loc>([^<]+)<\/loc>/)?.[1] : undefined
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || (builtUrl && new URL(builtUrl).origin) || 'https://agence-babtech.netlify.app').replace(/\/+$/, '')
 const config = await readFile(new URL('../src/lib/site.ts', import.meta.url), 'utf8')
 const key = config.match(/indexNowKey:\s*'([a-zA-Z0-9-]{8,128})'/)?.[1]
 
@@ -20,7 +24,11 @@ if (!key) {
   process.exit(1)
 }
 
-let urls = process.argv.slice(2).map((p) => (p.startsWith('http') ? p : `${siteUrl}${p.startsWith('/') ? p : `/${p}`}`))
+/** Même règle que le site : les pages finissent par « / », pas les fichiers. */
+const withTrailingSlash = (p) => (p.endsWith('/') || /\.[a-z0-9]+$/i.test(p.split('/').pop()) ? p : `${p}/`)
+let urls = process.argv
+  .slice(2)
+  .map((p) => (p.startsWith('http') ? p : `${siteUrl}${withTrailingSlash(p.startsWith('/') ? p : `/${p}`)}`))
 
 if (urls.length === 0) {
   const response = await fetch(`${siteUrl}/sitemap.xml`)

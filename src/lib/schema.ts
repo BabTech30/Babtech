@@ -19,7 +19,7 @@ export const ids = {
   founder: `${SITE_URL}/#founder`,
   website: `${SITE_URL}/#website`,
   logo: `${SITE_URL}/#logo`,
-  blog: `${SITE_URL}/blog#blog`,
+  blog: `${SITE_URL}/blog/#blog`,
 }
 
 const pageUrl = (path: string) => absoluteUrl(path)
@@ -97,8 +97,8 @@ export function organizationNode(): Json {
     logo: {
       '@type': 'ImageObject',
       '@id': ids.logo,
-      url: absoluteUrl('/icons/icon-512.png'),
-      contentUrl: absoluteUrl('/icons/icon-512.png'),
+      url: absoluteUrl('/brand/icon-512.png'),
+      contentUrl: absoluteUrl('/brand/icon-512.png'),
       width: 512,
       height: 512,
       caption: site.name,

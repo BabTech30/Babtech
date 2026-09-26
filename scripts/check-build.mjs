@@ -4,10 +4,15 @@
  *
  * Vérifie : fichiers SEO/GEO présents, pages du sitemap générées, balises essentielles
  * (title, description, canonical, h1 unique, Open Graph), JSON-LD valide, liens internes
- * et images référencées existants, titres et descriptions en double.
+ * et images référencées existants, URL de pages cohérentes (« / » final), titres et
+ * descriptions en double, fichier .htaccess pour Hostinger.
  */
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
+import { createRequire } from 'node:module'
 import path from 'node:path'
+
+/** Même réglage que Next.js : avec trailingSlash, toute URL de page se termine par « / ». */
+const { trailingSlash = false } = createRequire(import.meta.url)('../next.config.js')
 
 const OUT = path.resolve('out')
 const errors = []
@@ -31,9 +36,11 @@ const REQUIRED = [
   'manifest.webmanifest',
   '404.html',
   'favicon.svg',
-  'icons/icon-512.png',
-  'icons/apple-touch-icon.png',
+  'brand/icon-512.png',
+  'brand/apple-touch-icon.png',
   'og/default.png',
+  '.htaccess',
+  '_next/static/.htaccess',
 ]
 for (const f of REQUIRED) if (!existsSync(path.join(OUT, f))) errors.push(`Fichier manquant : ${f}`)
 
@@ -41,6 +48,14 @@ const sitemap = read(path.join(OUT, 'sitemap.xml'))
 const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim())
 if (!locs.length) errors.push('Sitemap vide')
 const siteUrl = new URL(locs[0]).origin
+
+const isPage = (pathname) => !/\.[a-z0-9]+$/i.test(pathname.split('/').pop() ?? '')
+/** Une URL de page doit finir par « / » si trailingSlash est actif (sinon : pas de « / » final, sauf l'accueil). */
+function badSlash(pathname) {
+  if (!isPage(pathname) || pathname === '/' || pathname === '') return false
+  return trailingSlash ? !pathname.endsWith('/') : pathname.endsWith('/')
+}
+const slashRule = trailingSlash ? 'devrait finir par « / »' : 'ne devrait pas finir par « / »'
 
 /** Fichier servi pour un chemin d'URL (comportement des hébergeurs statiques type Netlify). */
 function fileFor(urlPath) {
@@ -53,7 +68,9 @@ function fileFor(urlPath) {
 }
 
 for (const loc of locs) {
-  if (!fileFor(new URL(loc).pathname)) errors.push(`Sitemap → page non générée : ${loc}`)
+  const { pathname } = new URL(loc)
+  if (!fileFor(pathname)) errors.push(`Sitemap → page non générée : ${loc}`)
+  if (badSlash(pathname)) errors.push(`Sitemap → ${loc} ${slashRule}`)
 }
 
 const robots = read(path.join(OUT, 'robots.txt'))
@@ -73,7 +90,7 @@ let pages = 0
 
 for (const file of walk(OUT).filter((f) => f.endsWith('.html'))) {
   const rel = `/${path.relative(OUT, file).split(path.sep).join('/')}`
-  if (rel.startsWith('/_next/') || /^\/(404|_not-found)\.html$/.test(rel) || /^\/google[0-9a-f]+\.html$/.test(rel)) continue
+  if (rel.startsWith('/_next/') || /^\/(404|_not-found)(\/index)?\.html$/.test(rel) || /^\/google[0-9a-f]+\.html$/.test(rel)) continue
   pages++
   const html = read(file)
   const urlPath = rel === '/index.html' ? '/' : rel.replace(/(\/index)?\.html$/, '')
@@ -96,9 +113,9 @@ for (const file of walk(OUT).filter((f) => f.endsWith('.html'))) {
   }
 
   const canonical = html.match(/<link rel="canonical" href="([^"]*)"/)?.[1]
-  const expected = `${siteUrl}${urlPath === '/' ? '' : urlPath}`
+  const expected = urlPath === '/' ? `${siteUrl}/` : `${siteUrl}${urlPath}${trailingSlash ? '/' : ''}`
   if (!canonical) errors.push(`${where} canonical manquant`)
-  else if (canonical.replace(/\/$/, '') !== expected.replace(/\/$/, '')) errors.push(`${where} canonical ${canonical} ≠ ${expected}`)
+  else if (canonical !== expected) errors.push(`${where} canonical ${canonical} ≠ ${expected}`)
 
   const h1 = (html.match(/<h1[\s>]/g) ?? []).length
   if (h1 !== 1) errors.push(`${where} ${h1} balise(s) <h1> (1 attendue)`)
@@ -113,7 +130,10 @@ for (const file of walk(OUT).filter((f) => f.endsWith('.html'))) {
     try {
       const data = JSON.parse(json)
       for (const [, url] of JSON.stringify(data).matchAll(/"(https?:\/\/[^"]+)"/g)) {
-        if (url.startsWith(siteUrl) && !fileFor(new URL(url).pathname)) errors.push(`${where} JSON-LD → URL interne introuvable : ${url}`)
+        if (!url.startsWith(siteUrl)) continue
+        const { pathname } = new URL(url)
+        if (!fileFor(pathname)) errors.push(`${where} JSON-LD → URL interne introuvable : ${url}`)
+        else if (badSlash(pathname)) errors.push(`${where} JSON-LD → ${url} ${slashRule}`)
       }
     } catch (e) {
       errors.push(`${where} JSON-LD invalide : ${e.message}`)
@@ -124,6 +144,7 @@ for (const file of walk(OUT).filter((f) => f.endsWith('.html'))) {
     const target = decode(href)
     if (target.startsWith('/_next/') || target.startsWith('//')) continue
     if (!fileFor(target)) errors.push(`${where} lien interne cassé : ${target}`)
+    else if (badSlash(target.split('#')[0].split('?')[0])) errors.push(`${where} lien ${target} ${slashRule} (redirection inutile)`)
   }
 }
 
