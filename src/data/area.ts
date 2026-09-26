@@ -1,0 +1,31 @@
+/** Autres communes desservies, affichées sur la page « Zones d'intervention » (sans page dédiée). */
+export const otherCommunes = {
+  'Métropole de Montpellier': [
+    'Montpellier',
+    'Juvignac',
+    'Grabels',
+    'Jacou',
+    'Clapiers',
+    'Le Crès',
+    'Vendargues',
+    'Baillargues',
+    'Castries',
+    'Montferrier-sur-Lez',
+    'Prades-le-Lez',
+    'Lavérune',
+    'Pignan',
+    'Fabrègues',
+    'Villeneuve-lès-Maguelone',
+    "Saint-Georges-d'Orques",
+  ],
+  "Autour de Montpellier": [
+    'Saint-Gély-du-Fesc',
+    'Saint-Clément-de-Rivière',
+    'Teyran',
+    'Palavas-les-Flots',
+    'La Grande-Motte',
+    'Frontignan',
+    'Gignac',
+  ],
+  "Reste de l'Hérault": ['Agde', 'Pézenas', "Clermont-l'Hérault", 'Lodève', 'Marseillan', 'Mèze'],
+}

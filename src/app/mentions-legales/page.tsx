@@ -1,57 +1,85 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import { JsonLd } from '@/components/JsonLd'
+import { LegalPage } from '@/components/LegalPage'
+import { graph, webPageNode } from '@/lib/schema'
+import { pageMetadata } from '@/lib/seo'
+import { formatPhone, site } from '@/lib/site'
 
-export const metadata: Metadata = {
-  title: 'Mentions légales',
-  description: 'Mentions légales du site babtech.fr — éditeur, hébergement, propriété intellectuelle.',
-}
+const title = 'Mentions légales'
+const description = 'Mentions légales du site BabTech : éditeur, directeur de la publication, hébergement, propriété intellectuelle.'
+
+export const metadata: Metadata = pageMetadata({ title, description, path: '/mentions-legales' })
+
+const pending = 'en cours de mise à jour'
 
 export default function MentionsLegales() {
+  const { legal } = site
   return (
-    <article className="py-24 md:py-28">
-      <div className="max-w-[780px] mx-auto px-7">
-        <span className="section-tag text-bronze">Page légale</span>
-        <h1 className="font-outfit text-3xl md:text-4xl font-bold text-white tracking-tight mb-3">Mentions légales</h1>
-        <p className="text-sm text-txt-muted italic mb-12">Dernière mise à jour : <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium not-italic">date de mise en ligne</span></p>
-        <div className="space-y-10">
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">1. Éditeur du site</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8] mb-3">Le site babtech.fr est édité par :</p>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]">
-              <strong className="text-txt-primary font-medium">Bastien Ferrer</strong><br />
-              Statut : Entreprise individuelle<br />
-              SIRET : <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">en attente</span><br />
-              TVA intracommunautaire : <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">en attente</span><br />
-              Adresse : <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium">adresse professionnelle</span><br />
-              Email : babferrer@icloud.com<br />
-              Téléphone : sur demande
-            </p>
-          </section>
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">2. Directeur de la publication</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]"><strong className="text-txt-primary font-medium">Bastien Ferrer</strong>, en qualité de dirigeant.</p>
-          </section>
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">3. Hébergement</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]"><strong className="text-txt-primary font-medium">Netlify, Inc.</strong><br />512 2nd Street, Suite 200, San Francisco, CA 94107, USA<br />Site web : netlify.com</p>
-          </section>
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">4. Propriété intellectuelle</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]">L&apos;ensemble du contenu du site babtech.fr (textes, images, graphismes, logo, icônes, structure) est la propriété exclusive de BabTech, sauf mention contraire. Toute reproduction, totale ou partielle, est interdite sans autorisation écrite préalable.</p>
-          </section>
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">5. Responsabilité</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]">BabTech s&apos;efforce de fournir des informations aussi précises que possible. Toutefois, BabTech ne pourra être tenu responsable des omissions, inexactitudes ou carences dans la mise à jour des informations.</p>
-          </section>
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">6. Liens hypertextes</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]">Le site peut contenir des liens vers d&apos;autres sites. BabTech décline toute responsabilité quant à leur contenu.</p>
-          </section>
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">7. Droit applicable</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]">Les présentes mentions légales sont soumises au droit français. En cas de litige, les tribunaux français seront seuls compétents.</p>
-          </section>
-        </div>
-      </div>
-    </article>
+    <>
+      <JsonLd data={graph(webPageNode({ path: '/mentions-legales', name: title, description }))} />
+      <LegalPage title={title} path="/mentions-legales" updatedAt={legal.updatedAt}>
+        <h2>1. Éditeur du site</h2>
+        <p>
+          Le site {site.url.replace(/^https?:\/\//, '')} est édité par <strong>{site.founder.name}</strong>, exerçant sous le nom commercial{' '}
+          <strong>{site.name}</strong>.
+        </p>
+        <ul>
+          <li>Statut&nbsp;: {legal.status}</li>
+          <li>SIRET&nbsp;: {legal.siret || pending}</li>
+          {legal.vatNumber && <li>TVA intracommunautaire&nbsp;: {legal.vatNumber}</li>}
+          <li>Adresse&nbsp;: {legal.postalAddress || `${site.address.locality} (${site.address.department}) — adresse complète ${pending}`}</li>
+          <li>
+            Email&nbsp;: <a href={`mailto:${site.email}`}>{site.email}</a>
+          </li>
+          <li>Téléphone&nbsp;: {site.phone ? formatPhone() : 'communiqué sur demande par email'}</li>
+        </ul>
+
+        <h2>2. Directeur de la publication</h2>
+        <p>
+          <strong>{site.founder.name}</strong>, en qualité d&apos;entrepreneur individuel.
+        </p>
+
+        <h2>3. Hébergement</h2>
+        <p>
+          <strong>{legal.host.name}</strong>
+          <br />
+          {legal.host.address}
+          <br />
+          <a href={legal.host.url} target="_blank" rel="noopener noreferrer">
+            {legal.host.url.replace(/^https?:\/\//, '')}
+          </a>
+        </p>
+
+        <h2>4. Propriété intellectuelle</h2>
+        <p>
+          L&apos;ensemble des contenus du site (textes, graphismes, logo, icônes, structure, articles) est la propriété de {site.name}, sauf
+          mention contraire. Toute reproduction, totale ou partielle, est interdite sans autorisation écrite préalable. Les courtes citations
+          sont autorisées à condition de mentionner la source et de renvoyer vers la page d&apos;origine.
+        </p>
+
+        <h2>5. Responsabilité</h2>
+        <p>
+          {site.name} s&apos;efforce de fournir des informations aussi précises que possible. Les tarifs indiqués sont des prix « à partir de »,
+          donnés à titre indicatif&nbsp;: seul un devis signé engage les parties. {site.name} ne pourra être tenu responsable des omissions,
+          inexactitudes ou carences dans la mise à jour des informations.
+        </p>
+
+        <h2>6. Liens hypertextes</h2>
+        <p>
+          Le site peut contenir des liens vers d&apos;autres sites. {site.name} n&apos;exerce aucun contrôle sur leur contenu et décline toute
+          responsabilité à leur sujet.
+        </p>
+
+        <h2>7. Données personnelles</h2>
+        <p>
+          Le traitement des données personnelles collectées sur le site est détaillé dans la{' '}
+          <Link href="/confidentialite">politique de confidentialité</Link>.
+        </p>
+
+        <h2>8. Droit applicable</h2>
+        <p>Les présentes mentions légales sont soumises au droit français. En cas de litige, les tribunaux français sont seuls compétents.</p>
+      </LegalPage>
+    </>
   )
 }

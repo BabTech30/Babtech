@@ -1,72 +1,104 @@
 import type { Metadata } from 'next'
+import { JsonLd } from '@/components/JsonLd'
+import { LegalPage } from '@/components/LegalPage'
+import { graph, webPageNode } from '@/lib/schema'
+import { pageMetadata } from '@/lib/seo'
+import { site } from '@/lib/site'
 
-export const metadata: Metadata = {
-  title: 'Politique de confidentialité',
-  description: 'Politique de confidentialité du site babtech.fr — données collectées, finalités, droits RGPD.',
-}
+const title = 'Politique de confidentialité'
+const description =
+  'Politique de confidentialité de BabTech : données collectées, finalités, durées de conservation, sous-traitants et droits RGPD.'
+
+export const metadata: Metadata = pageMetadata({ title, description, path: '/confidentialite' })
 
 export default function Confidentialite() {
+  const mail = <a href={`mailto:${site.email}`}>{site.email}</a>
   return (
-    <article className="py-24 md:py-28">
-      <div className="max-w-[780px] mx-auto px-7">
-        <span className="section-tag text-emerald-b">Page légale</span>
-        <h1 className="font-outfit text-3xl md:text-4xl font-bold text-white tracking-tight mb-3">Politique de confidentialité</h1>
-        <p className="text-sm text-txt-muted italic mb-12">Dernière mise à jour : <span className="px-2.5 py-0.5 bg-bronze/10 border border-dashed border-bronze/30 rounded-md text-bronze text-xs font-medium not-italic">date de mise en ligne</span></p>
-        <div className="space-y-10">
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">1. Responsable du traitement</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]"><strong className="text-txt-primary font-medium">Bastien Ferrer</strong> — Entreprise individuelle<br />Email : babferrer@icloud.com</p>
-          </section>
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">2. Données collectées</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8] mb-3">BabTech est susceptible de collecter :</p>
-            <ul className="space-y-1.5 text-[15px] text-txt-secondary leading-[1.8]">
-              <li className="pl-5 relative before:content-['→'] before:absolute before:left-0 before:text-txt-muted"><strong className="text-txt-primary font-medium">Formulaire de contact :</strong> nom, email, type de besoin, message</li>
-              <li className="pl-5 relative before:content-['→'] before:absolute before:left-0 before:text-txt-muted"><strong className="text-txt-primary font-medium">Notification app.babtech.fr :</strong> adresse email</li>
-              <li className="pl-5 relative before:content-['→'] before:absolute before:left-0 before:text-txt-muted"><strong className="text-txt-primary font-medium">Navigation :</strong> données anonymes via Google Analytics</li>
-            </ul>
-          </section>
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">3. Finalités</h2>
-            <ul className="space-y-1.5 text-[15px] text-txt-secondary leading-[1.8]">
-              <li className="pl-5 relative before:content-['→'] before:absolute before:left-0 before:text-txt-muted">Répondre aux demandes de contact</li>
-              <li className="pl-5 relative before:content-['→'] before:absolute before:left-0 before:text-txt-muted">Notifier du lancement de l&apos;espace client</li>
-              <li className="pl-5 relative before:content-['→'] before:absolute before:left-0 before:text-txt-muted">Analyser la fréquentation du site</li>
-            </ul>
-            <p className="text-[15px] text-txt-secondary leading-[1.8] mt-3">Les données ne sont <strong className="text-txt-primary font-medium">jamais vendues ni transmises à des tiers</strong> à des fins commerciales.</p>
-          </section>
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">4. Base légale</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]"><strong className="text-txt-primary font-medium">Consentement</strong> (formulaires) et <strong className="text-txt-primary font-medium">intérêt légitime</strong> (analyse de fréquentation).</p>
-          </section>
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">5. Durée de conservation</h2>
-            <ul className="space-y-1.5 text-[15px] text-txt-secondary leading-[1.8]">
-              <li className="pl-5 relative before:content-['→'] before:absolute before:left-0 before:text-txt-muted"><strong className="text-txt-primary font-medium">Données de contact :</strong> 12 mois après le dernier échange</li>
-              <li className="pl-5 relative before:content-['→'] before:absolute before:left-0 before:text-txt-muted"><strong className="text-txt-primary font-medium">Emails de notification :</strong> jusqu&apos;au lancement de l&apos;espace client</li>
-              <li className="pl-5 relative before:content-['→'] before:absolute before:left-0 before:text-txt-muted"><strong className="text-txt-primary font-medium">Données Analytics :</strong> anonymisées, conservées 14 mois</li>
-            </ul>
-          </section>
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">6. Cookies</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]">Le site utilise Google Analytics 4 (cookies _ga, _ga_*) pour mesurer la fréquentation de manière anonyme. Aucun cookie publicitaire. Tu peux refuser les cookies via le bandeau ou les paramètres de ton navigateur.</p>
-          </section>
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">7. Tes droits (RGPD)</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8] mb-3">Tu disposes des droits d&apos;accès, de rectification, de suppression, d&apos;opposition et de portabilité.</p>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]">Pour les exercer : <strong className="text-txt-primary font-medium">babferrer@icloud.com</strong></p>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]">Réclamation : <strong className="text-txt-primary font-medium">cnil.fr</strong></p>
-          </section>
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">8. Sécurité</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]">Le site est servi en HTTPS. BabTech met en œuvre les mesures techniques appropriées pour protéger les données personnelles.</p>
-          </section>
-          <section>
-            <h2 className="font-outfit text-lg font-semibold text-txt-primary mb-4 pb-2.5 border-b border-bord">9. Modifications</h2>
-            <p className="text-[15px] text-txt-secondary leading-[1.8]">BabTech se réserve le droit de modifier cette politique à tout moment. La date de mise à jour est indiquée en haut de cette page.</p>
-          </section>
-        </div>
-      </div>
-    </article>
+    <>
+      <JsonLd data={graph(webPageNode({ path: '/confidentialite', name: title, description }))} />
+      <LegalPage title={title} path="/confidentialite" updatedAt={site.legal.updatedAt}>
+        <h2>1. Responsable du traitement</h2>
+        <p>
+          <strong>{site.founder.name}</strong> ({site.name}, {site.legal.status.toLowerCase()}) — {mail}
+        </p>
+
+        <h2>2. Données collectées</h2>
+        <ul>
+          <li>
+            <strong>Formulaire de contact&nbsp;:</strong> nom, entreprise ou activité, email, téléphone (facultatif), ville, budget envisagé, type de
+            besoin et message.
+          </li>
+          <li>
+            <strong>Inscription à la communauté&nbsp;:</strong> prénom, email, activité, ville, thèmes et formats souhaités, niveau, message
+            (facultatif) et consentement.
+          </li>
+          <li>
+            <strong>Prise de rendez-vous&nbsp;:</strong> les informations saisies sur le service Calendly lorsque tu réserves un créneau.
+          </li>
+          <li>
+            <strong>Navigation&nbsp;:</strong> le site ne dépose aucun cookie publicitaire ni traceur. Si une mesure d&apos;audience est activée,
+            elle utilise un outil sans cookie (Plausible ou Umami) qui produit des statistiques agrégées et anonymes. L&apos;hébergeur conserve
+            des journaux techniques (adresse IP, navigateur) pour assurer la sécurité du service.
+          </li>
+        </ul>
+
+        <h2>3. Finalités et bases légales</h2>
+        <ul>
+          <li>Répondre à tes demandes et établir un devis&nbsp;: mesures précontractuelles et intérêt légitime.</li>
+          <li>Te tenir informé(e) du lancement de la communauté et organiser les ateliers&nbsp;: consentement, retirable à tout moment.</li>
+          <li>Mesurer la fréquentation de façon anonyme et sécuriser le site&nbsp;: intérêt légitime.</li>
+        </ul>
+        <p>
+          Tes données ne sont <strong>jamais vendues</strong> ni cédées à des tiers à des fins commerciales.
+        </p>
+
+        <h2>4. Destinataires et sous-traitants</h2>
+        <p>Les données sont destinées uniquement à {site.name}. Elles transitent par des prestataires techniques&nbsp;:</p>
+        <ul>
+          <li>Formspree (réception des formulaires)&nbsp;;</li>
+          <li>Calendly (prise de rendez-vous)&nbsp;;</li>
+          <li>Netlify (hébergement du site)&nbsp;;</li>
+          <li>le cas échéant, l&apos;outil de mesure d&apos;audience sans cookie.</li>
+        </ul>
+        <p>
+          Certains de ces prestataires sont situés hors de l&apos;Union européenne, notamment aux États-Unis. Ces transferts sont encadrés par
+          les garanties prévues par le RGPD (clauses contractuelles types de la Commission européenne ou adhésion du prestataire au Data
+          Privacy Framework UE–États-Unis).
+        </p>
+
+        <h2>5. Durées de conservation</h2>
+        <ul>
+          <li>Demandes de contact&nbsp;: 12 mois après le dernier échange (hors relation commerciale, régie par les durées légales).</li>
+          <li>Liste de la communauté&nbsp;: jusqu&apos;à ta désinscription, et au plus 3 ans après ton dernier échange.</li>
+          <li>Statistiques de fréquentation&nbsp;: données anonymes et agrégées.</li>
+        </ul>
+
+        <h2>6. Cookies</h2>
+        <p>
+          Le site fonctionne sans cookie de mesure ni cookie publicitaire&nbsp;: aucun bandeau de consentement n&apos;est donc nécessaire. Les
+          services tiers ouverts depuis le site (Calendly, par exemple) appliquent leur propre politique lorsque tu les utilises.
+        </p>
+
+        <h2>7. Tes droits</h2>
+        <p>
+          Tu disposes d&apos;un droit d&apos;accès, de rectification, d&apos;effacement, de limitation, d&apos;opposition et de portabilité
+          de tes données, ainsi que du droit de retirer ton consentement à tout moment. Pour les exercer, écris à {mail}. Tu peux aussi
+          introduire une réclamation auprès de la CNIL (
+          <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">
+            cnil.fr
+          </a>
+          ).
+        </p>
+
+        <h2>8. Sécurité</h2>
+        <p>
+          Le site est servi exclusivement en HTTPS. {site.name} met en œuvre des mesures techniques et organisationnelles adaptées pour
+          protéger tes données.
+        </p>
+
+        <h2>9. Modifications</h2>
+        <p>Cette politique peut évoluer. La date de dernière mise à jour figure en haut de cette page.</p>
+      </LegalPage>
+    </>
   )
 }

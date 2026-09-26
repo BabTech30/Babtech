@@ -1,119 +1,113 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import { ContactForm } from '@/components/forms/ContactForm'
+import { Icon } from '@/components/Icon'
+import { JsonLd } from '@/components/JsonLd'
+import { PageHero } from '@/components/PageHero'
+import { graph, ids, webPageNode } from '@/lib/schema'
+import { pageMetadata } from '@/lib/seo'
+import { formatPhone, site, telLink } from '@/lib/site'
 
-export const metadata: Metadata = {
-  title: 'Contact — Parlons de ton projet',
-  description: 'Envoie-moi un message ou prends rendez-vous. Réponse sous 24h. Freelance digital disponible 100% en remote.',
-}
+const title = 'Contact : parlons de ton projet digital à Montpellier'
+const description =
+  "Un message ou un appel de 30 minutes offert pour parler de ton site internet, de ton application métier ou de l'IA. Réponse sous 24 h, près de Montpellier."
+
+export const metadata: Metadata = pageMetadata({ title, description, path: '/contact', og: 'contact' })
 
 export default function Contact() {
   return (
     <>
-      <section className="pt-24 md:pt-28 pb-16 relative">
-        <div className="absolute -top-16 -right-48 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(16,185,129,0.05)_0%,transparent_70%)] pointer-events-none" />
-        <div className="container-b">
-          <div className="max-w-[680px] relative">
-            <span className="section-tag text-emerald-b">Contact</span>
-            <h1 className="font-outfit text-4xl md:text-5xl font-bold text-white leading-[1.12] tracking-tight mb-5">
-              Parlons de ton projet.
-            </h1>
-            <p className="text-lg text-txt-secondary leading-relaxed">
-              Un message, un appel, un café virtuel — choisis ce qui te convient. Je réponds sous 24h.
-            </p>
-          </div>
-        </div>
-      </section>
+      <JsonLd
+        data={graph(
+          webPageNode({ path: '/contact', name: title, description, type: 'ContactPage', og: 'contact', mainEntity: { '@id': ids.organization } }),
+        )}
+      />
 
-      <section className="pb-20">
-        <div className="container-b">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-12 items-start">
-            <div className="bg-white/[0.03] border border-bord rounded-[20px] p-10 relative overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-b to-bronze" />
-              <h2 className="font-outfit text-[22px] font-semibold text-white tracking-tight mb-2">Envoie-moi un message</h2>
-              <p className="text-sm text-txt-secondary mb-8">Décris ton besoin en quelques mots — je reviens vers toi rapidement.</p>
-              <form action="https://formspree.io/f/xykbpjbz" method="POST" className="space-y-5">
-                <div>
-                  <label className="block text-[13px] font-medium text-txt-secondary mb-2 tracking-wide">Nom</label>
-                  <input type="text" name="name" required placeholder="Ton nom ou celui de ta boîte"
-                    className="w-full px-4 py-3.5 bg-white/[0.04] border border-bord rounded-[10px] text-txt-primary text-[15px] font-dm outline-none transition-all focus:border-emerald-b/40 focus:bg-white/[0.06] placeholder:text-txt-muted" />
-                </div>
-                <div>
-                  <label className="block text-[13px] font-medium text-txt-secondary mb-2 tracking-wide">Email</label>
-                  <input type="email" name="email" required placeholder="ton@email.com"
-                    className="w-full px-4 py-3.5 bg-white/[0.04] border border-bord rounded-[10px] text-txt-primary text-[15px] font-dm outline-none transition-all focus:border-emerald-b/40 focus:bg-white/[0.06] placeholder:text-txt-muted" />
-                </div>
-                <div>
-                  <label className="block text-[13px] font-medium text-txt-secondary mb-2 tracking-wide">Type de besoin</label>
-                  <select name="type" required defaultValue=""
-                    className="w-full px-4 py-3.5 bg-white/[0.04] border border-bord rounded-[10px] text-txt-primary text-[15px] font-dm outline-none transition-all focus:border-emerald-b/40 focus:bg-white/[0.06] appearance-none cursor-pointer">
-                    <option value="" disabled className="bg-nuit-light text-txt-muted">Choisis une catégorie</option>
-                    <option value="visibilite" className="bg-nuit-light">Visibilité — Site, Google, SEO, réseaux</option>
-                    <option value="outils" className="bg-nuit-light">Outils Métier — PWA, dashboard, app</option>
-                    <option value="ia" className="bg-nuit-light">IA et Automatisation — Workflows, intégrations</option>
-                    <option value="autre" className="bg-nuit-light">Autre / Je ne sais pas encore</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-[13px] font-medium text-txt-secondary mb-2 tracking-wide">Message</label>
-                  <textarea name="message" required rows={5} placeholder="Dis-moi en quelques lignes ce que tu as en tête."
-                    className="w-full px-4 py-3.5 bg-white/[0.04] border border-bord rounded-[10px] text-txt-primary text-[15px] font-dm outline-none transition-all focus:border-emerald-b/40 focus:bg-white/[0.06] placeholder:text-txt-muted resize-y min-h-[120px]" />
-                </div>
-                <button type="submit" className="w-full py-4 rounded-[10px] bg-emerald-b text-[#0a1a10] font-semibold text-[15px] font-dm transition-all hover:brightness-110 hover:-translate-y-0.5 mt-2 cursor-pointer">
-                  Envoyer →
-                </button>
-              </form>
+      <PageHero
+        eyebrow="Contact"
+        title="Parlons de ton projet."
+        lead="Un message, un appel, un café : choisis ce qui te convient. Je réponds sous 24 heures, et le premier échange est toujours gratuit."
+        crumbs={[{ name: 'Contact', path: '/contact' }]}
+      />
+
+      <section className="border-t border-bord pb-20 pt-12 md:pt-16">
+        <div className="container-b grid items-start gap-10 lg:grid-cols-[1fr_380px]">
+          <div className="card relative overflow-hidden p-7 md:p-10">
+            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-emerald-b to-bronze" />
+            <h2 className="mb-2 font-outfit text-[22px] font-semibold tracking-tight text-white">Envoie-moi un message</h2>
+            <p className="mb-8 text-sm text-txt-secondary">Décris ton besoin en quelques mots&nbsp;: je reviens vers toi rapidement.</p>
+            <ContactForm />
+          </div>
+
+          <div className="flex flex-col gap-5">
+            <div id="rdv" className="card relative overflow-hidden p-7">
+              <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-bronze" />
+              <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-bronze/[0.12] text-bronze">
+                <Icon name="calendar" className="h-6 w-6" />
+              </span>
+              <h2 className="mb-2 font-outfit text-lg font-semibold text-white">Réserve un créneau</h2>
+              <p className="mb-5 text-sm leading-relaxed text-txt-secondary">
+                30 minutes pour parler de ton projet, en visio ou par téléphone. Gratuit, sans engagement, sans jargon.
+              </p>
+              <a href={site.calendlyUrl} target="_blank" rel="noopener noreferrer" className="btn-bronze w-full" data-track="calendly">
+                Choisir un créneau
+                <Icon name="arrow-up-right" className="h-4 w-4" />
+              </a>
             </div>
 
-            <div className="flex flex-col gap-5">
-              <div className="bg-white/[0.03] border border-bord rounded-2xl p-7">
-                <p className="font-outfit text-sm font-semibold tracking-[2px] uppercase text-txt-muted mb-5">Coordonnées</p>
-                <div className="space-y-5">
-                  <div className="flex items-start gap-3.5">
-                    <div className="w-10 h-10 rounded-[10px] bg-emerald-b/[0.12] flex items-center justify-center text-lg shrink-0">✉</div>
-                    <div>
-                      <span className="text-xs text-txt-muted tracking-wide">Email</span>
-                      <a href="mailto:babferrer@icloud.com" className="block text-[15px] text-emerald-b font-medium hover:underline">babferrer@icloud.com</a>
-                    </div>
+            <div className="card p-7">
+              <h2 className="mb-5 font-outfit text-sm font-semibold uppercase tracking-[2px] text-txt-primary">Coordonnées</h2>
+              <ul className="space-y-5">
+                <li className="flex items-start gap-3.5">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-emerald-b/[0.12] text-emerald-b">
+                    <Icon name="mail" className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <span className="text-xs tracking-wide text-txt-muted">Email</span>
+                    <a href={`mailto:${site.email}`} className="block text-[15px] font-medium text-emerald-b hover:underline" data-track="email">
+                      {site.email}
+                    </a>
                   </div>
-                  <div className="flex items-start gap-3.5">
-                    <div className="w-10 h-10 rounded-[10px] bg-bronze/10 flex items-center justify-center text-lg shrink-0">☎</div>
-                    <div>
-                      <span className="text-xs text-txt-muted tracking-wide">Téléphone</span>
-                      <span className="block text-[15px] text-txt-primary font-medium">Sur demande</span>
-                      <span className="text-xs text-txt-muted italic">Communiqué après un premier échange</span>
-                    </div>
+                </li>
+                <li className="flex items-start gap-3.5">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-bronze/[0.12] text-bronze">
+                    <Icon name="phone" className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <span className="text-xs tracking-wide text-txt-muted">Téléphone</span>
+                    {site.phone ? (
+                      <a href={telLink()} className="block text-[15px] font-medium text-txt-primary hover:text-white" data-track="phone">
+                        {formatPhone()}
+                      </a>
+                    ) : (
+                      <>
+                        <span className="block text-[15px] font-medium text-txt-primary">Sur demande</span>
+                        <span className="text-xs italic text-txt-muted">Communiqué après un premier échange</span>
+                      </>
+                    )}
                   </div>
-                  <div className="flex items-start gap-3.5">
-                    <div className="w-10 h-10 rounded-[10px] bg-emerald-b/[0.12] flex items-center justify-center text-lg shrink-0">◎</div>
-                    <div>
-                      <span className="text-xs text-txt-muted tracking-wide">Disponibilité</span>
-                      <span className="block text-[15px] text-txt-primary font-medium">100% remote</span>
-                      <span className="text-xs text-txt-muted italic">Je travaille avec des clients partout en France</span>
-                    </div>
+                </li>
+                <li className="flex items-start gap-3.5">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-emerald-b/[0.12] text-emerald-b">
+                    <Icon name="map-pin" className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <span className="text-xs tracking-wide text-txt-muted">Zone</span>
+                    <span className="block text-[15px] font-medium text-txt-primary">Montpellier et Hérault</span>
+                    <Link href="/zones-intervention" className="text-xs text-txt-muted underline-offset-2 hover:text-white hover:underline">
+                      En rendez-vous ou en visio, partout en France
+                    </Link>
                   </div>
-                </div>
-              </div>
+                </li>
+              </ul>
+            </div>
 
-              <div className="bg-white/[0.03] border border-bord rounded-2xl p-7 relative overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-[3px] bg-bronze" />
-                <p className="font-outfit text-sm font-semibold tracking-[2px] uppercase text-txt-muted mb-5">Prendre rendez-vous</p>
-                <div className="border border-dashed border-white/10 rounded-xl p-8 text-center bg-white/[0.015]">
-                  <div className="w-12 h-12 rounded-xl bg-bronze/10 flex items-center justify-center text-[22px] mx-auto mb-4">📅</div>
-                  <h3 className="font-outfit text-[17px] font-semibold text-white mb-2">Réserve un créneau</h3>
-                  <p className="text-sm text-txt-secondary leading-relaxed mb-5">30 minutes pour parler de ton projet. Sans engagement, sans jargon.</p>
-                  <a href="https://calendly.com/babferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-[10px] bg-bronze text-[#1a1207] font-semibold text-sm font-dm transition-all hover:brightness-110 hover:-translate-y-0.5">
-                    Choisir un créneau →
-                  </a>
-                  <p className="text-xs text-txt-muted italic mt-3">Appel de 30 min, gratuit et sans engagement</p>
-                </div>
-              </div>
-
-              <div className="bg-white/[0.03] border border-bord rounded-2xl p-5 text-center">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-b/[0.12] border border-emerald-b/20 mb-2.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-b animate-pulse" />
-                  <span className="text-[13px] font-medium text-emerald-b">Disponible pour de nouveaux projets</span>
-                </div>
-                <p className="text-[13px] text-txt-muted">Réponse sous 24h en moyenne</p>
-              </div>
+            <div className="card p-5 text-center">
+              <p className="mb-2.5 inline-flex items-center gap-2 rounded-full border border-emerald-b/25 bg-emerald-b/[0.1] px-4 py-2">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-b" />
+                <span className="text-[13px] font-medium text-emerald-b">Disponible pour de nouveaux projets</span>
+              </p>
+              <p className="text-[13px] text-txt-muted">Réponse sous 24 h en moyenne</p>
             </div>
           </div>
         </div>

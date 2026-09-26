@@ -3,29 +3,152 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    color-scheme: dark;
+    scroll-padding-top: 96px;
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
   body {
     @apply bg-nuit text-txt-secondary font-dm antialiased;
+    text-rendering: optimizeLegibility;
   }
   ::selection {
-    background: rgba(16, 185, 129, 0.25);
+    background: rgba(16, 185, 129, 0.3);
     color: #ffffff;
+  }
+  :focus-visible {
+    outline: 2px solid #10b981;
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
   }
 }
 
 @layer components {
+  .container-b {
+    @apply mx-auto w-full max-w-[1120px] px-5 sm:px-7;
+  }
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-emerald-b focus:px-4 focus:py-2 focus:font-semibold focus:text-[#0a1a10];
+  }
+
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-emerald-b text-[#0a1a10] font-semibold text-[15px] font-dm transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-b px-7 py-3.5 font-dm text-[15px] font-semibold text-[#0a1a10] transition-all duration-200 hover:-translate-y-0.5 hover:brightness-110;
   }
   .btn-secondary {
-    @apply inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-transparent text-txt-primary font-medium text-[15px] font-dm border border-white/[0.12] transition-all duration-200 hover:border-white/25 hover:text-white;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-white/[0.14] bg-white/[0.02] px-7 py-3.5 font-dm text-[15px] font-medium text-txt-primary transition-all duration-200 hover:border-white/30 hover:text-white;
   }
+  .btn-bronze {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-bronze px-7 py-3.5 font-dm text-[15px] font-semibold text-[#1a1207] transition-all duration-200 hover:-translate-y-0.5 hover:brightness-110;
+  }
+  .btn-sm {
+    @apply rounded-lg px-4 py-2.5 text-sm;
+  }
+
   .section-tag {
-    @apply inline-block text-xs tracking-[2.5px] uppercase font-medium mb-3;
+    @apply mb-3 inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[2.5px];
   }
   .section-title {
-    @apply font-outfit text-3xl md:text-4xl font-bold text-white tracking-tight;
+    @apply font-outfit text-3xl font-bold tracking-tight text-white md:text-4xl;
   }
-  .container-b {
-    @apply max-w-[1120px] mx-auto px-7;
+  .h1 {
+    @apply font-outfit text-[34px] font-bold leading-[1.1] tracking-tight text-white sm:text-5xl md:text-[54px];
+  }
+  .lead {
+    @apply text-lg leading-relaxed text-txt-secondary md:text-xl md:leading-relaxed;
+  }
+  .card {
+    @apply rounded-2xl border border-bord bg-white/[0.03];
+  }
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-0.5 hover:border-white/[0.14] hover:bg-white/[0.045];
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[1.5px];
+  }
+  .input {
+    @apply w-full rounded-[10px] border border-white/[0.1] bg-white/[0.04] px-4 py-3.5 font-dm text-[15px] text-txt-primary outline-none transition-all placeholder:text-txt-muted focus:border-emerald-b/60 focus:bg-white/[0.06];
+  }
+  .label {
+    @apply mb-2 block text-[13px] font-medium tracking-wide text-txt-primary;
+  }
+  .input option {
+    background-color: #162233;
+    color: #e2e8f0;
+  }
+
+  /* Fond « grille » futuriste, estompé vers le bas. */
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 35%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 35%, transparent 80%);
+  }
+  .text-gradient {
+    @apply bg-gradient-to-r from-emerald-b via-emerald-300 to-bronze bg-clip-text text-transparent;
+  }
+
+  /* FAQ en <details> natif : accessible et lisible sans JavaScript. */
+  .faq-item summary {
+    list-style: none;
+  }
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-item[open] .faq-chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Contenu des articles. */
+  .prose .table-wrap {
+    @apply my-8 overflow-x-auto rounded-xl border border-bord;
+  }
+  .prose .table-wrap table {
+    @apply my-0 min-w-[560px] text-[15px];
+  }
+  .prose .table-wrap th,
+  .prose .table-wrap td {
+    @apply px-4 py-3;
+  }
+  .prose .table-wrap thead {
+    @apply bg-white/[0.04];
+  }
+  .prose h2,
+  .prose h3 {
+    @apply font-outfit tracking-tight;
+  }
+  .prose .heading-anchor {
+    @apply ml-2 text-emerald-b no-underline opacity-0 transition-opacity;
+  }
+  .prose h2:hover .heading-anchor,
+  .prose h3:hover .heading-anchor {
+    @apply opacity-60;
+  }
+  .prose a {
+    @apply underline decoration-emerald-b/40 underline-offset-[3px] hover:decoration-emerald-b;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

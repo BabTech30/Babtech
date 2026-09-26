@@ -1,114 +1,169 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { CtaSection } from '@/components/CtaSection'
+import { Icon, type IconName } from '@/components/Icon'
+import { JsonLd } from '@/components/JsonLd'
+import { PageHero } from '@/components/PageHero'
+import { ProcessSteps } from '@/components/ProcessSteps'
+import { graph, ids, webPageNode } from '@/lib/schema'
+import { pageMetadata } from '@/lib/seo'
+import { site } from '@/lib/site'
+import { fr } from '@/lib/typography'
 
-export const metadata: Metadata = {
-  title: 'À propos — Bastien, entrepreneur devenu freelance digital',
-  description: "14 ans d'entrepreneuriat dans le BTP, patron à 22 ans. Aujourd'hui, je crée des outils digitaux pour les artisans et TPE qui veulent avancer.",
-}
+const title = 'Bastien Ferrer, fondateur de BabTech à Montpellier'
+const description =
+  "Patron à 22 ans, 14 ans dans le BTP : Bastien Ferrer a fondé BabTech pour aider les TPE, artisans et commerçants de l'Hérault à réussir leur virage digital."
 
-const steps = [
-  { num: '01', title: 'Écoute', desc: 'On parle de ton business, pas de technologie. Je comprends ton quotidien, tes blocages, tes objectifs.', color: 'text-emerald-b' },
-  { num: '02', title: 'Proposition', desc: 'Je te présente une solution claire, sans jargon. Tu sais exactement ce que tu vas avoir et pourquoi.', color: 'text-bronze' },
-  { num: '03', title: 'Réalisation', desc: "Je construis, tu valides à chaque étape. Pas de mauvaise surprise.", color: 'text-emerald-b' },
-  { num: '04', title: 'Suivi', desc: "Je reste dispo. Ton projet ne s'arrête pas à la livraison. Tu as un interlocuteur, pas un ticket SAV.", color: 'text-bronze' },
-]
+export const metadata: Metadata = pageMetadata({ title, description, path: '/a-propos', og: 'a-propos' })
 
 const milestones = [
-  { number: '22 ans', label: 'Premier business', color: 'text-emerald-b' },
-  { number: '~1M€', label: 'CA atteint', color: 'text-bronze' },
-  { number: '14 ans', label: "D'entrepreneuriat", color: 'text-white' },
+  { value: '22 ans', label: 'Premier business', color: 'text-emerald-b' },
+  { value: '~1 M€', label: "De chiffre d'affaires atteint", color: 'text-bronze' },
+  { value: '14 ans', label: "D'entrepreneuriat", color: 'text-white' },
+  { value: '8', label: 'Salariés encadrés', color: 'text-emerald-b' },
+]
+
+const commitments: { icon: IconName; title: string; desc: string }[] = [
+  { icon: 'target', title: 'Du concret', desc: "Des outils qui marchent le jour où on les livre, pensés pour des gens qui n'ont pas le temps." },
+  { icon: 'shield', title: 'De la transparence', desc: 'Des prix clairs, un devis détaillé et pas de mauvaise surprise : tu sais ce que tu paies et pourquoi.' },
+  { icon: 'map-pin', title: 'De la proximité', desc: "Un interlocuteur unique, basé près de Montpellier, qui répond sous 24 heures." },
+  { icon: 'compass', title: "Un temps d'avance", desc: 'SEO local, GEO, IA générative : je fais le tri dans les nouveautés pour ne garder que ce qui te sert.' },
 ]
 
 export default function APropos() {
   return (
     <>
-      <section className="pt-24 md:pt-28 pb-16 relative">
-        <div className="absolute -top-16 -right-48 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(196,168,125,0.05)_0%,transparent_70%)] pointer-events-none" />
-        <div className="container-b">
-          <div className="max-w-[680px] relative">
-            <span className="section-tag text-bronze">À propos</span>
-            <h1 className="font-outfit text-4xl md:text-5xl font-bold text-white leading-[1.12] tracking-tight mb-5">
-              Derrière BabTech, il y a un parcours d&apos;entrepreneur.
-            </h1>
-            <p className="text-lg text-txt-secondary leading-relaxed">
-              Pas un CV de développeur. Une vraie expérience de terrain — et l&apos;envie de la mettre au service de ceux qui en ont besoin.
-            </p>
-          </div>
-        </div>
-      </section>
+      <JsonLd
+        data={graph(
+          webPageNode({
+            path: '/a-propos',
+            name: title,
+            description,
+            type: 'AboutPage',
+            og: 'a-propos',
+            about: { '@id': ids.founder },
+            mainEntity: { '@id': ids.founder },
+          }),
+        )}
+      />
 
-      <section className="py-20 border-t border-bord">
-        <div className="container-b">
-          <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-16 items-start">
-            <div className="w-full max-w-[280px] aspect-[3/4] rounded-[20px] bg-white/[0.03] border border-dashed border-white/10 flex flex-col items-center justify-center gap-3">
-              <div className="w-14 h-14 rounded-full bg-white/[0.04] border border-bord flex items-center justify-center text-2xl text-txt-muted font-outfit font-bold">B</div>
-              <span className="text-[13px] text-txt-muted italic">Photo à venir</span>
-            </div>
+      <PageHero
+        eyebrow="À propos"
+        title="Derrière BabTech, il y a un parcours d'entrepreneur."
+        lead="Pas un CV de développeur : une vraie expérience de chef d'entreprise, et l'envie de la mettre au service de ceux qui en ont besoin."
+        tone="bronze"
+        crumbs={[{ name: 'À propos', path: '/a-propos' }]}
+      />
+
+      <section className="border-t border-bord py-16 md:py-20" aria-labelledby="parcours">
+        <div className="container-b grid gap-12 md:grid-cols-[300px_1fr] md:items-start">
+          <div className="card relative flex aspect-[4/5] w-full max-w-[300px] flex-col items-center justify-center gap-4 overflow-hidden p-6 text-center">
+            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-emerald-b to-bronze" />
+            <span className="flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-emerald-b/30 to-bronze/30 font-outfit text-5xl font-bold text-white">
+              B
+            </span>
             <div>
-              <h2 className="font-outfit text-sm font-semibold tracking-[2px] uppercase text-bronze mb-5">Mon parcours</h2>
-              <p className="text-[17px] text-txt-secondary leading-[1.85] max-w-[600px] mb-9">
-                <strong className="text-txt-primary font-medium">Patron à 22 ans.</strong> Deux magasins, 8 salariés, le million avant 31 ans. Pendant 14 ans, j&apos;ai vécu la réalité d&apos;un chef d&apos;entreprise dans le BTP — les chantiers, la gestion, les coups durs, les victoires.
-                <br /><br />
-                Aujourd&apos;hui, <strong className="text-txt-primary font-medium">j&apos;ai choisi de mettre cette expérience au service des artisans et TPE</strong> qui veulent passer au digital. Pas depuis un bureau parisien. Depuis le terrain.
+              <p className="font-outfit text-xl font-semibold text-white">{site.founder.name}</p>
+              <p className="text-sm text-txt-secondary">Fondateur de BabTech</p>
+            </div>
+            <p className="flex items-center gap-1.5 text-[13px] text-txt-muted">
+              <Icon name="map-pin" className="h-4 w-4 text-emerald-b" /> Près de Montpellier, Hérault
+            </p>
+          </div>
+          <div>
+            <h2 id="parcours" className="mb-5 font-outfit text-sm font-semibold uppercase tracking-[2px] text-bronze">
+              Mon parcours
+            </h2>
+            <div className="mb-9 max-w-[640px] space-y-5 text-[17px] leading-[1.85] text-txt-secondary">
+              <p>
+                <strong className="font-medium text-txt-primary">Patron à 22 ans.</strong> Deux magasins, huit salariés, près d&apos;un million
+                d&apos;euros de chiffre d&apos;affaires avant 31 ans. Pendant 14 ans, j&apos;ai vécu la réalité d&apos;un chef d&apos;entreprise
+                dans le BTP&nbsp;: les chantiers, la gestion, les coups durs, les victoires.
               </p>
-              <div className="flex flex-wrap gap-4">
-                {milestones.map((m, i) => (
-                  <div key={i} className="bg-white/[0.03] border border-bord rounded-[14px] py-5 px-6 text-center flex-1 min-w-[140px]">
-                    <div className={`font-outfit text-[28px] font-bold leading-none mb-1.5 ${m.color}`}>{m.number}</div>
-                    <div className="text-[13px] text-txt-muted">{m.label}</div>
-                  </div>
-                ))}
-              </div>
+              <p>
+                Aujourd&apos;hui,{' '}
+                <strong className="font-medium text-txt-primary">
+                  j&apos;ai choisi de mettre cette expérience au service des artisans, commerçants et TPE
+                </strong>{' '}
+                qui veulent passer au digital. Pas depuis un bureau parisien&nbsp;: depuis le terrain, près de Montpellier.
+              </p>
+            </div>
+            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {milestones.map((m) => (
+                <li key={m.label} className="card p-5 text-center">
+                  <span className={`block font-outfit text-[26px] font-bold leading-none ${m.color}`}>{fr(m.value)}</span>
+                  <span className="mt-2 block text-[13px] leading-snug text-txt-muted">{m.label}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-bord bg-nuit-light py-16 md:py-20" aria-labelledby="difference">
+        <div className="container-b max-w-[820px]">
+          <h2 id="difference" className="mb-6 font-outfit text-3xl font-bold leading-tight tracking-tight text-white md:text-[34px]">
+            Ce qui me différencie
+          </h2>
+          <p className="mb-7 border-l-[3px] border-bronze pl-6 text-lg leading-[1.85] text-txt-secondary">
+            Quand un artisan me parle de ses galères,{' '}
+            <strong className="font-medium text-txt-primary">je ne fais pas semblant de comprendre&nbsp;: je les ai vécues.</strong>
+          </p>
+          <p className="text-base leading-[1.8] text-txt-secondary">
+            Les devis qui traînent, le site web qu&apos;on repousse toujours, la compta sur Excel, les journées de 12 heures. Je construis des
+            outils digitaux pensés pour des gens qui n&apos;ont pas le temps de se former pendant trois semaines.{' '}
+            <strong className="font-medium text-txt-primary">Des solutions qui marchent le jour où on les livre.</strong>
+          </p>
+        </div>
+      </section>
+
+      <section className="py-16 md:py-20" aria-labelledby="vision">
+        <div className="container-b grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-center">
+          <div>
+            <p className="section-tag text-emerald-b">Ma vision</p>
+            <h2 id="vision" className="section-title mb-5">
+              Le digital et l&apos;IA ne sont pas réservés aux grandes entreprises
+            </h2>
+            <div className="space-y-5 text-[16.5px] leading-[1.8] text-txt-secondary">
+              <p>
+                Les outils qui faisaient la différence pour les grands groupes sont aujourd&apos;hui à la portée d&apos;une TPE&nbsp;: un site qui
+                travaille pour toi, des applications sur mesure, des automatisations, des assistants IA. Encore faut-il savoir lesquels choisir,
+                et comment s&apos;en servir.
+              </p>
+              <p>
+                C&apos;est pour ça que BabTech ne se limite pas à livrer des projets&nbsp;: je veux créer à Montpellier une{' '}
+                <Link href="/communaute" className="text-emerald-b underline decoration-emerald-b/50 underline-offset-2 hover:decoration-emerald-b">
+                  communauté d&apos;entrepreneurs
+                </Link>{' '}
+                qui apprennent ensemble, partagent ce qui marche et se donnent un coup de main.
+              </p>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="py-20 bg-nuit-light border-t border-b border-bord">
-        <div className="container-b">
-          <div className="max-w-[720px]">
-            <h2 className="font-outfit text-3xl md:text-[34px] font-bold text-white tracking-tight mb-6 leading-tight">Ce qui me différencie</h2>
-            <p className="text-lg text-txt-secondary leading-[1.85] pl-6 border-l-[3px] border-bronze mb-7">
-              Quand un artisan me parle de ses galères, <strong className="text-txt-primary font-medium">je ne fais pas semblant de comprendre — je les ai vécues.</strong>
-            </p>
-            <p className="text-base text-txt-secondary leading-[1.8]">
-              Les devis qui traînent, le site web qu&apos;on repousse toujours, la compta sur Excel, les journées à 12h. Je construis des outils digitaux pensés pour des gens qui n&apos;ont pas le temps de se former pendant 3 semaines. <strong className="text-txt-primary font-medium">Des solutions qui marchent le jour où on les livre.</strong>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20">
-        <div className="container-b">
-          <div className="mb-12">
-            <span className="section-tag text-emerald-b">Ma méthode</span>
-            <h2 className="section-title">Simple. Efficace. Sans jargon.</h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {steps.map((s, i) => (
-              <div key={i} className="bg-white/[0.03] border border-bord rounded-2xl p-8 transition-all duration-300 hover:border-white/10 hover:-translate-y-0.5">
-                <div className="font-outfit text-[40px] font-extrabold leading-none mb-4 opacity-[0.12] text-white">{s.num}</div>
-                <div className={`font-outfit text-lg font-semibold mb-2.5 tracking-tight ${s.color}`}>{s.title}</div>
-                <p className="text-sm text-txt-secondary leading-relaxed">{s.desc}</p>
-              </div>
+          <ul className="grid gap-4 sm:grid-cols-2">
+            {commitments.map((c) => (
+              <li key={c.title} className="card p-6">
+                <Icon name={c.icon} className="mb-3 h-6 w-6 text-emerald-b" />
+                <h3 className="mb-2 font-outfit text-lg font-semibold text-white">{c.title}</h3>
+                <p className="text-[14.5px] leading-relaxed text-txt-secondary">{fr(c.desc)}</p>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
-      <section className="py-24 text-center border-t border-bord relative">
-        <div className="absolute bottom-[-100px] left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[radial-gradient(ellipse,rgba(196,168,125,0.05)_0%,transparent_70%)] pointer-events-none" />
-        <div className="container-b relative">
-          <h2 className="section-title mb-3">Envie d&apos;en discuter ?</h2>
-          <p className="text-[17px] text-txt-secondary mb-9 max-w-[520px] mx-auto">
-            Pas besoin de savoir ce que tu veux exactement — c&apos;est mon job de t&apos;aider à y voir clair.
-          </p>
-          <div className="flex flex-wrap gap-3.5 justify-center">
-            <Link href="/contact" className="btn-primary">Prendre rendez-vous →</Link>
-            <Link href="/contact" className="btn-secondary">Me contacter</Link>
+      <section className="border-t border-bord bg-nuit-light py-16 md:py-20" aria-labelledby="methode">
+        <div className="container-b">
+          <div className="mb-10">
+            <p className="section-tag text-emerald-b">Ma méthode</p>
+            <h2 id="methode" className="section-title">
+              Simple. Efficace. Sans jargon.
+            </h2>
           </div>
+          <ProcessSteps />
         </div>
       </section>
+
+      <CtaSection title="Envie d'en discuter ?" text="Pas besoin de savoir exactement ce que tu veux : c'est mon job de t'aider à y voir clair." />
     </>
   )
 }

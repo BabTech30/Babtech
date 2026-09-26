@@ -1,6 +1,19 @@
+# Déploiement Netlify : site 100 % statique (export Next.js dans out/).
+# Le contrôle qualité (liens, SEO, JSON-LD) bloque la mise en ligne en cas d'erreur.
+
 [build]
-  command = "npm run build"
+  command = "npm run build && npm run check"
   publish = "out"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+# Les navigateurs demandent /favicon.ico par défaut.
+[[redirects]]
+  from = "/favicon.ico"
+  to = "/icons/favicon-48.png"
+  status = 200
 
 [[headers]]
   for = "/*"
@@ -8,3 +21,44 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), browsing-topics=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+# Fichiers versionnés par Next.js : cache long.
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/og/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/icons/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# Fichiers pour les assistants IA : lisibles par les robots, mais pas affichés dans les résultats Google.
+[[headers]]
+  for = "/llms.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/llms-full.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/blog/rss.xml"
+  [headers.values]
+    Content-Type = "application/rss+xml; charset=utf-8"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json; charset=utf-8"

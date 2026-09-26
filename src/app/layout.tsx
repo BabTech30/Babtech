@@ -1,67 +1,87 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
+import localFont from 'next/font/local'
 import './globals.css'
-import Header from '@/components/Header'
+import { Analytics } from '@/components/Analytics'
 import Footer from '@/components/Footer'
+import Header from '@/components/Header'
+import { JsonLd } from '@/components/JsonLd'
+import { founderNode, graph, organizationNode, websiteNode } from '@/lib/schema'
+import { absoluteUrl, site, SITE_URL } from '@/lib/site'
+
+const outfit = localFont({
+  src: '../fonts/outfit-latin-wght-normal.woff2',
+  weight: '100 900',
+  variable: '--font-outfit',
+  display: 'swap',
+})
+
+const dmSans = localFont({
+  src: [
+    { path: '../fonts/dm-sans-latin-wght-normal.woff2', weight: '100 1000', style: 'normal' },
+    { path: '../fonts/dm-sans-latin-wght-italic.woff2', weight: '100 1000', style: 'italic' },
+  ],
+  variable: '--font-dm',
+  display: 'swap',
+})
+
+const verification = {
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } : {}),
+  ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+    ? { other: { 'msvalidate.01': process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION } }
+    : {}),
+}
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: 'BabTech — Solutions digitales pour commerces et TPE',
+    default: 'BabTech — Sites web, applications métier et IA à Montpellier',
     template: '%s | BabTech',
   },
-  description: 'Sites vitrines, outils métier, automatisations IA. Bastien, ancien entrepreneur BTP, crée le digital qui fait tourner ton business.',
-  metadataBase: new URL('https://babtech.fr'),
-  openGraph: {
-    title: 'BabTech — Le digital qui fait tourner ton business',
-    description: 'Solutions digitales sur mesure pour commerces, artisans et TPE. Par un ancien entrepreneur qui connaît ta réalité.',
-    url: 'https://babtech.fr',
-    siteName: 'BabTech',
-    locale: 'fr_FR',
-    type: 'website',
-  },
+  description: site.shortDescription,
+  applicationName: site.name,
+  authors: [{ name: site.founder.name, url: absoluteUrl('/a-propos') }],
+  creator: site.founder.name,
+  publisher: site.name,
+  category: 'technology',
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true },
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1, 'max-video-preview': -1 },
   },
-  icons: { icon: '/favicon.svg' },
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icons/favicon-48.png', sizes: '48x48', type: 'image/png' },
+    ],
+    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180' }],
+  },
+  verification,
+  other: {
+    'geo.region': 'FR-34',
+    'geo.placename': 'Montpellier',
+  },
 }
 
-const schemaOrg = {
-  '@context': 'https://schema.org',
-  '@type': ['ProfessionalService', 'Organization'],
-  name: 'BabTech',
-  description: 'Solutions digitales sur mesure pour commerces, artisans et TPE. Sites vitrines, outils métier, automatisations IA.',
-  url: 'https://babtech.fr',
-  email: 'babferrer@icloud.com',
-  founder: {
-    '@type': 'Person',
-    name: 'Bastien',
-    jobTitle: 'Freelance digital',
-    description: 'Ancien entrepreneur BTP (14 ans), reconverti dans le digital pour aider les artisans et TPE.',
-  },
-  areaServed: { '@type': 'Country', name: 'France' },
-  serviceType: ['Site vitrine', 'Application web', 'Automatisation IA', 'SEO local'],
-  priceRange: '$$',
-  knowsAbout: ['développement web', 'PWA', 'automatisation n8n', 'SEO local', 'outils digitaux TPE', 'QR menu restaurant'],
-  sameAs: [],
+export const viewport: Viewport = {
+  themeColor: '#0f1923',
+  colorScheme: 'dark',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
+    <html lang="fr" className={`${outfit.variable} ${dmSans.variable}`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
-        />
+        <link rel="alternate" type="application/rss+xml" title="Le blog BabTech" href="/blog/rss.xml" />
+        <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt" />
       </head>
-      <body className="min-h-screen flex flex-col">
+      <body className="flex min-h-screen flex-col">
+        <JsonLd data={graph(organizationNode(), founderNode(), websiteNode())} />
         <Header />
-        <main className="flex-1">{children}</main>
+        <main id="contenu" className="flex-1">
+          {children}
+        </main>
         <Footer />
+        <Analytics />
       </body>
     </html>
   )
