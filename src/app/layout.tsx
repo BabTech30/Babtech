@@ -5,6 +5,7 @@ import { Analytics } from '@/components/Analytics'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import { JsonLd } from '@/components/JsonLd'
+import { PublicOnly } from '@/components/PublicOnly'
 import { founderNode, graph, organizationNode, websiteNode } from '@/lib/schema'
 import { absoluteUrl, site, SITE_URL } from '@/lib/site'
 
@@ -76,13 +77,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt" />
       </head>
       <body className="flex min-h-screen flex-col">
-        <JsonLd data={graph(organizationNode(), founderNode(), websiteNode())} />
-        <Header />
+        <PublicOnly>
+          <JsonLd data={graph(organizationNode(), founderNode(), websiteNode())} />
+          <Header />
+        </PublicOnly>
         <main id="contenu" className="flex-1">
           {children}
         </main>
-        <Footer />
-        <Analytics />
+        <PublicOnly>
+          <Footer />
+          <Analytics />
+        </PublicOnly>
       </body>
     </html>
   )

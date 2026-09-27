@@ -4,18 +4,27 @@ Site vitrine + blog de BabTech (studio digital près de Montpellier). Next.js 16
 React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `docs/` pour la stratégie.
 
 ## Avant de pousser
-- `npm run verify` doit passer (TypeScript, ESLint, build, puis `scripts/check-build.mjs` qui exporte une copie statique
-  dans `out/` et contrôle chaque page). Le workflow GitHub « Contrôle qualité » lance la même chose à chaque envoi.
-- Mise en ligne : Hostinger (application Node.js, Node 22) est relié à la branche `main` et redéploie à chaque mise à
-  jour (`npm run build`, puis serveur Next.js « standalone » imposé par Hostinger). Ne fusionner dans `main` qu'avec
-  l'accord explicite de l'utilisateur.
+- `npm run verify` doit passer (TypeScript, ESLint, build, puis `scripts/check-build.mjs` qui démarre le site construit
+  et contrôle chaque page ainsi que la protection de `/admin`). Le workflow GitHub « Contrôle qualité » lance la même
+  chose à chaque envoi.
+- Mise en ligne : Hostinger (application Node.js, Node 22) construit la branche `main` (`npm run build`, puis serveur
+  Next.js « standalone » imposé par Hostinger). Les modifications validées vont dans `main` ; l'utilisateur déploie
+  ensuite lui-même, à la main, depuis hPanel.
 - Domaine défini par `DEFAULT_SITE_URL` dans `src/lib/site.ts`. `trailingSlash: true` : toutes les URL de pages finissent
   par « / » — construire les URL avec `absoluteUrl()` / `withTrailingSlash()` (`src/lib/site.ts`). En-têtes de sécurité,
   redirection www → domaine principal et favicon : `next.config.js`.
 - Ne pas créer de route sous `/icons/` : ce chemin est réservé par beaucoup de serveurs Apache/LiteSpeed (d'où `/brand/`).
-- Toutes les pages doivent rester prérendues (le contrôle qualité les exporte en statique) : pas d'API routes, middleware
-  ni ISR sans décision explicite (future plateforme communauté). Les routes générées (sitemap, robots, llms.txt, RSS,
-  images OG) utilisent `dynamic = 'force-static'`, les routes dynamiques `dynamicParams = false`.
+- Pages publiques : toutes prérendues, sans API routes, middleware ni ISR. Les routes générées (sitemap, robots, llms.txt,
+  RSS, images OG) utilisent `dynamic = 'force-static'`, les routes dynamiques `dynamicParams = false`.
+
+## Espace /admin (tableau de bord privé)
+- Seule partie dynamique du site : connexion, réglages, chiffres du mois (`src/app/admin`, `src/lib/admin`). Jamais
+  indexée (noindex, robots.txt), jamais liée depuis le site public, absente du sitemap.
+- Identifiant et mot de passe de départ : variables `ADMIN_USERNAME` / `ADMIN_PASSWORD` dans hPanel. Ne jamais écrire
+  d'identifiant, de mot de passe ou de secret dans le code : le dépôt GitHub est public.
+- Les coches, les chiffres et le mot de passe changé (haché) de l'utilisateur sont dans un fichier JSON sur le serveur,
+  jamais dans le dépôt. Ce que Claude tient à jour est dans `src/data/admin.ts` : cocher ses propres tâches, ajouter
+  les décisions prises, mettre à jour la santé du site et `adminUpdatedAt` à chaque étape.
 
 ## Contenus
 - Français, **tutoiement**, ton direct et concret, sans jargon (expliquer chaque terme technique en une phrase).

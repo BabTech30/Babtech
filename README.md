@@ -7,7 +7,7 @@ Le site est pensé pour être trouvé **sur Google** (SEO local) **et dans les r
 Gemini, Claude, Copilot…), grâce au GEO (*Generative Engine Optimization*).
 
 - Stack : **Next.js 16** (App Router, export statique), **React 19**, **Tailwind CSS 3**, **TypeScript**
-- Hébergement : **Hostinger**, application Node.js reliée à la branche `main` (mise en ligne automatique)
+- Hébergement : **Hostinger**, application Node.js qui construit la branche `main` (déploiement depuis hPanel)
 - Formulaires : **Formspree** · Rendez-vous : **Calendly** · Mesure d'audience optionnelle et sans cookie : **Plausible** ou **Umami**
 
 ## Démarrer
@@ -22,7 +22,7 @@ npm run dev        # http://localhost:3000
 | `npm run dev` | Serveur de développement |
 | `npm run build` | Construit le site, comme Hostinger |
 | `npm start` | Lance le site construit, comme en production (après `npm run build`) |
-| `npm run check` | Contrôle qualité : exporte une copie statique dans `out/` et vérifie liens, balises SEO, JSON-LD, sitemap… |
+| `npm run check` | Contrôle qualité : démarre le site construit et vérifie liens, balises SEO, JSON-LD, sitemap et protection de `/admin` |
 | `npm run verify` | Tout d'un coup : TypeScript + ESLint + build + contrôle |
 | `npm run indexnow` | Signale les pages à Bing & co. après une mise en ligne (voir `docs/DEPLOIEMENT.md`) |
 
@@ -38,6 +38,7 @@ npm run dev        # http://localhost:3000
 | La communauté (formats, thèmes, étapes, FAQ) | `src/data/community.ts` |
 | Les catégories du blog | `src/data/blog.ts` |
 | Un article | `content/blog/<slug>.md` |
+| Le tableau de bord `/admin` (étapes, tâches, décisions, santé du site) | `src/data/admin.ts` |
 
 Tout le reste (sitemap, robots.txt, llms.txt, flux RSS, images de partage, données structurées Schema.org) est **généré
 automatiquement** à partir de ces fichiers.
@@ -76,9 +77,15 @@ et un appel à l'action vers `/contact` ou `/communaute`.
 
 ## Déployer
 
-Hostinger (application Node.js) est relié à la branche **`main`** : chaque mise à jour de `main` est construite et mise en
-ligne automatiquement. On travaille donc sur une branche, on vérifie que le **Contrôle qualité** GitHub est vert, puis on
-fusionne dans `main`. Réglages et dépannage : **[`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md)**.
+Hostinger (application Node.js) construit la branche **`main`**. Les modifications validées y sont versées, puis tu
+cliques sur **Déployer** dans hPanel. Le **Contrôle qualité** GitHub doit être vert avant. Réglages et dépannage :
+**[`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md)**.
+
+## Tableau de bord privé
+
+`https://babtech.fr/admin/` : avancement du projet, checklist, santé du site, chiffres du mois (demandes de devis,
+contrats, Google…), zones visées et décisions. Connexion par identifiant et mot de passe (variables `ADMIN_USERNAME` et
+`ADMIN_PASSWORD` dans hPanel), mot de passe modifiable dans **Réglages**.
 
 ## Documentation
 
@@ -93,7 +100,7 @@ content/blog/          Articles en Markdown
 public/                Fichiers servis tels quels (favicon, vérification Google, clé IndexNow)
 scripts/               check-build.mjs (contrôle qualité), postbuild.mjs (serveur Node.js autonome), indexnow.mjs
 .github/workflows/     ci.yml (contrôle qualité à chaque envoi sur GitHub)
-src/app/               Pages (App Router) + routes générées : sitemap, robots, llms.txt, RSS, images OG, icônes
+src/app/               Pages (App Router) + routes générées : sitemap, robots, llms.txt, RSS, images OG, icônes ; admin/ (espace privé)
 src/components/        Composants d'interface (Header, Footer, formulaires, FAQ, cartes…)
 src/data/              Contenus structurés (services, villes, FAQ, communauté…)
 src/fonts/             Polices auto-hébergées (Outfit, DM Sans — licence OFL)

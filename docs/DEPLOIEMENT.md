@@ -2,14 +2,14 @@
 
 ## Comment ça marche
 
-Hostinger est relié à la branche **`main`** du dépôt GitHub. À chaque mise à jour de `main`, Hostinger récupère le code,
-installe les paquets, construit le site (`npm run build`) et le redémarre : **ce qui est dans `main` est en ligne**.
+Hostinger construit la branche **`main`** du dépôt GitHub : il récupère le code, installe les paquets, construit le
+site (`npm run build`) et le redémarre.
 
 Pour modifier le site :
-1. les modifications sont faites sur une branche de travail ;
+1. Claude fait les modifications et les envoie sur GitHub ;
 2. GitHub lance le **Contrôle qualité** (onglet **Actions**) : il doit être vert ;
-3. tu valides (« ok main »), la branche est fusionnée dans `main` et Hostinger met le site à jour en quelques minutes ;
-4. tu vérifies sur `https://babtech.fr`.
+3. les modifications sont versées dans `main` ;
+4. tu cliques sur **Déployer** dans hPanel, puis tu vérifies sur `https://babtech.fr`.
 
 ## Réglages de l'application Node.js (hPanel, une seule fois)
 
@@ -23,11 +23,29 @@ Pour modifier le site :
 | Domaine | `babtech.fr` |
 
 Hostinger construit les sites Next.js en mode serveur (« standalone ») : c'est prévu, rien à changer dans le code.
-Toutes les pages sont préparées à l'avance au moment du build, le serveur n'a qu'à les envoyer : le site reste très rapide.
+Les pages publiques sont préparées à l'avance au moment du build : le site reste très rapide.
 
-**Variables d'environnement** (facultatives) : dans les réglages de l'application, puis redéployer. Par exemple
-`NEXT_PUBLIC_PHONE` (`+33…`), `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` (mesure d'audience sans cookie),
-`NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`. La liste complète est dans `.env.example`.
+**Variables d'environnement** (réglages de l'application, puis redéployer) :
+
+| Variable | Rôle |
+|---|---|
+| `ADMIN_USERNAME` | Identifiant de l'espace `/admin` |
+| `ADMIN_PASSWORD` | Mot de passe de départ de `/admin`, à remplacer ensuite dans **Réglages** |
+| `ADMIN_DATA_DIR` | Facultatif : dossier des données de `/admin` (par défaut `~/.babtech-admin`, hors du dossier du site) |
+| `NEXT_PUBLIC_PHONE`, `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`… | Facultatives : téléphone, mesure d'audience… (liste dans `.env.example`) |
+
+Ces valeurs ne s'écrivent que dans hPanel, jamais dans le code : le dépôt GitHub est public.
+
+## Tableau de bord `/admin`
+
+`https://babtech.fr/admin/` : connexion avec l'identifiant et le mot de passe ci-dessus.
+- **Tableau de bord** : avancement, prochaine action, checklist (tu coches tes tâches, Claude tient les siennes), santé
+  du site, chiffres du mois à saisir chaque début de mois, zones visées, décisions prises, liens utiles.
+- **Réglages** : changer le mot de passe (il remplace alors celui de hPanel et déconnecte les autres appareils),
+  télécharger une sauvegarde de tes données.
+- Après 5 mots de passe faux, la connexion est bloquée 15 minutes.
+- Tes coches, tes chiffres et ton mot de passe (sous une forme illisible) sont enregistrés sur le serveur, hors du dossier
+  du site : un déploiement ne les efface pas. Si **Réglages** signale le contraire, renseigne `ADMIN_DATA_DIR`.
 
 ## Si une mise à jour n'apparaît pas
 

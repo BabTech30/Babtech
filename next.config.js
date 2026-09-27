@@ -1,12 +1,8 @@
 /**
  * En ligne : Hostinger (application Node.js) construit le site avec `npm run build` et le sert en mode serveur
- * (Hostinger ajoute lui-même `output: 'standalone'`). Les pages restent toutes prérendues au build.
- *
- * Contrôle qualité : `npm run check` construit une copie statique du site dans out/ (BABTECH_STATIC_EXPORT=1)
- * pour vérifier chaque page (liens, balises SEO, données structurées…).
+ * (Hostinger ajoute lui-même `output: 'standalone'`). Les pages publiques sont toutes prérendues au build ;
+ * seul l'espace privé /admin est rendu à la demande.
  */
-const staticExport = process.env.BABTECH_STATIC_EXPORT === '1'
-
 const securityHeaders = [
   { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
@@ -15,14 +11,21 @@ const securityHeaders = [
   { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
 ]
 
-/** Réglages du serveur (ignorés par l'export statique). */
-const serverRules = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Toutes les URL de pages finissent par « / » (ex. /services/) : construire les liens avec absoluteUrl().
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
+  },
   poweredByHeader: false,
   async headers() {
     return [
       { source: '/:path*', headers: securityHeaders },
       // Fichiers pour les assistants IA : lisibles par les robots, absents des résultats Google.
       { source: '/:file(llms|llms-full).txt', headers: [{ key: 'X-Robots-Tag', value: 'noindex' }] },
+      // Espace privé : jamais indexé.
+      { source: '/admin/:path*', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] },
     ]
   },
   async redirects() {
@@ -40,16 +43,6 @@ const serverRules = {
     // Les navigateurs demandent /favicon.ico par défaut.
     return [{ source: '/favicon.ico', destination: '/brand/favicon-48.png' }]
   },
-}
-
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  // Toutes les URL de pages finissent par « / » (ex. /services/) : construire les liens avec absoluteUrl().
-  trailingSlash: true,
-  images: {
-    unoptimized: true,
-  },
-  ...(staticExport ? { output: 'export' } : serverRules),
 }
 
 module.exports = nextConfig

@@ -33,8 +33,8 @@ const SEARCH_AND_AI_BOTS = [
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      { userAgent: '*', allow: '/' },
-      { userAgent: SEARCH_AND_AI_BOTS, allow: '/' },
+      { userAgent: '*', allow: '/', disallow: '/admin/' },
+      { userAgent: SEARCH_AND_AI_BOTS, allow: '/', disallow: '/admin/' },
     ],
     sitemap: absoluteUrl('/sitemap.xml'),
   }
