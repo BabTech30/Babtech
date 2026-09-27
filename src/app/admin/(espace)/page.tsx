@@ -12,9 +12,11 @@ import {
   type AdminTask,
   type Owner,
 } from '@/data/admin'
+import { qrCodes } from '@/data/qr'
 import { zones } from '@/data/zones'
 import { requireAdmin } from '@/lib/admin/auth'
 import { currentMonth, formatDay, formatMonth, formatNumber } from '@/lib/admin/format'
+import { scanStats } from '@/lib/admin/scans'
 import { type Kpi, readStore, storageInfo } from '@/lib/admin/store'
 import { fr } from '@/lib/typography'
 import { toggleTask } from '../actions'
@@ -234,6 +236,26 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                 ))}
               </ol>
             </div>
+          </section>
+
+          <section className={panel} aria-labelledby="qr-title">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 id="qr-title" className={h2}>
+                QR codes
+              </h2>
+              <Link href="/admin/partager/" className="text-sm font-medium text-emerald-300 hover:underline">
+                Imprimer, partager →
+              </Link>
+            </div>
+            <p className="mt-1 text-xs text-txt-muted">Scans en {formatMonth(currentMonth())}</p>
+            <ul className="mt-2">
+              {qrCodes.map((q) => (
+                <li key={q.code} className="flex items-baseline justify-between gap-3 border-b border-bord py-2 last:border-0">
+                  <span className="text-txt-primary">{q.label}</span>
+                  <span className="font-outfit text-lg font-semibold tabular-nums text-white">{formatNumber(scanStats(store.scans, q.code).month)}</span>
+                </li>
+              ))}
+            </ul>
           </section>
 
           <section className={panel} aria-labelledby="links-title">

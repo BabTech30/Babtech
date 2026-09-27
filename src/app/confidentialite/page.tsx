@@ -41,6 +41,10 @@ export default function Confidentialite() {
             Avant ton clic, la page ne contacte pas YouTube.
           </li>
           <li>
+            <strong>QR codes&nbsp;:</strong> les QR codes de {site.name} passent par une adresse courte ({new URL(site.url).host}/q/…) qui compte le
+            nombre de scans par mois, sans rien enregistrer sur la personne qui scanne.
+          </li>
+          <li>
             <strong>Navigation&nbsp;:</strong> le site ne dépose aucun cookie publicitaire ni traceur. Si une mesure d&apos;audience est activée,
             elle utilise un outil sans cookie (Plausible ou Umami) qui produit des statistiques agrégées et anonymes. L&apos;hébergeur conserve
             des journaux techniques (adresse IP, navigateur) pour assurer la sécurité du service.

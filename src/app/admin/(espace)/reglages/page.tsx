@@ -57,7 +57,8 @@ export default async function SettingsPage() {
         </h2>
         {storage ? (
           <p className="mt-2 text-sm text-txt-secondary">
-            Tes coches, tes chiffres du mois et ton mot de passe (sous une forme illisible, jamais en clair) sont enregistrés sur le serveur, dans{' '}
+            Tes coches, tes chiffres du mois, les scans des QR codes et ton mot de passe (sous une forme illisible, jamais en clair) sont
+            enregistrés sur le serveur, dans{' '}
             <code className="break-all text-txt-primary">{storage.dir}</code>
             {storage.persistent ? (
               <>&nbsp;: en dehors du dossier du site, ils ne sont pas touchés par un déploiement.</>

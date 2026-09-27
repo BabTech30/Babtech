@@ -6,9 +6,9 @@ import path from 'node:path'
 import type { MetricKey } from '@/data/admin'
 
 /**
- * Données enregistrées par l'espace /admin : tes coches, tes chiffres du mois et ton mot de passe
- * (haché). Un simple fichier JSON sur le serveur, rangé hors du dossier du site pour survivre aux
- * déploiements : ADMIN_DATA_DIR s'il est défini, sinon ~/.babtech-admin.
+ * Données enregistrées par l'espace /admin : tes coches, tes chiffres du mois, les scans des QR codes
+ * et ton mot de passe (haché). Un simple fichier JSON sur le serveur, rangé hors du dossier du site
+ * pour survivre aux déploiements : ADMIN_DATA_DIR s'il est défini, sinon ~/.babtech-admin.
  */
 export type Kpi = { month: string; note?: string; updatedAt: string } & Partial<Record<MetricKey, number>>
 
@@ -19,10 +19,12 @@ export type AdminStore = {
   sessionSecret?: string
   tasks: Record<string, { done: boolean; at: string }>
   kpis: Record<string, Kpi>
+  /** Scans des QR codes par mois (AAAA-MM) puis par code : de simples compteurs, aucune donnée personnelle. */
+  scans: Record<string, Record<string, number>>
 }
 
 const FILE = 'admin.json'
-const empty = (): AdminStore => ({ sessionVersion: 1, tasks: {}, kpis: {} })
+const empty = (): AdminStore => ({ sessionVersion: 1, tasks: {}, kpis: {}, scans: {} })
 
 type Location = { dir: string; persistent: boolean }
 let location: Promise<Location | null> | null = null
@@ -58,7 +60,7 @@ async function readFrom(loc: Location): Promise<AdminStore> {
     throw error
   }
   const data = JSON.parse(raw) as Partial<AdminStore>
-  return { ...empty(), ...data, tasks: data.tasks ?? {}, kpis: data.kpis ?? {} }
+  return { ...empty(), ...data, tasks: data.tasks ?? {}, kpis: data.kpis ?? {}, scans: data.scans ?? {} }
 }
 
 /** Lecture pour l'affichage : un fichier absent ou illisible donne des données vides. */

@@ -6,11 +6,12 @@
  * celles qu'elles relient. Vérifie : fichiers SEO/GEO présents, balises essentielles (title,
  * description, canonical, h1 unique, Open Graph), JSON-LD valide, liens internes, images et vidéos
  * qui répondent, URL de pages cohérentes (« / » final), titres et descriptions en double, page 404,
- * redirection www, pages partagées par QR code (hors Google), fiche contact .vcf, et l'espace
- * /admin : protégé par la connexion, jamais indexé, absent du sitemap.
+ * redirection www, pages partagées par QR code (hors Google), fiche contact .vcf, adresses courtes
+ * des QR codes (redirection et compteur de scans), et l'espace /admin : protégé par la connexion,
+ * jamais indexé, absent du sitemap.
  */
 import { spawn } from 'node:child_process'
-import { existsSync, mkdtempSync, rmSync } from 'node:fs'
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import http from 'node:http'
 import { createRequire } from 'node:module'
 import net from 'node:net'
@@ -138,6 +139,7 @@ const robots = (await get('/robots.txt')).body
 if (!robots.includes(`Sitemap: ${siteUrl}/sitemap.xml`)) errors.push('robots.txt : ligne Sitemap absente ou incorrecte')
 if (/Disallow:\s*\/\s*$/m.test(robots)) errors.push('robots.txt : un « Disallow: / » bloque le site')
 if (!/Disallow:\s*\/admin\//.test(robots)) errors.push('robots.txt : /admin/ devrait être exclu')
+if (!/Disallow:\s*\/q\//.test(robots)) errors.push('robots.txt : /q/ (adresses des QR codes) devrait être exclu')
 
 for (const loc of locs) {
   const { pathname } = new URL(loc)
@@ -272,6 +274,26 @@ for (const vcard of vcards) {
   if (!(res.headers.get('x-robots-tag') ?? '').includes('noindex')) errors.push(`${vcard} : en-tête X-Robots-Tag noindex absent`)
 }
 
+/* ---------- QR codes : redirection et compteur de scans ---------- */
+const phone = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
+const scanOf = (method, userAgent) => fetch(`${base}/q/site/`, { method, redirect: 'manual', headers: { 'User-Agent': userAgent } })
+const scanned = await scanOf('GET', phone)
+if (scanned.status !== 302 || scanned.headers.get('location') !== '/') {
+  errors.push(`/q/site/ : redirection vers / attendue (reçu ${scanned.status} ${scanned.headers.get('location') ?? ''})`)
+}
+if (!(scanned.headers.get('cache-control') ?? '').includes('no-store')) errors.push('/q/site/ : la redirection ne doit pas être mise en cache')
+await scanOf('GET', 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)')
+await scanOf('HEAD', phone)
+const month = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit' }).format(new Date())
+let counted
+try {
+  counted = JSON.parse(readFileSync(path.join(dataDir, 'admin.json'), 'utf8')).scans?.[month]?.site
+} catch {
+  counted = undefined
+}
+if (counted !== 1) errors.push(`/q/site/ : 1 scan attendu (le robot et la requête HEAD ne comptent pas), ${counted ?? 0} enregistré(s)`)
+if ((await get('/q/inconnu/')).status !== 404) errors.push('/q/inconnu/ : réponse 404 attendue')
+
 /* ---------- Comportements du serveur ---------- */
 const missing = await get('/page-inexistante-controle/')
 if (missing.status !== 404) errors.push(`Page inexistante : réponse ${missing.status} (404 attendu)`)
@@ -285,7 +307,7 @@ const admin = await get('/admin/')
 if (![302, 303, 307].includes(admin.status) || !admin.location.includes('/admin/connexion/')) {
   errors.push(`/admin/ sans connexion : redirection vers /admin/connexion/ attendue (reçu ${admin.status} ${admin.location})`)
 }
-for (const privatePath of ['/admin/reglages/', '/admin/export/']) {
+for (const privatePath of ['/admin/reglages/', '/admin/partager/', '/admin/export/', '/admin/qr/site.png']) {
   const res = await get(privatePath)
   if (res.status === 200) errors.push(`${privatePath} accessible sans connexion`)
 }

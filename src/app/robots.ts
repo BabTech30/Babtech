@@ -33,8 +33,9 @@ const SEARCH_AND_AI_BOTS = [
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      { userAgent: '*', allow: '/', disallow: '/admin/' },
-      { userAgent: SEARCH_AND_AI_BOTS, allow: '/', disallow: '/admin/' },
+      // /admin/ : espace privé ; /q/ : adresses courtes des QR codes (compteur de scans).
+      { userAgent: '*', allow: '/', disallow: ['/admin/', '/q/'] },
+      { userAgent: SEARCH_AND_AI_BOTS, allow: '/', disallow: ['/admin/', '/q/'] },
     ],
     sitemap: absoluteUrl('/sitemap.xml'),
   }

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Icon } from '@/components/Icon'
 import { JsonLd } from '@/components/JsonLd'
 import { ShareButton } from '@/components/ShareButton'
+import { qrPath } from '@/data/qr'
 import { qrSvg } from '@/lib/qr'
 import { graph, ids, webPageNode } from '@/lib/schema'
 import { pageMetadata } from '@/lib/seo'
@@ -26,7 +27,8 @@ const actionClass =
 
 export default async function Carte() {
   const url = absoluteUrl('/carte')
-  const qr = await qrSvg(url)
+  // Le QR code passe par l'adresse courte : les scans de la carte sont comptés dans le tableau de bord.
+  const qr = await qrSvg(absoluteUrl(qrPath('carte')))
 
   return (
     <>

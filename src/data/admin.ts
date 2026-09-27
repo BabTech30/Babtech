@@ -143,8 +143,20 @@ export const adminTasks: AdminTask[] = [
     id: 'qr-codes',
     phase: 'launch',
     owner: 'claude',
+    done: true,
     title: 'QR codes et compteur de scans dans ce tableau de bord',
-    detail: 'Un QR code pour la présentation, un pour le site, un pour la carte de visite.',
+    detail: 'Un QR code pour la présentation, un pour le site, un pour la carte de visite : à imprimer depuis « Partager ».',
+    link: '/admin/partager/',
+    linkLabel: 'Partager',
+  },
+  {
+    id: 'qr-print',
+    phase: 'launch',
+    owner: 'toi',
+    title: 'Imprimer tes QR codes',
+    detail: "Après le déploiement : scanne-les d'abord avec ton téléphone, puis ajoute-les à ta carte de visite, tes flyers ou ton véhicule.",
+    link: '/admin/partager/',
+    linkLabel: 'Partager',
   },
   {
     id: 'pwa',
@@ -262,6 +274,10 @@ export const adminDecisions = [
   {
     date: '2026-09-27',
     text: 'Page de présentation (/bastien/) et carte de visite (/carte/) : partagées par lien ou QR code, volontairement hors de Google.',
+  },
+  {
+    date: '2026-09-27',
+    text: 'QR codes : adresses courtes babtech.fr/q/…, qui comptent les scans par mois sans aucune donnée personnelle.',
   },
 ]
 

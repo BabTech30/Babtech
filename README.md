@@ -89,10 +89,14 @@ Deux pages à partager par lien ou par QR code, volontairement absentes de Googl
 (qui tu es, ce que tu fais, ton parcours et un projet) et `https://babtech.fr/carte/` (ta carte de visite, avec le bouton
 « Enregistrer le contact » qui ajoute ta fiche au téléphone, et son propre QR code).
 
+Les QR codes à imprimer sont dans le tableau de bord, rubrique **Partager** : présentation, site et carte de visite. Chacun
+mène à une adresse courte (`/q/presentation/`, `/q/site/`, `/q/carte/`) qui compte les scans du mois, sans aucune donnée
+personnelle, puis redirige vers la page. Pour en ajouter un : `src/data/qr.ts`.
+
 ## Tableau de bord privé
 
 `https://babtech.fr/admin/` : avancement du projet, checklist, santé du site, chiffres du mois (demandes de devis,
-contrats, Google…), zones visées et décisions. Connexion par identifiant et mot de passe (variables `ADMIN_USERNAME` et
+contrats, Google…), scans des QR codes, zones visées et décisions. Connexion par identifiant et mot de passe (variables `ADMIN_USERNAME` et
 `ADMIN_PASSWORD` dans hPanel), mot de passe modifiable dans **Réglages**.
 
 ## Documentation

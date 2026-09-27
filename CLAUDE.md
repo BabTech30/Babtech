@@ -15,14 +15,16 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
   redirection www → domaine principal et favicon : `next.config.js`.
 - Ne pas créer de route sous `/icons/` : ce chemin est réservé par beaucoup de serveurs Apache/LiteSpeed (d'où `/brand/`).
 - Pages publiques : toutes prérendues, sans API routes, middleware ni ISR. Les routes générées (sitemap, robots, llms.txt,
-  RSS, images OG) utilisent `dynamic = 'force-static'`, les routes dynamiques `dynamicParams = false`.
+  RSS, images OG, fiche .vcf) utilisent `dynamic = 'force-static'`, les routes dynamiques `dynamicParams = false`.
+  Seule exception publique : `/q/<code>/` (`src/app/q`), l'adresse courte des QR codes, qui compte le scan puis redirige
+  (codes dans `src/data/qr.ts`, jamais d'adresse déjà imprimée à supprimer ; exclue de robots.txt).
 
 ## Espace /admin (tableau de bord privé)
-- Seule partie dynamique du site : connexion, réglages, chiffres du mois (`src/app/admin`, `src/lib/admin`). Jamais
-  indexée (noindex, robots.txt), jamais liée depuis le site public, absente du sitemap.
+- Partie dynamique du site : connexion, réglages, chiffres du mois, QR codes à partager (`src/app/admin`,
+  `src/lib/admin`). Jamais indexée (noindex, robots.txt), jamais liée depuis le site public, absente du sitemap.
 - Identifiant et mot de passe de départ : variables `ADMIN_USERNAME` / `ADMIN_PASSWORD` dans hPanel. Ne jamais écrire
   d'identifiant, de mot de passe ou de secret dans le code : le dépôt GitHub est public.
-- Les coches, les chiffres et le mot de passe changé (haché) de l'utilisateur sont dans un fichier JSON sur le serveur,
+- Les coches, les chiffres, les scans et le mot de passe changé (haché) de l'utilisateur sont dans un fichier JSON sur le serveur,
   jamais dans le dépôt. Ce que Claude tient à jour est dans `src/data/admin.ts` : cocher ses propres tâches, ajouter
   les décisions prises, mettre à jour la santé du site et `adminUpdatedAt` à chaque étape.
 
