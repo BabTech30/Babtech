@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { site } from '@/lib/site'
+import { formatPhone, site, telLink } from '@/lib/site'
 import { fr } from '@/lib/typography'
 import { Icon } from './Icon'
 
@@ -31,6 +31,14 @@ export function CtaSection({
             Écrire un message
           </Link>
         </div>
+        {site.phone && (
+          <p className="mt-5 text-[15px] text-txt-secondary">
+            Ou appelle directement le{' '}
+            <a href={telLink()} className="font-semibold whitespace-nowrap text-white hover:text-emerald-b" data-track="phone">
+              {formatPhone()}
+            </a>
+          </p>
+        )}
         <p className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[13px] text-txt-muted">
           <span className="inline-flex items-center gap-1.5">
             <Icon name="clock" className="h-4 w-4 text-emerald-b" /> Réponse sous 24 h

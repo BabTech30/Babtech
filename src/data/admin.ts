@@ -56,7 +56,7 @@ export const adminTasks: AdminTask[] = [
     owner: 'claude',
     done: true,
     title: "Ajouter l'offre « site de réservation » pour les locations saisonnières",
-    detail: 'Dès 250 €, tableau de bord 350 €, maintenance dès 35 € par mois : page service, accueil, FAQ, pages des villes.',
+    detail: 'Dès 250 €, tableau de bord en option (+ 350 €), maintenance dès 35 € par mois : page service, accueil, FAQ, pages des villes.',
     link: 'https://babtech.fr/services/site-reservation-location-saisonniere/',
     linkLabel: "Voir l'offre",
   },
@@ -227,8 +227,8 @@ export const adminTasks: AdminTask[] = [
     id: 'legal-info',
     phase: 'legal',
     owner: 'toi',
-    title: 'Envoyer SIRET, adresse et téléphone',
-    detail: "Obligatoires dans les mentions légales. Une domiciliation convient pour l'adresse.",
+    title: 'Envoyer SIRET et adresse',
+    detail: "Obligatoires dans les mentions légales (le téléphone est reçu et affiché). Une domiciliation convient pour l'adresse.",
   },
   {
     id: 'photo',
@@ -278,7 +278,7 @@ export const adminDecisions = [
   { date: '2026-09-27', text: 'Communauté : après la mise en ligne et le référencement local.' },
   {
     date: '2026-09-27',
-    text: 'Nouvelle offre : site de réservation pour 1 à 4 logements ou chambres. Dès 250 €, tableau de bord 350 €, maintenance dès 35 € par mois, personnalisation sur devis.',
+    text: 'Nouvelle offre : site de réservation pour 1 à 4 logements ou chambres. Dès 250 €, tableau de bord en option (+ 350 €), maintenance dès 35 € par mois, personnalisation sur devis.',
   },
   { date: '2026-09-27', text: 'Adresse e-mail affichée sur le site : contact@babtech.fr.' },
   {
@@ -293,6 +293,11 @@ export const adminDecisions = [
     date: '2026-09-27',
     text: "Tableau de bord installable comme une application (ordinateur et téléphone). Rien n'est gardé sur l'appareil : les chiffres viennent toujours du serveur.",
   },
+  {
+    date: '2026-09-27',
+    text: 'Site de réservation : le tableau de bord est une option (+ 350 €). Calendriers synchronisés avec Airbnb et Booking.com par iCal (mise à jour toutes les 2 à 3 heures, pas en temps réel).',
+  },
+  { date: '2026-09-27', text: 'Téléphone affiché sur le site, la carte de visite et les données pour Google : 07 63 51 93 63.' },
 ]
 
 /** Dernière mesure Lighthouse (mobile), mise à jour par Claude. */

@@ -10,7 +10,7 @@ import { getCaseStudy } from '@/data/portfolio'
 import { getService, type ServiceSlug } from '@/data/services'
 import { graph, ids, webPageNode } from '@/lib/schema'
 import { pageMetadata } from '@/lib/seo'
-import { site } from '@/lib/site'
+import { formatPhone, site, telLink } from '@/lib/site'
 import { fr } from '@/lib/typography'
 
 /**
@@ -39,7 +39,7 @@ const offers: { icon: IconName; title: string; text: string; slug: ServiceSlug }
   {
     icon: 'bed',
     title: 'Site de réservation pour ta location',
-    text: "Location type Airbnb, gîte ou chambres d'hôtes : jusqu'à 4 logements, réservation en direct, e-mail de confirmation et tableau de bord.",
+    text: "Location type Airbnb, gîte ou chambres d'hôtes : jusqu'à 4 logements, réservation en direct, e-mail de confirmation, calendriers synchronisés avec Airbnb et Booking.com.",
     slug: 'site-reservation-location-saisonniere',
   },
   {
@@ -113,6 +113,12 @@ export default function Presentation() {
                 <Icon name="calendar" className="h-[18px] w-[18px]" />
                 Réserver un appel gratuit
               </a>
+              {site.phone && (
+                <a href={telLink()} className="btn-secondary" data-track="phone">
+                  <Icon name="phone" className="h-[18px] w-[18px]" />
+                  {formatPhone()}
+                </a>
+              )}
               <Link href="/carte" className="btn-secondary">
                 <Icon name="user-plus" className="h-[18px] w-[18px]" />
                 Ma carte de visite

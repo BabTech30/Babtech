@@ -38,8 +38,8 @@ export const site = {
     "BabTech est un studio digital basé près de Montpellier (Hérault). Il crée des sites internet, des applications métier sur mesure et des automatisations IA pour les TPE, artisans et commerçants, et les accompagne dans leur transition numérique. Fondé par Bastien Ferrer, ancien chef d'entreprise du BTP (14 ans).",
 
   email: 'contact@babtech.fr',
-  /** À COMPLÉTER : numéro au format international, ex. '+33612345678'. Vide = masqué. */
-  phone: process.env.NEXT_PUBLIC_PHONE || '',
+  /** Téléphone au format international (07 63 51 93 63) : site, carte de visite, fiche contact, données structurées. */
+  phone: process.env.NEXT_PUBLIC_PHONE || '+33763519363',
   calendlyUrl: process.env.NEXT_PUBLIC_CALENDLY_URL || 'https://calendly.com/babferrer',
   /** URL de l'espace client (ex. https://app.babtech.fr). Vide = bouton masqué. */
   clientSpaceUrl: process.env.NEXT_PUBLIC_CLIENT_SPACE_URL || '',

@@ -304,16 +304,16 @@ export const services: Service[] = [
     name: 'Site de réservation pour locations saisonnières',
     promise: 'Tes réservations en direct. Sans commission.',
     summary:
-      'Site de réservation pour 1 à 4 logements ou chambres : réservation en direct, e-mail de confirmation, tableau de bord et synchronisation avec Booking.com. À partir de 250 €.',
+      'Site de réservation pour 1 à 4 logements ou chambres : réservation en direct, e-mail de confirmation, calendriers synchronisés avec Airbnb et Booking.com. À partir de 250 €, tableau de bord en option.',
     metaTitle: 'Site de réservation pour location saisonnière à Montpellier',
     metaDescription:
-      'Loue en direct, sans commission : site de réservation pour 1 à 4 logements, e-mail de confirmation, tableau de bord, synchro Booking.com. Dès 250 €.',
+      'Loue en direct, sans commission : site de réservation pour 1 à 4 logements, e-mail de confirmation, synchro Airbnb et Booking.com. Dès 250 €.',
     h1: "Site de réservation pour tes locations saisonnières à Montpellier et dans l'Hérault",
     lead:
-      "Airbnb et Booking.com t'amènent des voyageurs, mais prennent une commission sur chaque séjour. Avec ton propre site, tes voyageurs réservent en direct : e-mail de confirmation automatique, tableau de bord simple, calendrier synchronisé avec Booking.com si tu y loues aussi. Pour 1 à 4 logements ou chambres, à partir de 250 €.",
+      "Airbnb et Booking.com t'amènent des voyageurs, mais prennent une commission sur chaque séjour. Avec ton propre site, tes voyageurs réservent en direct et reçoivent un e-mail de confirmation, et tes calendriers restent synchronisés avec Airbnb et Booking.com si tu y loues aussi. Pour 1 à 4 logements ou chambres, à partir de 250 €, avec un tableau de bord en option.",
     priceFrom: 250,
     priceLabel: 'À partir de 250 €',
-    priceNote: 'Tableau de bord : 350 €. Maintenance à partir de 35 € par mois. Assistance, améliorations et personnalisation sur devis.',
+    priceNote: 'Tableau de bord en option : + 350 €. Maintenance à partir de 35 € par mois. Assistance, améliorations et personnalisation sur devis.',
     audience: [
       "Tu loues un appartement, une maison, un gîte ou quelques chambres d'hôtes : jusqu'à 4 logements ou chambres.",
       'Tu laisses une commission aux plateformes sur chaque séjour, même quand un voyageur revient chez toi.',
@@ -328,19 +328,19 @@ export const services: Service[] = [
       },
       {
         title: 'Réservation en direct et e-mail de confirmation',
-        desc: 'Le voyageur choisit ses dates et réserve. Il reçoit aussitôt un e-mail de confirmation, et la réservation apparaît dans ton tableau de bord.',
+        desc: 'Le voyageur choisit ses dates et réserve. Il reçoit aussitôt un e-mail de confirmation.',
       },
       {
-        title: 'Un tableau de bord simple et efficace',
-        desc: "Tes réservations, ton calendrier et le nombre de visites de ton site en un coup d'œil, sur ton téléphone comme sur ton ordinateur.",
+        title: 'Calendriers synchronisés avec Airbnb et Booking.com',
+        desc: "Si tu loues aussi sur ces plateformes, une nuit réservée d'un côté se ferme de l'autre. Ce n'est pas instantané : Airbnb se met à jour toutes les 3 heures, Booking.com toutes les 2 heures.",
+      },
+      {
+        title: 'Un tableau de bord simple et efficace (en option)',
+        desc: "Pour 350 € de plus : tes réservations, ton calendrier et le nombre de visites de ton site en un coup d'œil, sur ton téléphone comme sur ton ordinateur.",
       },
       {
         title: 'Photos et textes modifiables par toi',
-        desc: 'Tu changes une photo ou une description toi-même, sans compétence technique et sans attendre personne.',
-      },
-      {
-        title: 'Synchronisation avec Booking.com',
-        desc: "Si tu loues aussi sur Booking.com, les calendriers se synchronisent : une nuit réservée d'un côté se ferme de l'autre, pour éviter les doubles réservations.",
+        desc: 'Depuis le tableau de bord, tu changes une photo ou une description toi-même, sans compétence technique et sans attendre personne.',
       },
       {
         title: 'Maintenance et assistance',
@@ -354,11 +354,11 @@ export const services: Service[] = [
       'Nom de domaine et adresse e-mail à ton nom',
     ],
     result:
-      'Tes voyageurs réservent chez toi, en direct : pas de commission sur ces séjours, ton propre site à partager, et tes réservations toujours sous les yeux.',
+      'Tes voyageurs réservent chez toi, en direct : pas de commission sur ces séjours, ton propre site à partager, et des calendriers qui restent à jour avec les plateformes.',
     faq: [
       {
         q: 'Combien coûte un site de réservation pour ma location ?',
-        a: "Le site de réservation démarre à 250 €, le tableau de bord est à 350 € et la maintenance à partir de 35 € par mois. L'assistance, les améliorations et la personnalisation sont sur devis. Tu reçois un devis clair avant de t'engager.",
+        a: "Le site de réservation démarre à 250 €. Le tableau de bord est en option : 350 € de plus. La maintenance démarre à 35 € par mois ; l'assistance, les améliorations et la personnalisation sont sur devis. Tu reçois un devis clair avant de t'engager.",
       },
       {
         q: 'Pour combien de logements ou de chambres ?',
@@ -366,11 +366,15 @@ export const services: Service[] = [
       },
       {
         q: 'Dois-je quitter Airbnb ou Booking.com ?',
-        a: "Non. Ton site s'ajoute aux plateformes, il ne les remplace pas : elles t'amènent de nouveaux voyageurs, ton site te permet de recevoir en direct ceux qui reviennent ou qui te trouvent autrement. Avec Booking.com, les calendriers se synchronisent pour éviter les doubles réservations. Pour Airbnb, on regarde ensemble ce qui est possible selon ton annonce.",
+        a: "Non. Ton site s'ajoute aux plateformes, il ne les remplace pas : elles t'amènent de nouveaux voyageurs, ton site te permet de recevoir en direct ceux qui reviennent ou qui te trouvent autrement. Les calendriers se synchronisent avec Airbnb et Booking.com pour éviter les doubles réservations.",
+      },
+      {
+        q: 'La synchronisation avec Airbnb et Booking.com est-elle instantanée ?',
+        a: "Non. Les plateformes échangent les calendriers au format iCal, un lien qui liste les nuits déjà prises : Airbnb le relit toutes les 3 heures, Booking.com toutes les 2 heures, et chacun a un bouton pour forcer la mise à jour. Seules les dates passent, pas les prix ni les coordonnées des voyageurs. Entre deux mises à jour, une même nuit peut être réservée deux fois : pour les arrivées de dernière minute, on convient ensemble d'une règle simple, par exemple confirmer toi-même ces réservations. Une synchronisation instantanée demande un « channel manager », un logiciel payant au mois, surtout utile quand on gère beaucoup de logements.",
       },
       {
         q: 'Pourrai-je modifier mon site moi-même ?',
-        a: "Oui. Tu modifies tes photos et tes textes toi-même, sans compétence technique. Pour le reste, la maintenance et l'assistance sont là.",
+        a: "Oui, avec le tableau de bord en option : tu modifies tes photos et tes textes toi-même, sans compétence technique.",
       },
       {
         q: 'Mon site sera-t-il visible sur Google ?',

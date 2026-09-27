@@ -37,7 +37,8 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
   présentés comme indicatifs. Aucune promesse de classement garanti.
 - Faits sur BabTech : uniquement ceux de `src/lib/site.ts`, `src/data/*` et de la page À propos. Tarifs : dès 800 €
   (site), 1 500 € (application métier), 3 000 € (automatisation & IA) ; site de réservation pour locations saisonnières
-  (1 à 4 logements) dès 250 €, tableau de bord 350 €, maintenance dès 35 €/mois ; SEO/GEO inclus dans les sites ;
+  (1 à 4 logements) dès 250 €, tableau de bord en option (+ 350 €), maintenance dès 35 €/mois ; synchronisation des
+  calendriers Airbnb et Booking.com par iCal, jamais présentée comme instantanée ; SEO/GEO inclus dans les sites ;
   formation sur devis. Les documents internes fournis par l'utilisateur (devis, budgets) ne se publient pas.
 - Photos : `public/photos/` (Bastien) et `public/realisations/` (captures faites avec des données de démonstration).
   Toujours retirer les métadonnées (EXIF, GPS) avant publication et recadrer les passants. Pas de détails de vie privée.
