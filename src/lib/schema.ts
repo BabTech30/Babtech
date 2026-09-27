@@ -43,6 +43,7 @@ export const knowsAbout = [
   'Google Business Profile',
   'Applications web progressives (PWA)',
   'Applications métier sur mesure',
+  'Sites de réservation pour locations saisonnières',
   'Automatisation de processus (n8n)',
   'Intelligence artificielle générative',
   'Transformation numérique des TPE',
@@ -148,6 +149,7 @@ export function founderNode(): Json {
     familyName: f.familyName,
     jobTitle: f.jobTitle,
     description: f.description,
+    image: absoluteUrl(f.photo),
     url: pageUrl('/a-propos'),
     worksFor: { '@id': ids.organization },
     knowsAbout,
@@ -172,7 +174,7 @@ type WebPageInput = {
   path: string
   name: string
   description: string
-  type?: 'WebPage' | 'AboutPage' | 'ContactPage' | 'CollectionPage' | 'FAQPage' | 'ItemPage'
+  type?: 'WebPage' | 'AboutPage' | 'ContactPage' | 'CollectionPage' | 'FAQPage' | 'ItemPage' | 'ProfilePage'
   og?: string
   breadcrumb?: boolean
   datePublished?: string
@@ -258,7 +260,7 @@ export function serviceNode({ service, path, name, description, area }: ServiceI
     areaServed: area ?? areaServed(),
     audience: {
       '@type': 'BusinessAudience',
-      audienceType: 'TPE, artisans, commerçants, restaurateurs et indépendants',
+      audienceType: service.audienceType ?? 'TPE, artisans, commerçants, restaurateurs et indépendants',
     },
     ...(service.priceFrom
       ? {

@@ -4,6 +4,7 @@ export type ServiceSlug =
   | 'creation-site-internet'
   | 'application-metier'
   | 'automatisation-ia'
+  | 'site-reservation-location-saisonniere'
   | 'referencement-local-geo'
   | 'accompagnement-formation-ia'
 
@@ -29,6 +30,8 @@ export type Service = {
   priceNote: string
   duration?: string
   audience: string[]
+  /** Public visé, pour les données structurées (par défaut : TPE, artisans, commerçants…). */
+  audienceType?: string
   deliverables: { title: string; desc: string }[]
   extras?: string[]
   result: string
@@ -294,6 +297,97 @@ export const services: Service[] = [
     ],
   },
   {
+    slug: 'site-reservation-location-saisonniere',
+    icon: 'bed',
+    accent: 'emerald',
+    badge: 'Offre clé en main · Hébergement',
+    name: 'Site de réservation pour locations saisonnières',
+    promise: 'Tes réservations en direct. Sans commission.',
+    summary:
+      'Site de réservation pour 1 à 4 logements ou chambres : réservation en direct, e-mail de confirmation, tableau de bord et synchronisation avec Booking.com. À partir de 250 €.',
+    metaTitle: 'Site de réservation pour location saisonnière à Montpellier',
+    metaDescription:
+      'Loue en direct, sans commission : site de réservation pour 1 à 4 logements, e-mail de confirmation, tableau de bord, synchro Booking.com. Dès 250 €.',
+    h1: "Site de réservation pour tes locations saisonnières à Montpellier et dans l'Hérault",
+    lead:
+      "Airbnb et Booking.com t'amènent des voyageurs, mais prennent une commission sur chaque séjour. Avec ton propre site, tes voyageurs réservent en direct : e-mail de confirmation automatique, tableau de bord simple, calendrier synchronisé avec Booking.com si tu y loues aussi. Pour 1 à 4 logements ou chambres, à partir de 250 €.",
+    priceFrom: 250,
+    priceLabel: 'À partir de 250 €',
+    priceNote: 'Tableau de bord : 350 €. Maintenance à partir de 35 € par mois. Assistance, améliorations et personnalisation sur devis.',
+    audience: [
+      "Tu loues un appartement, une maison, un gîte ou quelques chambres d'hôtes : jusqu'à 4 logements ou chambres.",
+      'Tu laisses une commission aux plateformes sur chaque séjour, même quand un voyageur revient chez toi.',
+      'Tu veux un lien à donner à tes voyageurs fidèles, sur tes réseaux ou dans tes messages, pour réserver directement.',
+      "Tu veux voir tes réservations et les visites de ton site en un coup d'œil, sans tableur.",
+    ],
+    audienceType: "Propriétaires de locations saisonnières, gîtes et chambres d'hôtes",
+    deliverables: [
+      {
+        title: 'Un site de réservation pour tes logements',
+        desc: "Jusqu'à 4 logements ou chambres, avec photos, descriptions et disponibilités. Pensé d'abord pour le téléphone, là où tes voyageurs réservent.",
+      },
+      {
+        title: 'Réservation en direct et e-mail de confirmation',
+        desc: 'Le voyageur choisit ses dates et réserve. Il reçoit aussitôt un e-mail de confirmation, et la réservation apparaît dans ton tableau de bord.',
+      },
+      {
+        title: 'Un tableau de bord simple et efficace',
+        desc: "Tes réservations, ton calendrier et le nombre de visites de ton site en un coup d'œil, sur ton téléphone comme sur ton ordinateur.",
+      },
+      {
+        title: 'Photos et textes modifiables par toi',
+        desc: 'Tu changes une photo ou une description toi-même, sans compétence technique et sans attendre personne.',
+      },
+      {
+        title: 'Synchronisation avec Booking.com',
+        desc: "Si tu loues aussi sur Booking.com, les calendriers se synchronisent : une nuit réservée d'un côté se ferme de l'autre, pour éviter les doubles réservations.",
+      },
+      {
+        title: 'Maintenance et assistance',
+        desc: "À partir de 35 € par mois, ton site est suivi et maintenu. Besoin d'une amélioration ou d'une fonction sur mesure ? On en parle, sur devis.",
+      },
+    ],
+    extras: [
+      'Version anglaise pour les voyageurs étrangers',
+      "Arrivée autonome : code d'accès et consignes envoyés avant le séjour",
+      "Demande d'avis après le séjour",
+      'Nom de domaine et adresse e-mail à ton nom',
+    ],
+    result:
+      'Tes voyageurs réservent chez toi, en direct : pas de commission sur ces séjours, ton propre site à partager, et tes réservations toujours sous les yeux.',
+    faq: [
+      {
+        q: 'Combien coûte un site de réservation pour ma location ?',
+        a: "Le site de réservation démarre à 250 €, le tableau de bord est à 350 € et la maintenance à partir de 35 € par mois. L'assistance, les améliorations et la personnalisation sont sur devis. Tu reçois un devis clair avant de t'engager.",
+      },
+      {
+        q: 'Pour combien de logements ou de chambres ?',
+        a: "Jusqu'à 4 : un appartement, une maison, un gîte ou quelques chambres d'hôtes. Au-delà, c'est un projet sur mesure, comme le site de réservation et de gestion créé pour l'Hôtel Le Saint Éloi à Montpellier (17 chambres).",
+      },
+      {
+        q: 'Dois-je quitter Airbnb ou Booking.com ?',
+        a: "Non. Ton site s'ajoute aux plateformes, il ne les remplace pas : elles t'amènent de nouveaux voyageurs, ton site te permet de recevoir en direct ceux qui reviennent ou qui te trouvent autrement. Avec Booking.com, les calendriers se synchronisent pour éviter les doubles réservations. Pour Airbnb, on regarde ensemble ce qui est possible selon ton annonce.",
+      },
+      {
+        q: 'Pourrai-je modifier mon site moi-même ?',
+        a: "Oui. Tu modifies tes photos et tes textes toi-même, sans compétence technique. Pour le reste, la maintenance et l'assistance sont là.",
+      },
+      {
+        q: 'Mon site sera-t-il visible sur Google ?',
+        a: "Il est rapide et bien structuré, ce qui aide Google à le comprendre, mais aucun classement ne peut être garanti. Pour une location, le levier le plus direct reste de partager ton lien : à tes voyageurs fidèles, sur tes réseaux et dans tes messages. Chaque réservation faite en direct est une réservation sans commission.",
+      },
+    ],
+    related: ['creation-site-internet', 'application-metier'],
+    caseStudy: 'hotel-le-saint-eloi',
+    relatedPosts: ['prix-site-internet-tpe-montpellier'],
+    keywords: [
+      'site de réservation location saisonnière',
+      'site Airbnb sans commission',
+      'réservation en direct gîte Hérault',
+      "site chambres d'hôtes Montpellier",
+    ],
+  },
+  {
     slug: 'referencement-local-geo',
     icon: 'search',
     accent: 'emerald',
@@ -455,10 +549,20 @@ export function getService(slug: string) {
   return services.find((s) => s.slug === slug)
 }
 
+function pick(...slugs: ServiceSlug[]): Service[] {
+  return slugs.map((slug) => {
+    const service = getService(slug)
+    if (!service) throw new Error(`Service inconnu : ${slug}`)
+    return service
+  })
+}
+
 /** Les 3 niveaux de l'offre, dans l'ordre. */
-export const levels = services.slice(0, 3)
+export const levels = pick('creation-site-internet', 'application-metier', 'automatisation-ia')
+/** Les offres clés en main, pour un métier précis. */
+export const turnkey = pick('site-reservation-location-saisonniere')
 /** Les expertises transversales. */
-export const transversal = services.slice(3)
+export const transversal = pick('referencement-local-geo', 'accompagnement-formation-ia')
 
 /** Méthode commune à tous les projets. */
 export const process = [

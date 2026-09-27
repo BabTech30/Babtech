@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { CtaSection } from '@/components/CtaSection'
 import { Icon, type IconName } from '@/components/Icon'
 import { JsonLd } from '@/components/JsonLd'
 import { PageHero } from '@/components/PageHero'
 import { ProcessSteps } from '@/components/ProcessSteps'
+import { YouTubeVideo } from '@/components/YouTubeVideo'
 import { graph, ids, webPageNode } from '@/lib/schema'
 import { pageMetadata } from '@/lib/seo'
 import { site } from '@/lib/site'
@@ -31,6 +33,7 @@ const commitments: { icon: IconName; title: string; desc: string }[] = [
 ]
 
 export default function APropos() {
+  const company = site.founder.formerCompany
   return (
     <>
       <JsonLd
@@ -57,19 +60,25 @@ export default function APropos() {
 
       <section className="border-t border-bord py-16 md:py-20" aria-labelledby="parcours">
         <div className="container-b grid gap-12 md:grid-cols-[300px_1fr] md:items-start">
-          <div className="card relative flex aspect-[4/5] w-full max-w-[300px] flex-col items-center justify-center gap-4 overflow-hidden p-6 text-center">
-            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-emerald-b to-bronze" />
-            <span className="flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-emerald-b/30 to-bronze/30 font-outfit text-5xl font-bold text-white">
-              B
-            </span>
-            <div>
-              <p className="font-outfit text-xl font-semibold text-white">{site.founder.name}</p>
-              <p className="text-sm text-txt-secondary">Fondateur de BabTech</p>
-            </div>
-            <p className="flex items-center gap-1.5 text-[13px] text-txt-muted">
-              <Icon name="map-pin" className="h-4 w-4 text-emerald-b" /> Près de Montpellier, Hérault
-            </p>
-          </div>
+          <figure className="card relative mx-auto w-full max-w-[300px] overflow-hidden md:mx-0">
+            <div aria-hidden="true" className="absolute inset-x-0 top-0 z-10 h-[3px] bg-gradient-to-r from-emerald-b to-bronze" />
+            <Image
+              src={site.founder.portrait}
+              alt={`Portrait de ${site.founder.name}`}
+              width={720}
+              height={900}
+              preload
+              fetchPriority="high"
+              className="aspect-[4/5] w-full object-cover"
+            />
+            <figcaption className="p-5 text-center">
+              <span className="block font-outfit text-xl font-semibold text-white">{site.founder.name}</span>
+              <span className="block text-sm text-txt-secondary">Fondateur de BabTech</span>
+              <span className="mt-2 flex items-center justify-center gap-1.5 text-[13px] text-txt-muted">
+                <Icon name="map-pin" className="h-4 w-4 text-emerald-b" /> Près de Montpellier, Hérault
+              </span>
+            </figcaption>
+          </figure>
           <div>
             <h2 id="parcours" className="mb-5 font-outfit text-sm font-semibold uppercase tracking-[2px] text-bronze">
               Mon parcours
@@ -86,6 +95,16 @@ export default function APropos() {
                   j&apos;ai choisi de mettre cette expérience au service des artisans, commerçants et TPE
                 </strong>{' '}
                 qui veulent passer au digital. Pas depuis un bureau parisien&nbsp;: depuis le terrain, près de Montpellier.
+              </p>
+              <p>
+                Mon premier gros projet de développement&nbsp;: le{' '}
+                <Link
+                  href="/portfolio#hotel-le-saint-eloi"
+                  className="text-emerald-b underline decoration-emerald-b/50 underline-offset-2 hover:decoration-emerald-b"
+                >
+                  site de réservation et de gestion de l&apos;Hôtel Le Saint Éloi
+                </Link>
+                , à Montpellier, conçu sur le terrain avec le gérant.
               </p>
             </div>
             <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -117,7 +136,30 @@ export default function APropos() {
         </div>
       </section>
 
-      <section className="py-16 md:py-20" aria-labelledby="vision">
+      <section className="py-16 md:py-20" aria-labelledby="avant-babtech">
+        <div className="container-b grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-center">
+          <div>
+            <p className="section-tag text-bronze">Avant BabTech</p>
+            <h2 id="avant-babtech" className="section-title mb-5">
+              {company.name}, mon entreprise du bâtiment
+            </h2>
+            <div className="space-y-5 text-[16.5px] leading-[1.8] text-txt-secondary">
+              <p>
+                Avant de créer BabTech, j&apos;ai dirigé {company.name}&nbsp;: des chantiers, des salariés, des clients à satisfaire, et
+                une entreprise à faire tourner avec tout ce que ça implique. Les devis, le planning, la trésorerie, les imprévus.
+              </p>
+              <p>
+                Cette vidéo de présentation, tournée à l&apos;époque, montre l&apos;équipe et notre métier.{' '}
+                <strong className="font-medium text-txt-primary">C&apos;est de là que vient ma façon de travailler</strong>&nbsp;: des
+                outils pensés pour des gens qui ont les mains dans le concret, parce que j&apos;en faisais partie.
+              </p>
+            </div>
+          </div>
+          <YouTubeVideo id={company.youtubeId} title={company.videoTitle} thumbnail="/photos/cvc-energies-habitat.webp" />
+        </div>
+      </section>
+
+      <section className="border-y border-bord bg-nuit-light py-16 md:py-20" aria-labelledby="vision">
         <div className="container-b grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-center">
           <div>
             <p className="section-tag text-emerald-b">Ma vision</p>
@@ -151,7 +193,7 @@ export default function APropos() {
         </div>
       </section>
 
-      <section className="border-t border-bord bg-nuit-light py-16 md:py-20" aria-labelledby="methode">
+      <section className="py-16 md:py-20" aria-labelledby="methode">
         <div className="container-b">
           <div className="mb-10">
             <p className="section-tag text-emerald-b">Ma méthode</p>

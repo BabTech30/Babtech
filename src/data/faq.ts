@@ -54,6 +54,11 @@ export const faqGroups: FaqGroup[] = [
         link: { href: '/services', label: 'Comparer les services' },
       },
       {
+        q: 'BabTech propose-t-il un site de réservation pour les locations saisonnières ?',
+        a: "Oui, pour 1 à 4 logements ou chambres (location type Airbnb, gîte, chambres d'hôtes) : réservation en direct sans commission, e-mail de confirmation, tableau de bord et synchronisation avec Booking.com si besoin. Le site démarre à 250 €, le tableau de bord est à 350 € et la maintenance à partir de 35 € par mois.",
+        link: { href: '/services/site-reservation-location-saisonniere', label: "Voir l'offre" },
+      },
+      {
         q: 'Combien de temps faut-il pour créer un site vitrine ?',
         a: "Entre 2 et 4 semaines selon la complexité. Tu valides chaque étape : tu ne découvres pas le résultat à la fin. Le site est livré prêt à l'emploi, avec le référencement déjà en place.",
       },

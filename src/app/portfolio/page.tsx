@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { CtaSection } from '@/components/CtaSection'
 import { Icon } from '@/components/Icon'
@@ -13,7 +14,7 @@ import { fr } from '@/lib/typography'
 
 const title = 'Réalisations : sites, applications et outils digitaux pour TPE'
 const description =
-  'Le Terrier (bar-restaurant créé de A à Z), PWA Budget (application de gestion) et Hôtel Saint Eloi (règlement multilingue par QR code) : des projets concrets.'
+  "Le Terrier (bar-restaurant créé de A à Z), PWA Budget (application de gestion) et l'Hôtel Le Saint Éloi (réservation en direct et gestion de l'hôtel)."
 
 export const metadata: Metadata = pageMetadata({ title, description, path: '/portfolio', og: 'portfolio' })
 
@@ -39,6 +40,7 @@ export default function Portfolio() {
                   name: c.title,
                   description: c.result,
                   genre: c.sector,
+                  ...(c.media ? { image: c.media.images.map((img) => absoluteUrl(img.src)) } : {}),
                   creator: { '@id': ids.organization },
                 },
               })),
@@ -97,6 +99,62 @@ export default function Portfolio() {
                   </ul>
                 </div>
               </div>
+              {c.facts && (
+                <ul className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4">
+                  {c.facts.map((f) => (
+                    <li key={f.label} className="rounded-xl border border-bord bg-white/[0.02] p-4 text-center">
+                      <span className="block font-outfit text-2xl font-bold leading-none text-emerald-b">{fr(f.value)}</span>
+                      <span className="mt-2 block text-[12.5px] leading-snug text-txt-muted">{f.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {c.media && (
+                <div className="mt-8 space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {c.media.images
+                      .filter((img) => img.width > img.height)
+                      .map((img) => (
+                        <Image key={img.src} src={img.src} alt={img.alt} width={img.width} height={img.height} className="h-auto w-full rounded-xl border border-bord" />
+                      ))}
+                  </div>
+                  <div className="mx-auto grid max-w-[760px] grid-cols-2 gap-4 sm:grid-cols-3">
+                    {c.media.images
+                      .filter((img) => img.width <= img.height)
+                      .map((img) => (
+                        <Image key={img.src} src={img.src} alt={img.alt} width={img.width} height={img.height} className="h-auto w-full rounded-xl border border-bord" />
+                      ))}
+                    {c.media.video && (
+                      <figure className="col-span-2 mx-auto w-full max-w-[260px] sm:col-span-1 sm:max-w-none">
+                        <video
+                          controls
+                          preload="none"
+                          playsInline
+                          poster={c.media.video.poster}
+                          width={c.media.video.width}
+                          height={c.media.video.height}
+                          aria-label={fr(`Vidéo de démonstration : ${c.title}`)}
+                          className="h-auto w-full rounded-xl border border-bord bg-black"
+                        >
+                          <source src={c.media.video.src} type="video/mp4" />
+                        </video>
+                        <figcaption className="mt-2 text-center text-[12.5px] leading-snug text-txt-muted">{fr(c.media.video.label)}</figcaption>
+                      </figure>
+                    )}
+                  </div>
+                  {c.media.note && <p className="text-[13px] text-txt-muted">{c.media.note}</p>}
+                </div>
+              )}
+              {c.stack && (
+                <p className="mt-6 flex flex-wrap items-center gap-2.5">
+                  <span className="mr-1 text-sm text-txt-muted">Outils&nbsp;:</span>
+                  {c.stack.map((t) => (
+                    <span key={t} className="rounded-full border border-bord bg-white/[0.03] px-3.5 py-1.5 text-sm text-txt-secondary">
+                      {t}
+                    </span>
+                  ))}
+                </p>
+              )}
               <div className="mt-8 rounded-[14px] border border-dashed border-white/[0.1] bg-white/[0.02] p-6">
                 <p className="mb-2 text-[11px] font-semibold uppercase tracking-[2px] text-emerald-b">Résultat</p>
                 <p className="leading-relaxed text-txt-primary">{fr(c.result)}</p>

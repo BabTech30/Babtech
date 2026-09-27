@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { ImageResponse } from 'next/og'
 import { getOgEntries } from '@/lib/og'
-import { SITE_URL } from '@/lib/site'
+import { site, SITE_URL } from '@/lib/site'
 import { fr } from '@/lib/typography'
 
 export const dynamic = 'force-static'
@@ -20,12 +20,13 @@ export async function GET(_request: Request, { params }: { params: Promise<{ key
   const entry = getOgEntries().find((e) => e.key === id)
   if (!entry) return new Response('Not found', { status: 404 })
 
-  const [outfit, dmSans] = await Promise.all([
+  const [outfit, dmSans, photo] = await Promise.all([
     readFile(path.join(fontDir, 'outfit-latin-700-normal.woff')),
     readFile(path.join(fontDir, 'dm-sans-latin-500-normal.woff')),
+    entry.photo ? readFile(path.join(process.cwd(), 'public', site.founder.photo)) : undefined,
   ])
   const host = new URL(SITE_URL).host
-  const titleSize = entry.title.length > 70 ? 54 : entry.title.length > 45 ? 62 : 72
+  const titleSize = entry.title.length > 70 || (photo && entry.title.length > 45) ? 54 : entry.title.length > 45 ? 62 : 72
 
   return new ImageResponse(
     (
@@ -80,18 +81,30 @@ export async function GET(_request: Request, { params }: { params: Promise<{ key
           </div>
         </div>
 
-        <div
-          style={{
-            display: 'flex',
-            fontFamily: 'Outfit',
-            fontSize: titleSize,
-            lineHeight: 1.1,
-            color: '#ffffff',
-            letterSpacing: -1,
-            maxWidth: 1000,
-          }}
-        >
-          {fr(entry.title)}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 48 }}>
+          <div
+            style={{
+              display: 'flex',
+              fontFamily: 'Outfit',
+              fontSize: titleSize,
+              lineHeight: 1.1,
+              color: '#ffffff',
+              letterSpacing: -1,
+              maxWidth: photo ? 720 : 1000,
+            }}
+          >
+            {fr(entry.title)}
+          </div>
+          {photo && (
+            // eslint-disable-next-line @next/next/no-img-element -- rendu en PNG par ImageResponse
+            <img
+              src={`data:image/jpeg;base64,${photo.toString('base64')}`}
+              alt=""
+              width={250}
+              height={250}
+              style={{ borderRadius: 999, border: '6px solid rgba(16,185,129,0.55)', objectFit: 'cover' }}
+            />
+          )}
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 24 }}>

@@ -8,7 +8,7 @@ import { absoluteUrl } from '@/lib/site'
 export const dynamic = 'force-static'
 
 /** Date de dernière mise à jour des pages fixes : à changer quand leur contenu évolue. */
-const PAGES_UPDATED_AT = '2026-09-26'
+const PAGES_UPDATED_AT = '2026-09-27'
 
 type Entry = MetadataRoute.Sitemap[number]
 

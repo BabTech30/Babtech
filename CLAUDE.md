@@ -31,7 +31,13 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
 - **Ne jamais inventer** de statistiques, d'études, de clients, de témoignages ou de résultats. Les ordres de grandeur sont
   présentés comme indicatifs. Aucune promesse de classement garanti.
 - Faits sur BabTech : uniquement ceux de `src/lib/site.ts`, `src/data/*` et de la page À propos. Tarifs : dès 800 €
-  (site), 1 500 € (application métier), 3 000 € (automatisation & IA) ; SEO/GEO inclus dans les sites ; formation sur devis.
+  (site), 1 500 € (application métier), 3 000 € (automatisation & IA) ; site de réservation pour locations saisonnières
+  (1 à 4 logements) dès 250 €, tableau de bord 350 €, maintenance dès 35 €/mois ; SEO/GEO inclus dans les sites ;
+  formation sur devis. Les documents internes fournis par l'utilisateur (devis, budgets) ne se publient pas.
+- Photos : `public/photos/` (Bastien) et `public/realisations/` (captures faites avec des données de démonstration).
+  Toujours retirer les métadonnées (EXIF, GPS) avant publication et recadrer les passants. Pas de détails de vie privée.
+- Vidéo YouTube : uniquement avec `<YouTubeVideo>` (chargée au clic, miniature hébergée sur le site), déjà décrite dans
+  la page Confidentialité.
 - Typographie : guillemets « », montants « 1 500 € ». Les textes issus des données passent par `fr()`
   (`src/lib/typography.ts`) qui pose les espaces insécables ; dans le JSX écrit en dur, utiliser `&nbsp;` avant `: ; ! ?`.
 - Articles : `content/blog/*.md` (format décrit dans le README). Réponse dès le premier paragraphe, intertitres en questions,
@@ -42,5 +48,7 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
 - Toute nouvelle page : `pageMetadata()` (`src/lib/seo.ts`) avec un `path` canonique, une image OG déclarée dans
   `src/lib/og.ts`, un JSON-LD (`src/lib/schema.ts`) et, si besoin, un fil d'Ariane (`<Breadcrumbs>` ou `crumbs` de `PageHero`).
 - Ajouter la page au sitemap (`src/app/sitemap.ts`) si elle n'est pas générée depuis les données.
+- Exception : les pages partagées par lien ou QR code, `/bastien/` (présentation) et `/carte/` (carte de visite, fiche
+  `/carte/bastien-ferrer.vcf`), sont en `noindex`, hors du sitemap et du menu (liste `NOINDEX_PAGES` de `check-build.mjs`).
 - Un seul `<h1>` par page. Accessibilité : contrastes AA (utiliser `txt-secondary` / `txt-muted`, jamais plus sombre),
   libellés de formulaire associés, zones défilantes focusables.

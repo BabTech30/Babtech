@@ -36,6 +36,11 @@ export default function Confidentialite() {
             <strong>Prise de rendez-vous&nbsp;:</strong> les informations saisies sur le service Calendly lorsque tu réserves un créneau.
           </li>
           <li>
+            <strong>Vidéos YouTube&nbsp;:</strong> sur certaines pages, une vidéo YouTube ne se charge que si tu cliques pour la lancer.
+            YouTube (Google) reçoit alors ton adresse IP et peut déposer des cookies, selon sa propre politique de confidentialité.
+            Avant ton clic, la page ne contacte pas YouTube.
+          </li>
+          <li>
             <strong>Navigation&nbsp;:</strong> le site ne dépose aucun cookie publicitaire ni traceur. Si une mesure d&apos;audience est activée,
             elle utilise un outil sans cookie (Plausible ou Umami) qui produit des statistiques agrégées et anonymes. L&apos;hébergeur conserve
             des journaux techniques (adresse IP, navigateur) pour assurer la sécurité du service.
@@ -58,6 +63,7 @@ export default function Confidentialite() {
           <li>Formspree (réception des formulaires)&nbsp;;</li>
           <li>Calendly (prise de rendez-vous)&nbsp;;</li>
           <li>{site.legal.host.name} (hébergement du site)&nbsp;;</li>
+          <li>YouTube (Google), seulement si tu lances une vidéo&nbsp;;</li>
           <li>le cas échéant, l&apos;outil de mesure d&apos;audience sans cookie.</li>
         </ul>
         <p>
@@ -76,7 +82,8 @@ export default function Confidentialite() {
         <h2>6. Cookies</h2>
         <p>
           Le site fonctionne sans cookie de mesure ni cookie publicitaire&nbsp;: aucun bandeau de consentement n&apos;est donc nécessaire. Les
-          services tiers ouverts depuis le site (Calendly, par exemple) appliquent leur propre politique lorsque tu les utilises.
+          services tiers ouverts depuis le site (Calendly, par exemple) appliquent leur propre politique lorsque tu les utilises. Les vidéos
+          YouTube restent inactives tant que tu ne cliques pas dessus&nbsp;: lancer une vidéo vaut accord pour les cookies de YouTube.
         </p>
 
         <h2>7. Tes droits</h2>

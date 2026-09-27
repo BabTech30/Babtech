@@ -3,6 +3,7 @@ title: "Application métier sur mesure ou logiciel du marché : comment choisir 
 seoTitle: "Application métier sur mesure ou logiciel : que choisir ?"
 description: "Application métier sur mesure ou logiciel du marché ? Coûts, délais, dépendance, données : la méthode simple pour bien choisir quand tu diriges une TPE."
 date: "2026-09-26"
+updated: "2026-09-27"
 category: "outils-metier"
 tags: ["application métier", "logiciel", "pwa", "sur mesure", "tpe"]
 tldr:
@@ -116,7 +117,7 @@ Pour la partie liaison, découvre [mon offre d'automatisation et d'intégration 
 Trois projets que j'ai réalisés montrent ce que le sur-mesure apporte à petite échelle. Tu les retrouveras en détail dans [mon portfolio de projets digitaux](/portfolio).
 
 - **Le Terrier, un bar-restaurant** : en plus de l'identité visuelle, du site vitrine et du QR menu, j'ai conçu un tableau de bord de gestion utilisable sans compétence technique, et j'ai accompagné la création du business.
-- **Hôtel Saint Eloi** : le règlement intérieur est digitalisé et accessible par QR code, traduit en plus de cinq langues, avec un tableau de bord de suivi de la conformité.
+- **[Hôtel Le Saint Éloi](/portfolio#hotel-le-saint-eloi), 17 chambres à Montpellier** : un site de réservation en direct, sans commission, et un tableau de bord où chaque membre de l'équipe (réception, nuit, ménage, gérant) a son propre accès. Pour le même hôtel, le règlement intérieur est aussi accessible par QR code, traduit en plus de cinq langues.
 - **PWA Budget** : une application web de gestion de budget que j'ai développée, installable sur téléphone, avec plusieurs profils, un tableau de bord visuel, des notifications et des alertes. Elle montre ce qu'une PWA permet, sans passer par les stores.
 
 Chacun de ces outils règle un problème précis, sans chercher à tout faire.

@@ -51,6 +51,26 @@ export const adminTasks: AdminTask[] = [
     detail: 'Liens, balises, données structurées et sitemap vérifiés à chaque modification.',
   },
   {
+    id: 'offer-booking',
+    phase: 'site',
+    owner: 'claude',
+    done: true,
+    title: "Ajouter l'offre « site de réservation » pour les locations saisonnières",
+    detail: 'Dès 250 €, tableau de bord 350 €, maintenance dès 35 € par mois : page service, accueil, FAQ, pages des villes.',
+    link: 'https://babtech.fr/services/site-reservation-location-saisonniere/',
+    linkLabel: "Voir l'offre",
+  },
+  {
+    id: 'presentation',
+    phase: 'site',
+    owner: 'claude',
+    done: true,
+    title: 'Page de présentation, carte de visite et page À propos avec ta photo',
+    detail: 'babtech.fr/bastien/ et babtech.fr/carte/ (hors Google), vidéo CVC Energies Habitat, projet Hôtel Le Saint Éloi.',
+    link: 'https://babtech.fr/carte/',
+    linkLabel: 'Ta carte',
+  },
+  {
     id: 'node-adapt',
     phase: 'node',
     owner: 'claude',
@@ -77,6 +97,15 @@ export const adminTasks: AdminTask[] = [
     linkLabel: 'Réglages',
   },
   {
+    id: 'email-pro',
+    phase: 'launch',
+    owner: 'toi',
+    title: "Créer l'adresse contact@babtech.fr",
+    detail: "Le site l'affiche déjà : crée la boîte dans hPanel → Emails avant de déployer, sinon les messages envoyés à cette adresse seront perdus.",
+    link: 'https://hpanel.hostinger.com',
+    linkLabel: 'hPanel',
+  },
+  {
     id: 'site-tour',
     phase: 'launch',
     owner: 'toi',
@@ -84,6 +113,15 @@ export const adminTasks: AdminTask[] = [
     detail: 'Note ce qui te gêne (textes, photos, couleurs) : Claude corrige.',
     link: 'https://babtech.fr',
     linkLabel: 'babtech.fr',
+  },
+  {
+    id: 'card-test',
+    phase: 'launch',
+    owner: 'toi',
+    title: 'Tester ta carte de visite sur ton téléphone',
+    detail: 'Touche « Enregistrer le contact » et vérifie la fiche, puis essaie « Partager ma carte ».',
+    link: 'https://babtech.fr/carte/',
+    linkLabel: 'Ta carte',
   },
   {
     id: 'forms-test',
@@ -100,6 +138,20 @@ export const adminTasks: AdminTask[] = [
     owner: 'claude',
     title: 'Contrôler le site en ligne',
     detail: 'Vitesse, redirections, page 404, en-têtes, données structurées.',
+  },
+  {
+    id: 'qr-codes',
+    phase: 'launch',
+    owner: 'claude',
+    title: 'QR codes et compteur de scans dans ce tableau de bord',
+    detail: 'Un QR code pour la présentation, un pour le site, un pour la carte de visite.',
+  },
+  {
+    id: 'pwa',
+    phase: 'launch',
+    owner: 'claude',
+    title: 'Installer ce tableau de bord comme une application',
+    detail: "Une icône sur ton ordinateur ou ton téléphone, qui s'ouvre comme une appli.",
   },
   {
     id: 'gsc',
@@ -157,20 +209,12 @@ export const adminTasks: AdminTask[] = [
     detail: "Obligatoires dans les mentions légales. Une domiciliation convient pour l'adresse.",
   },
   {
-    id: 'email-pro',
-    phase: 'legal',
-    owner: 'toi',
-    title: "Créer l'adresse contact@babtech.fr",
-    detail: 'hPanel → Emails. Claude la reporte ensuite sur le site.',
-    link: 'https://hpanel.hostinger.com',
-    linkLabel: 'hPanel',
-  },
-  {
     id: 'photo',
     phase: 'legal',
     owner: 'toi',
+    done: true,
     title: 'Envoyer une photo pour la page À propos',
-    detail: 'Un visage rassure les clients.',
+    detail: "C'est fait : ta photo est sur l'accueil, la page À propos, la présentation et la carte. Envoie-en d'autres quand tu veux.",
   },
   {
     id: 'profiles',
@@ -210,6 +254,15 @@ export const adminDecisions = [
   { date: '2026-09-27', text: "Priorité : décrocher des contrats en local, à Montpellier et dans l'Hérault. La France entière viendra plus tard." },
   { date: '2026-09-27', text: 'Infos légales (SIRET, adresse, téléphone) : fournies après la mise en ligne.' },
   { date: '2026-09-27', text: 'Communauté : après la mise en ligne et le référencement local.' },
+  {
+    date: '2026-09-27',
+    text: 'Nouvelle offre : site de réservation pour 1 à 4 logements ou chambres. Dès 250 €, tableau de bord 350 €, maintenance dès 35 € par mois, personnalisation sur devis.',
+  },
+  { date: '2026-09-27', text: 'Adresse e-mail affichée sur le site : contact@babtech.fr.' },
+  {
+    date: '2026-09-27',
+    text: 'Page de présentation (/bastien/) et carte de visite (/carte/) : partagées par lien ou QR code, volontairement hors de Google.',
+  },
 ]
 
 /** Dernière mesure Lighthouse (mobile), mise à jour par Claude. */
@@ -223,7 +276,7 @@ export const adminHealth = {
     { label: 'SEO', value: 100 },
   ],
   facts: [
-    { label: 'Pages', value: '35' },
+    { label: 'Pages', value: '36' },
     { label: 'Articles de blog', value: '7' },
     { label: 'Zones couvertes', value: '9' },
     { label: 'Affichage principal', value: '2,4 s' },

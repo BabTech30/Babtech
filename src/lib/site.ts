@@ -37,7 +37,7 @@ export const site = {
   description:
     "BabTech est un studio digital basé près de Montpellier (Hérault). Il crée des sites internet, des applications métier sur mesure et des automatisations IA pour les TPE, artisans et commerçants, et les accompagne dans leur transition numérique. Fondé par Bastien Ferrer, ancien chef d'entreprise du BTP (14 ans).",
 
-  email: 'babferrer@icloud.com',
+  email: 'contact@babtech.fr',
   /** À COMPLÉTER : numéro au format international, ex. '+33612345678'. Vide = masqué. */
   phone: process.env.NEXT_PUBLIC_PHONE || '',
   calendlyUrl: process.env.NEXT_PUBLIC_CALENDLY_URL || 'https://calendly.com/babferrer',
@@ -58,6 +58,17 @@ export const site = {
       "Chef d'entreprise à 22 ans, 14 ans d'entrepreneuriat dans le BTP (2 magasins, 8 salariés, près d'1 M€ de chiffre d'affaires), reconverti dans le digital pour aider les TPE, artisans et commerçants.",
     /** À COMPLÉTER : profils personnels (LinkedIn, Malt…). Renforce l'autorité (E-E-A-T). */
     sameAs: [] as string[],
+    /** Portraits : carré en JPEG (données structurées, images de partage), 4:5 et avatars ronds en WebP (pages). */
+    photo: '/photos/bastien-ferrer-carre.jpg',
+    portrait: '/photos/bastien-ferrer.webp',
+    avatar: '/photos/bastien-ferrer-avatar.webp',
+    avatarSmall: '/photos/bastien-ferrer-avatar-petit.webp',
+    /** Son entreprise du bâtiment avant BabTech, et la vidéo de présentation tournée à l'époque. */
+    formerCompany: {
+      name: 'CVC Energies Habitat',
+      youtubeId: 'X1jGCQEJLOA',
+      videoTitle: 'Faites des économies grâce au solaire avec CVC ENERGIES HABITAT',
+    },
   },
 
   address: {
@@ -93,7 +104,7 @@ export const site = {
     vatNumber: '',
     /** Adresse de l'établissement ou de domiciliation. */
     postalAddress: '',
-    updatedAt: '26 septembre 2026',
+    updatedAt: '27 septembre 2026',
     host: {
       name: 'Hostinger International Ltd',
       address: '61 Lordou Vironos Street, 6023 Larnaca, Chypre',

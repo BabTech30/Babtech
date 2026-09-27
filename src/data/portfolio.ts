@@ -1,5 +1,7 @@
 import type { ServiceSlug } from './services'
 
+export type CaseImage = { src: string; alt: string; width: number; height: number }
+
 export type CaseStudy = {
   slug: string
   title: string
@@ -8,6 +10,15 @@ export type CaseStudy = {
   context: string
   delivered: string[]
   result: string
+  /** Chiffres clés du projet (uniquement des faits vérifiables). */
+  facts?: { value: string; label: string }[]
+  stack?: string[]
+  /** Captures et vidéo, dans public/realisations/. */
+  media?: {
+    images: CaseImage[]
+    video?: { src: string; poster: string; width: number; height: number; label: string }
+    note?: string
+  }
 }
 
 export const caseStudies: CaseStudy[] = [
@@ -45,19 +56,66 @@ export const caseStudies: CaseStudy[] = [
       'Une application fonctionnelle qui montre concrètement ma capacité à livrer un outil métier complet, de la conception au déploiement.',
   },
   {
-    slug: 'hotel-saint-eloi',
-    title: 'Hôtel Saint Eloi',
-    sector: 'Hôtellerie',
+    slug: 'hotel-le-saint-eloi',
+    title: 'Hôtel Le Saint Éloi',
+    sector: 'Hôtellerie · Montpellier',
     services: ['creation-site-internet', 'application-metier'],
     context:
-      "Un hôtel qui accueille des résidents de nombreuses nationalités. Le règlement intérieur devait être accessible, compréhensible par tous et conforme à la réglementation.",
+      "Un hôtel de 17 chambres à Montpellier, à cinq minutes du CHU Saint-Éloi et du tramway. Objectif : vendre les chambres en direct, sans commission, et faire tourner l'hôtel au quotidien depuis un seul outil, pour toute l'équipe. Mon premier gros projet de développement, conçu sur le terrain avec le gérant. Pour le même hôtel, j'ai aussi digitalisé le règlement intérieur.",
     delivered: [
-      'Règlement intérieur digitalisé via QR code',
-      'Traduction en 5 langues et plus',
-      'Dashboard de suivi de la conformité',
+      'Site de réservation en français et en anglais : disponibilités et prix en temps réel, choix de sa chambre en photos',
+      'Réservations en direct, sans commission, et jamais deux fois la même chambre, même si deux clients réservent à la même seconde',
+      'Tableau de bord avec un accès par rôle : gérant, réception, veilleur de nuit, ménage, maintenance',
+      'Planning sur 14 jours, chambres à vendre nuit par nuit et synchronisation avec Booking.com',
+      "E-mails automatiques et arrivée autonome : code de la porte, Wi-Fi et numéro de chambre envoyés 48 h avant l'arrivée",
+      "Pilotage : chiffre d'affaires, occupation, commissions évitées, taxe de séjour, export comptable",
+      'Règlement intérieur accessible par QR code, traduit en 5 langues et plus',
     ],
     result:
-      "Fini les documents papier que personne ne lit. Chaque résident accède au règlement dans sa langue en un scan, et l'hôtel peut prouver la bonne diffusion de ses obligations réglementaires.",
+      "Le site est en service : l'hôtel vend ses chambres en direct, et toute l'équipe voit les mêmes chiffres, du site au tableau de bord. 189 tests automatiques sont rejoués avant chaque mise en ligne.",
+    facts: [
+      { value: '17', label: 'chambres gérées' },
+      { value: '5', label: "rôles dans l'équipe, chacun son accès" },
+      { value: '189', label: 'tests automatiques avant chaque mise en ligne' },
+      { value: '0 %', label: 'de commission sur les réservations directes' },
+    ],
+    stack: ['React', 'Node.js', 'MariaDB', 'Hostinger'],
+    media: {
+      images: [
+        {
+          src: '/realisations/hotel-le-saint-eloi-site.webp',
+          alt: "Page d'accueil du site de l'Hôtel Le Saint Éloi, avec la recherche de disponibilités par dates et par nombre de voyageurs",
+          width: 1200,
+          height: 750,
+        },
+        {
+          src: '/realisations/hotel-le-saint-eloi-tableau-de-bord.webp',
+          alt: "Tableau de bord de l'hôtel : occupation du soir, arrivées, départs, chiffre d'affaires du mois et commissions évitées",
+          width: 1200,
+          height: 750,
+        },
+        {
+          src: '/realisations/hotel-le-saint-eloi-reservation-mobile.webp',
+          alt: 'Réservation sur téléphone : le client choisit sa chambre en photos',
+          width: 390,
+          height: 844,
+        },
+        {
+          src: '/realisations/hotel-le-saint-eloi-planning-mobile.webp',
+          alt: 'Plan des chambres sur téléphone : qui dort où ce soir, chambres libres et propres',
+          width: 390,
+          height: 844,
+        },
+      ],
+      video: {
+        src: '/realisations/hotel-le-saint-eloi-demo.mp4',
+        poster: '/realisations/hotel-le-saint-eloi-demo.webp',
+        width: 720,
+        height: 1558,
+        label: 'Démonstration du site et du tableau de bord (1 min 15, sans son)',
+      },
+      note: 'Captures et vidéo réalisées avec des données de démonstration.',
+    },
   },
 ]
 

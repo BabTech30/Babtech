@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { CtaSection } from '@/components/CtaSection'
 import { FaqList } from '@/components/FaqList'
@@ -10,7 +11,7 @@ import { ServiceCard } from '@/components/ServiceCard'
 import { community } from '@/data/community'
 import { faqGroups } from '@/data/faq'
 import { caseStudies } from '@/data/portfolio'
-import { levels, transversal } from '@/data/services'
+import { levels, transversal, turnkey } from '@/data/services'
 import { zones } from '@/data/zones'
 import { getAllPosts } from '@/lib/blog'
 import { graph, webPageNode } from '@/lib/schema'
@@ -124,11 +125,16 @@ export default function Home() {
           <aside aria-label="Bastien, fondateur de BabTech" className="card relative overflow-hidden p-7 md:p-8">
             <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-emerald-b to-bronze" />
             <div className="mb-6 flex items-center gap-4">
-              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-b/30 to-bronze/30 font-outfit text-2xl font-bold text-white">
-                B
-              </span>
+              <Image
+                src={site.founder.avatarSmall}
+                alt={`Portrait de ${site.founder.name}`}
+                width={128}
+                height={128}
+                loading="eager"
+                className="h-14 w-14 rounded-2xl border border-white/10 object-cover"
+              />
               <div>
-                <p className="font-outfit text-lg font-semibold text-white">Bastien Ferrer</p>
+                <p className="font-outfit text-lg font-semibold text-white">{site.founder.name}</p>
                 <p className="text-sm text-txt-secondary">Fondateur de BabTech</p>
               </div>
             </div>
@@ -165,8 +171,8 @@ export default function Home() {
               <ServiceCard key={s.slug} service={s} />
             ))}
           </div>
-          <div className="mt-5 grid gap-5 md:grid-cols-2">
-            {transversal.map((s) => (
+          <div className="mt-5 grid gap-5 md:grid-cols-3">
+            {[...turnkey, ...transversal].map((s) => (
               <ServiceCard key={s.slug} service={s} />
             ))}
           </div>

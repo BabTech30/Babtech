@@ -124,7 +124,7 @@ Chaque article : une vraie question de client, une réponse dès le premier para
 | 5 | Étude de cas : Le Terrier, un bar-restaurant digitalisé de A à Z · PWA ou application mobile : que choisir ? |
 | 6 | Répondre aux avis négatifs : méthode et modèles · Créer une charte d'usage de l'IA pour son équipe |
 | 7 | Site multilingue pour le tourisme (Sète, Agde, La Grande-Motte) · Automatiser la prise de rendez-vous |
-| 8 | RGPD et IA : les règles simples pour une petite entreprise · Étude de cas : Hôtel Saint Eloi |
+| 8 | RGPD et IA : les règles simples pour une petite entreprise · Étude de cas : Hôtel Le Saint Éloi |
 | 9 | Mesurer son trafic sans cookie (Plausible, Umami) · Bilan des cercles de travail de la communauté |
 | 10 | Les métiers du BTP face à l'IA : ce qui change vraiment · Tableau de bord : les 5 chiffres qu'un artisan doit suivre |
 | 11 | GEO : bilan d'un an de tests dans les assistants IA · Refonte de site : quand et comment |

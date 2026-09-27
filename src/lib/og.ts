@@ -3,7 +3,13 @@ import { services } from '@/data/services'
 import { zones } from '@/data/zones'
 import { getAllPosts } from './blog'
 
-export type OgEntry = { key: string; eyebrow: string; title: string }
+export type OgEntry = {
+  key: string
+  eyebrow: string
+  title: string
+  /** Affiche le portrait de Bastien à droite du titre. */
+  photo?: boolean
+}
 
 /**
  * Registre des images de partage (1200×630) générées au build dans /og/<clé>.png.
@@ -32,9 +38,17 @@ export function getOgEntries(): OgEntry[] {
       eyebrow: 'Communauté · Montpellier',
       title: "Apprendre le digital et l'IA entre entrepreneurs",
     },
-    { key: 'a-propos', eyebrow: 'À propos', title: "Derrière BabTech, il y a un parcours d'entrepreneur." },
+    { key: 'a-propos', eyebrow: 'À propos', title: "Derrière BabTech, il y a un parcours d'entrepreneur.", photo: true },
     { key: 'portfolio', eyebrow: 'Réalisations', title: 'Des projets concrets. Des résultats qui parlent.' },
     { key: 'contact', eyebrow: 'Contact', title: 'Parlons de ton projet.' },
     { key: 'faq', eyebrow: 'FAQ', title: 'Toutes les réponses à tes questions.' },
+    // Pages partagées par QR code (hors Google) : le visage rassure dans l'aperçu du lien.
+    {
+      key: 'bastien',
+      eyebrow: 'Bastien Ferrer · BabTech',
+      title: 'Du digital concret pour les artisans, commerçants et loueurs',
+      photo: true,
+    },
+    { key: 'carte', eyebrow: 'Carte de visite', title: 'Bastien Ferrer, fondateur de BabTech', photo: true },
   ]
 }

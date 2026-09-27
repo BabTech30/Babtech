@@ -4,9 +4,10 @@
  *
  * Démarre le site comme en production (`next start`), puis parcourt toutes les pages du sitemap et
  * celles qu'elles relient. Vérifie : fichiers SEO/GEO présents, balises essentielles (title,
- * description, canonical, h1 unique, Open Graph), JSON-LD valide, liens internes et images qui
- * répondent, URL de pages cohérentes (« / » final), titres et descriptions en double, page 404,
- * redirection www, et l'espace /admin : protégé par la connexion, jamais indexé, absent du sitemap.
+ * description, canonical, h1 unique, Open Graph), JSON-LD valide, liens internes, images et vidéos
+ * qui répondent, URL de pages cohérentes (« / » final), titres et descriptions en double, page 404,
+ * redirection www, pages partagées par QR code (hors Google), fiche contact .vcf, et l'espace
+ * /admin : protégé par la connexion, jamais indexé, absent du sitemap.
  */
 import { spawn } from 'node:child_process'
 import { existsSync, mkdtempSync, rmSync } from 'node:fs'
@@ -86,6 +87,9 @@ for (let i = 0; ; i++) {
   await new Promise((resolve) => setTimeout(resolve, 250))
 }
 
+/** Pages partagées par lien ou QR code : en ligne, mais hors de Google (noindex) et du sitemap. */
+const NOINDEX_PAGES = ['/bastien/', '/carte/']
+
 /* ---------- Fichiers SEO / GEO ---------- */
 const REQUIRED = [
   '/robots.txt',
@@ -139,11 +143,15 @@ for (const loc of locs) {
   const { pathname } = new URL(loc)
   if (badSlash(pathname)) errors.push(`Sitemap → ${loc} ${slashRule}`)
   if (pathname.startsWith('/admin')) errors.push(`Sitemap → l'espace privé ${loc} ne doit pas y figurer`)
+  if (NOINDEX_PAGES.includes(pathname)) errors.push(`Sitemap → ${loc} est hors Google (noindex) et ne doit pas y figurer`)
 }
 
 /* ---------- Pages ---------- */
-const queue = locs.map((loc) => new URL(loc).pathname)
+const queue = [...new Set([...locs.map((loc) => new URL(loc).pathname), ...NOINDEX_PAGES])]
 const queued = new Set(queue)
+/** Vidéos et fiches contact rencontrées, contrôlées à part. */
+const videos = new Set()
+const vcards = new Set()
 /** Page qui a mené à une page hors sitemap (pour situer un lien cassé). */
 const referrer = new Map()
 const seenTitles = new Map()
@@ -189,7 +197,10 @@ while (queue.length) {
   if (h1 !== 1) errors.push(`${where} ${h1} balise(s) <h1> (1 attendue)`)
 
   if (!/<html lang="fr"/.test(html)) errors.push(`${where} attribut lang="fr" manquant`)
-  if (/<meta name="robots" content="[^"]*noindex/.test(html)) errors.push(`${where} page publique marquée noindex`)
+  const noindex = /<meta name="robots" content="[^"]*noindex/.test(html)
+  if (NOINDEX_PAGES.includes(urlPath)) {
+    if (!noindex) errors.push(`${where} page partagée par QR code : balise robots noindex attendue`)
+  } else if (noindex) errors.push(`${where} page publique marquée noindex`)
 
   const ogImage = html.match(/<meta property="og:image" content="([^"]*)"/)?.[1]
   if (!ogImage) errors.push(`${where} og:image manquant`)
@@ -209,6 +220,14 @@ while (queue.length) {
     }
   }
 
+  // Images, vidéos et affiches de vidéo servies par le site.
+  for (const [, src] of html.matchAll(/\s(?:src|poster)="(\/[^"]*)"/g)) {
+    const target = decode(src).split('?')[0]
+    if (target.startsWith('/_next/') || target.startsWith('//')) continue
+    if ((await statusOf(target)) !== 200) errors.push(`${where} image ou vidéo introuvable : ${target}`)
+    if (/\.(mp4|webm)$/i.test(target)) videos.add(target)
+  }
+
   for (const [, href] of html.matchAll(/href="(\/[^"]*)"/g)) {
     const target = decode(href)
     if (target.startsWith('/_next/') || target.startsWith('//')) continue
@@ -217,6 +236,7 @@ while (queue.length) {
       errors.push(`${where} lien vers l'espace privé : ${target}`)
       continue
     }
+    if (pathname.endsWith('.vcf')) vcards.add(pathname)
     if (badSlash(pathname)) {
       errors.push(`${where} lien ${target} ${slashRule} (redirection inutile)`)
     } else if (isPage(pathname)) {
@@ -234,6 +254,23 @@ while (queue.length) {
 
 for (const [t, where] of seenTitles) if (where.length > 1) errors.push(`Title en double « ${t} » : ${where.join(', ')}`)
 for (const [d, where] of seenDescriptions) if (where.length > 1) warnings.push(`Description en double : ${where.join(', ')} — ${d.slice(0, 60)}…`)
+
+/* ---------- Vidéos et fiches contact ---------- */
+// Safari ne lit une vidéo que si le serveur répond aux requêtes partielles (Range → 206).
+for (const video of videos) {
+  const res = await fetch(base + video, { headers: { Range: 'bytes=0-1' } })
+  await res.arrayBuffer()
+  if (res.status !== 206) errors.push(`Vidéo ${video} : lecture partielle non prise en charge (réponse ${res.status}, 206 attendu)`)
+}
+if (!vcards.size) errors.push('Aucune fiche contact .vcf liée depuis la carte de visite')
+for (const vcard of vcards) {
+  const res = await get(vcard)
+  if (res.status !== 200) continue // déjà signalé comme lien cassé
+  if (!(res.headers.get('content-type') ?? '').startsWith('text/vcard')) errors.push(`${vcard} : type ${res.headers.get('content-type')} (text/vcard attendu)`)
+  if (!/^BEGIN:VCARD\r\nVERSION:3\.0\r\n[\s\S]*\r\nEND:VCARD\r\n$/.test(res.body)) errors.push(`${vcard} : format vCard invalide`)
+  if (res.body.split('\r\n').some((line) => Buffer.byteLength(line) > 75)) errors.push(`${vcard} : ligne de plus de 75 octets`)
+  if (!(res.headers.get('x-robots-tag') ?? '').includes('noindex')) errors.push(`${vcard} : en-tête X-Robots-Tag noindex absent`)
+}
 
 /* ---------- Comportements du serveur ---------- */
 const missing = await get('/page-inexistante-controle/')

@@ -6,7 +6,7 @@ référencement local + GEO, et accompagnement des TPE.
 Le site est pensé pour être trouvé **sur Google** (SEO local) **et dans les réponses des assistants IA** (ChatGPT, Perplexity,
 Gemini, Claude, Copilot…), grâce au GEO (*Generative Engine Optimization*).
 
-- Stack : **Next.js 16** (App Router, export statique), **React 19**, **Tailwind CSS 3**, **TypeScript**
+- Stack : **Next.js 16** (App Router, pages prérendues servies par Node.js), **React 19**, **Tailwind CSS 3**, **TypeScript**
 - Hébergement : **Hostinger**, application Node.js qui construit la branche `main` (déploiement depuis hPanel)
 - Formulaires : **Formspree** · Rendez-vous : **Calendly** · Mesure d'audience optionnelle et sans cookie : **Plausible** ou **Umami**
 
@@ -31,10 +31,12 @@ npm run dev        # http://localhost:3000
 | Je veux modifier… | Fichier |
 |---|---|
 | Domaine, nom, email, téléphone, adresse, réseaux sociaux, SIRET | `src/lib/site.ts` |
+| Tes photos, ton ancienne entreprise et sa vidéo | `src/lib/site.ts` (`founder`) et `public/photos/` |
 | Les services (textes, prix, FAQ) | `src/data/services.ts` |
 | Les pages des villes (zones d'intervention) | `src/data/zones.ts` et `src/data/area.ts` |
 | La FAQ générale | `src/data/faq.ts` |
-| Les réalisations | `src/data/portfolio.ts` |
+| Les réalisations (textes, chiffres, captures, vidéo) | `src/data/portfolio.ts` et `public/realisations/` |
+| La page de présentation et la carte de visite | `src/app/bastien/page.tsx`, `src/app/carte/page.tsx`, `src/lib/vcard.ts` |
 | La communauté (formats, thèmes, étapes, FAQ) | `src/data/community.ts` |
 | Les catégories du blog | `src/data/blog.ts` |
 | Un article | `content/blog/<slug>.md` |
@@ -81,6 +83,12 @@ Hostinger (application Node.js) construit la branche **`main`**. Les modificatio
 cliques sur **Déployer** dans hPanel. Le **Contrôle qualité** GitHub doit être vert avant. Réglages et dépannage :
 **[`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md)**.
 
+## Présentation et carte de visite
+
+Deux pages à partager par lien ou par QR code, volontairement absentes de Google : `https://babtech.fr/bastien/`
+(qui tu es, ce que tu fais, ton parcours et un projet) et `https://babtech.fr/carte/` (ta carte de visite, avec le bouton
+« Enregistrer le contact » qui ajoute ta fiche au téléphone, et son propre QR code).
+
 ## Tableau de bord privé
 
 `https://babtech.fr/admin/` : avancement du projet, checklist, santé du site, chiffres du mois (demandes de devis,
@@ -97,12 +105,13 @@ contrats, Google…), zones visées et décisions. Connexion par identifiant et 
 
 ```
 content/blog/          Articles en Markdown
-public/                Fichiers servis tels quels (favicon, vérification Google, clé IndexNow)
+public/                Fichiers servis tels quels (favicon, photos, captures et vidéo des réalisations, vérification Google, clé IndexNow)
 scripts/               check-build.mjs (contrôle qualité), postbuild.mjs (serveur Node.js autonome), indexnow.mjs
 .github/workflows/     ci.yml (contrôle qualité à chaque envoi sur GitHub)
 src/app/               Pages (App Router) + routes générées : sitemap, robots, llms.txt, RSS, images OG, icônes ; admin/ (espace privé)
 src/components/        Composants d'interface (Header, Footer, formulaires, FAQ, cartes…)
 src/data/              Contenus structurés (services, villes, FAQ, communauté…)
+src/assets/            Photo intégrée à la fiche contact (.vcf) de la carte de visite
 src/fonts/             Polices auto-hébergées (Outfit, DM Sans — licence OFL)
 src/lib/               Configuration du site, SEO, Schema.org, blog, llms.txt, typographie
 ```

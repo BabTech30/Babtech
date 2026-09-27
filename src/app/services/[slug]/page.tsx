@@ -11,7 +11,7 @@ import { ProcessSteps } from '@/components/ProcessSteps'
 import { PostCard } from '@/components/PostCard'
 import { accentStyles, ServiceCard } from '@/components/ServiceCard'
 import { getCaseStudy } from '@/data/portfolio'
-import { getService, services } from '@/data/services'
+import { getService, services, type ServiceSlug } from '@/data/services'
 import { zones } from '@/data/zones'
 import { getAllPosts } from '@/lib/blog'
 import { faqNode, graph, serviceNode, webPageNode } from '@/lib/schema'
@@ -39,10 +39,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /** Libellé court utilisé dans les liens locaux (« Création de site internet à Sète »). */
-const localLabel: Record<string, string> = {
+const localLabel: Record<ServiceSlug, string> = {
   'creation-site-internet': 'Création de site internet',
   'application-metier': 'Application métier',
   'automatisation-ia': 'Automatisation et IA',
+  'site-reservation-location-saisonniere': 'Site de réservation',
   'referencement-local-geo': 'Référencement local',
   'accompagnement-formation-ia': 'Formation IA',
 }

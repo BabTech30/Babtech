@@ -6,7 +6,7 @@ import { JsonLd } from '@/components/JsonLd'
 import { PageHero } from '@/components/PageHero'
 import { ProcessSteps } from '@/components/ProcessSteps'
 import { accentStyles } from '@/components/ServiceCard'
-import { levels, services, transversal } from '@/data/services'
+import { levels, services, transversal, turnkey } from '@/data/services'
 import { graph, webPageNode } from '@/lib/schema'
 import { pageMetadata } from '@/lib/seo'
 import { absoluteUrl } from '@/lib/site'
@@ -14,7 +14,7 @@ import { fr } from '@/lib/typography'
 
 const title = 'Services digitaux pour TPE à Montpellier : site, application, IA'
 const description =
-  "Création de site internet dès 800 €, applications métier dès 1 500 €, automatisation IA dès 3 000 €, référencement local + GEO et formation IA pour les TPE de l'Hérault."
+  "Sites internet dès 800 €, applications métier dès 1 500 €, automatisation IA dès 3 000 €, sites de réservation dès 250 €, SEO local, GEO et formation IA dans l'Hérault."
 
 export const metadata: Metadata = pageMetadata({ title, description, path: '/services', og: 'services' })
 
@@ -22,6 +22,7 @@ const comparison = [
   { need: 'Être trouvé en ligne et inspirer confiance', answer: 'Site internet + SEO local', slug: 'creation-site-internet', price: 'Dès 800 €', delay: '2 à 4 semaines' },
   { need: 'Arrêter Excel, le papier et les doubles saisies', answer: 'Application métier / PWA', slug: 'application-metier', price: 'Dès 1 500 €', delay: 'Par étapes' },
   { need: 'Supprimer les tâches répétitives', answer: 'Automatisation & IA (n8n)', slug: 'automatisation-ia', price: 'Dès 3 000 €', delay: 'Selon les processus' },
+  { need: 'Louer ton logement en direct, sans commission', answer: 'Site de réservation (locations saisonnières)', slug: 'site-reservation-location-saisonniere', price: 'Dès 250 €', delay: 'Selon les options' },
   { need: 'Apparaître dans Google Maps et les réponses des IA', answer: 'Référencement local & GEO', slug: 'referencement-local-geo', price: 'Inclus dans les sites', delay: 'Effets en quelques semaines' },
   { need: "Savoir par où commencer, former l'équipe à l'IA", answer: 'Accompagnement & formation IA', slug: 'accompagnement-formation-ia', price: 'Sur devis', delay: 'Selon le format' },
 ]
@@ -53,7 +54,7 @@ export default function ServicesPage() {
       <PageHero
         eyebrow="Services"
         title="Ce dont tu as besoin. Rien de plus, rien de moins."
-        lead="Pas de pack tout fait ni de formule magique. Sites internet, applications métier, automatisations IA : je construis ce dont ton entreprise a vraiment besoin, au bon moment et au bon niveau."
+        lead="Pas de formule magique. Sites internet, applications métier, automatisations IA ou site de réservation pour ta location : je construis ce dont ton activité a vraiment besoin, au bon moment et au bon niveau."
         crumbs={[{ name: 'Services', path: '/services' }]}
       >
         <a href="#comparatif" className="btn-secondary">
@@ -61,7 +62,7 @@ export default function ServicesPage() {
         </a>
       </PageHero>
 
-      {levels.map((s, i) => {
+      {[...levels, ...turnkey].map((s, i) => {
         const a = accentStyles[s.accent]
         return (
           <section key={s.slug} className={`border-t border-bord py-16 md:py-20 ${i % 2 === 0 ? 'bg-nuit-light' : ''}`} aria-labelledby={`titre-${s.slug}`}>
