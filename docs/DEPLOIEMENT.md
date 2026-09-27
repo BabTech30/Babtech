@@ -1,38 +1,57 @@
 # Mettre le site en ligne sur Hostinger
 
-Le site est **100 % statique** : c'est un dossier de fichiers (pages, images, sitemap…) à copier dans `public_html`.
+Le site est **100 % statique** : c'est un dossier de fichiers (pages, images, sitemap…) servi depuis `public_html`.
 Pas besoin de Node.js ni de base de données chez Hostinger : n'importe quelle offre d'hébergement web convient.
-Le fichier `.htaccess` (HTTPS obligatoire, `www` redirigé, page 404, sécurité, cache) est fourni avec le site.
+Le fichier `.htaccess` (HTTPS obligatoire, `www` redirigé, page 404, sécurité, cache, compression) est fourni avec le site.
 
-## 1. Côté Hostinger (une seule fois)
+## Comment ça marche
 
-1. Prendre l'hébergement et le domaine **babtech.fr** (libre au 26 septembre 2026).
-   Autre domaine ? Change la ligne `DEFAULT_SITE_URL` dans `src/lib/site.ts`, c'est tout.
-2. Dans hPanel, ajouter un site **vide** pour ce domaine (ni WordPress, ni créateur de site).
-3. Vérifier que le certificat SSL gratuit est actif (il l'est en général automatiquement).
-4. Conseillé : créer une adresse email à ton domaine (ex. `contact@babtech.fr`) et la reporter dans `src/lib/site.ts` (`email`).
+1. Tu modifies le site sur la branche **`main`** (le code source).
+2. GitHub construit le site et le contrôle (liens, balises SEO, données structurées…) en 2 à 3 minutes, puis range le
+   résultat, prêt à servir, dans la branche **`hostinger`**. Si le contrôle échoue, rien n'est publié et le site en
+   ligne reste intact.
+3. Hostinger récupère la branche `hostinger` dans `public_html`.
 
-## 2. Récupérer le site prêt à l'emploi
+> **Ne branche jamais Hostinger sur `main`** : `main` contient le code source, pas le site. Hostinger ne sait pas le
+> construire et afficherait une page vide ou une erreur. La branche `hostinger` est régénérée à chaque mise à jour :
+> ne la modifie jamais à la main.
 
-**Sans rien installer (recommandé).** À chaque mise à jour de la branche `main` sur GitHub, le site est construit et
-contrôlé automatiquement. Sur GitHub → onglet **Actions** → dernière exécution « Site Hostinger » → section **Artifacts** →
-télécharge **site-hostinger** (un fichier zip). Pour relancer à la main : **Run workflow** sur la même page.
+## 1. Brancher Hostinger sur la branche `hostinger` (une seule fois)
 
-**Ou sur ton ordinateur** (Node.js installé) : `npm install` puis `npm run build:hostinger` → fichier `hostinger-site.zip`.
+La branche `hostinger` est créée automatiquement la première fois que `main` est mise à jour avec cette version du
+site : vérifie sur GitHub → onglet **Actions** que l'exécution « Site Hostinger » est verte.
 
-## 3. Mettre en ligne
+1. hPanel → **Sites web** → babtech.fr → **Avancé → Git**. Si un dépôt est déjà branché sur `main`, supprime-le.
+2. hPanel → **Gestionnaire de fichiers** → `public_html` : supprime tout son contenu, dont `default.php` (la page par
+   défaut d'Hostinger). Le déploiement Git n'accepte qu'un dossier vide.
+3. Retour dans **Git**, crée un dépôt :
+   - dépôt : `https://github.com/BabTech30/Babtech.git` (dépôt public : aucune clé SSH nécessaire) ;
+   - branche : `hostinger` ;
+   - répertoire : laisse vide (le site va directement dans `public_html`).
+4. Clique sur **Déployer**, puis ouvre `https://babtech.fr` : le site s'affiche en HTTPS.
 
-hPanel → **Gestionnaire de fichiers** → dossier **`public_html`** :
-1. supprime l'ancien contenu et les fichiers de démonstration d'Hostinger (garde le dossier `.well-known` s'il existe) ;
-2. importe le zip, clic droit → **Extraire** dans `public_html`, puis supprime le zip ;
-3. ouvre `https://babtech.fr` : le site s'affiche en HTTPS.
+**Mise à jour automatique** : dans Git, active le **déploiement automatique** et copie l'URL du webhook fournie par
+Hostinger. Sur GitHub → dépôt `Babtech` → **Settings → Webhooks → Add webhook** : colle l'URL dans *Payload URL*,
+laisse le reste par défaut, puis **Add webhook**. Désormais, chaque mise à jour de `main` arrive en ligne toute seule,
+quelques minutes plus tard. Sans webhook, il suffit de cliquer sur **Déployer** dans hPanel.
 
-Pour une mise à jour : même opération avec le nouveau zip.
+Le dossier `.git` que Hostinger crée dans `public_html` est bloqué par le `.htaccess` : il n'est pas lisible depuis le web.
+Ne modifie pas les fichiers de `public_html` à la main et évite les réglages d'hPanel qui réécrivent le `.htaccess`
+(redirections, « Forcer HTTPS »…) : le site gère déjà HTTPS et `www`, et une modification sur le serveur peut bloquer
+les mises à jour Git.
 
-## Option : envoi automatique
+## Autres façons de mettre en ligne (sans le Git d'Hostinger)
 
-Pour ne plus rien faire à la main, ajoute tes accès FTP dans GitHub → dépôt `Babtech` → **Settings → Secrets and variables
-→ Actions → New repository secret** :
+Une seule méthode à la fois : si le déploiement Git est en place, n'utilise ni le zip ni le FTP (ils écriraient dans le
+même dossier et bloqueraient les mises à jour Git).
+
+**Zip, à la main.** GitHub → onglet **Actions** → dernière exécution « Site Hostinger » → section **Artifacts** →
+télécharge **site-hostinger**. Ou, sur ton ordinateur (Node.js installé) : `npm install` puis `npm run build:hostinger`
+→ fichier `hostinger-site.zip`. Ensuite, hPanel → **Gestionnaire de fichiers** → `public_html` : supprime l'ancien
+contenu (garde le dossier `.well-known` s'il existe), importe le zip, clic droit → **Extraire**, puis supprime le zip.
+
+**FTP automatique.** Ajoute tes accès FTP dans GitHub → dépôt `Babtech` → **Settings → Secrets and variables →
+Actions → New repository secret** (ne les écris jamais ailleurs) :
 
 | Secret | Où le trouver |
 |---|---|
@@ -40,12 +59,18 @@ Pour ne plus rien faire à la main, ajoute tes accès FTP dans GitHub → dépô
 | `FTP_USERNAME` | même page (identifiant) |
 | `FTP_PASSWORD` | même page (mot de passe, à réinitialiser si besoin) |
 
-Ensuite, chaque mise à jour de `main` est envoyée sur Hostinger toute seule (seuls les fichiers modifiés partent).
-Si le contrôle qualité trouve une erreur, rien n'est envoyé et le site en ligne reste intact.
+Chaque mise à jour de `main` est alors envoyée sur Hostinger (seuls les fichiers modifiés partent). Deux réglages
+facultatifs, en *Variables* sur la même page : `FTP_SERVER_DIR` (`public_html/` par défaut ; mets `./` si ton compte FTP
+s'ouvre directement dans `public_html`) et `FTP_PROTOCOL` (`ftps`, chiffré, par défaut ; `ftp` seulement si la
+connexion chiffrée est refusée).
 
-Deux réglages facultatifs, en *Variables* sur la même page : `FTP_SERVER_DIR` (`public_html/` par défaut ; mets `./` si
-ton compte FTP s'ouvre directement dans `public_html`) et `FTP_PROTOCOL` (`ftps`, chiffré, par défaut ; `ftp` seulement si
-la connexion chiffrée est refusée). Le téléphone peut aussi être ajouté en variable `PHONE` (`+33…`).
+## Si une mise à jour n'apparaît pas
+
+1. GitHub → **Actions** : la dernière exécution « Site Hostinger » doit être verte. En rouge, ouvre-la : le contrôle
+   qualité indique la page et le problème.
+2. hPanel → **Git** : clique sur **Déployer** pour forcer la récupération. Si le déploiement échoue, supprime le dépôt
+   dans Git, vide `public_html` et recrée-le (étapes 2 à 4 ci-dessus).
+3. hPanel → **Performances → CDN** : vide le cache du CDN, puis recharge la page (Ctrl + F5).
 
 ## Netlify
 
@@ -69,6 +94,7 @@ Le site n'utilise plus Netlify. Tu peux supprimer l'ancien site `agence-babtech`
 |---|---|
 | SIRET et adresse (`legal`) | Obligatoires dans les mentions légales |
 | Téléphone (`phone`, ou variable `PHONE` dans GitHub) | Obligation légale, SEO local, appels directs |
+| Email à ton domaine (`email`, ex. `contact@babtech.fr`, à créer dans hPanel → Emails) | Image professionnelle, cohérence avec la fiche Google |
 | Profils LinkedIn, Malt, Google Business Profile (`social`, `founder.sameAs`) | Relient ton entreprise pour Google et les IA |
 
 Et la photo de Bastien sur la page À propos, dès que possible. Le plan de référencement complet est dans

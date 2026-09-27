@@ -1,11 +1,12 @@
 # Site pour Hostinger, construit par GitHub à chaque mise à jour de la branche main.
 #
-# Sans aucune configuration : le site est construit, contrôlé, et le fichier « site-hostinger »
-# (zip, .htaccess compris) est téléchargeable dans l'onglet Actions → dernière exécution → Artifacts.
-# Il suffit de l'importer dans public_html via le gestionnaire de fichiers d'Hostinger et de l'extraire.
-#
-# Envoi automatique (facultatif) : ajouter dans GitHub → Settings → Secrets and variables → Actions
-# les secrets FTP_SERVER, FTP_USERNAME et FTP_PASSWORD (hPanel → Fichiers → Comptes FTP).
+# À chaque exécution, le site est construit et contrôlé, puis :
+# - publié sur la branche « hostinger » (uniquement les fichiers du site, .htaccess compris) :
+#   c'est cette branche que suit le déploiement Git d'Hostinger (hPanel → Avancé → Git) ;
+# - proposé en zip « site-hostinger » (onglet Actions → dernière exécution → Artifacts),
+#   pour une mise en ligne à la main dans public_html ;
+# - envoyé par FTP si les secrets FTP_SERVER, FTP_USERNAME et FTP_PASSWORD existent (facultatif).
+# Si le contrôle qualité échoue, rien n'est publié et le site en ligne reste intact.
 # Détails : docs/DEPLOIEMENT.md
 
 name: Site Hostinger
@@ -19,6 +20,9 @@ concurrency:
   group: hostinger
   cancel-in-progress: false
 
+permissions:
+  contents: write # publication de la branche « hostinger »
+
 jobs:
   site:
     runs-on: ubuntu-latest
@@ -27,6 +31,8 @@ jobs:
       FTP_SERVER: ${{ secrets.FTP_SERVER }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-node@v6
         with:
@@ -55,6 +61,30 @@ jobs:
           path: out/
           include-hidden-files: true
           retention-days: 30
+
+      - name: Publier le site sur la branche hostinger
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          # Dépôt Git temporaire, à côté du dossier out/ (qui reste intact pour l'envoi FTP).
+          export GIT_DIR="$RUNNER_TEMP/site-hostinger.git" GIT_WORK_TREE="$PWD/out"
+          git init --quiet
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          # Nouvelle version = commit ajouté à la suite des précédents : Hostinger n'a qu'un « git pull » à faire.
+          if git ls-remote --exit-code --heads origin hostinger > /dev/null; then
+            git fetch --quiet --depth=1 origin hostinger
+            git reset --quiet --soft FETCH_HEAD
+          fi
+          git add --all
+          if git diff --cached --quiet; then
+            echo "Site identique à la version déjà publiée."
+          else
+            git commit --quiet -m "Site généré depuis ${GITHUB_SHA::7}"
+            git push --quiet origin HEAD:refs/heads/hostinger
+            echo "Branche hostinger mise à jour."
+          fi
 
       - name: Envoi automatique sur Hostinger (si les accès FTP sont configurés)
         if: env.FTP_SERVER != ''

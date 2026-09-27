@@ -5,7 +5,8 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
 
 ## Avant de pousser
 - `npm run verify` doit passer (TypeScript, ESLint, build, `scripts/check-build.mjs`). Le workflow GitHub Actions
-  (zip du site + envoi FTP facultatif vers Hostinger) échoue si le contrôle qualité échoue.
+  publie le site construit sur la branche `hostinger` (suivie par le déploiement Git d'Hostinger), en zip et, en option,
+  par FTP ; rien n'est publié si le contrôle qualité échoue. Ne jamais modifier la branche `hostinger` à la main.
 - Hébergement : Hostinger uniquement (Apache/LiteSpeed), domaine défini par `DEFAULT_SITE_URL` dans `src/lib/site.ts`. `trailingSlash: true` : chaque page est exportée en `dossier/index.html`
   et toutes les URL de pages finissent par « / » — construire les URL avec `absoluteUrl()` / `withTrailingSlash()`
   (`src/lib/site.ts`). Le `.htaccess` est généré par `scripts/postbuild.mjs` (ne pas l'écrire à la main dans `public/`).

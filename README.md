@@ -79,11 +79,12 @@ et un appel à l'action vers `/contact` ou `/communaute`.
 
 Le guide pas à pas est dans **[`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md)**. En résumé :
 
-1. à chaque mise à jour de `main`, GitHub construit le site : onglet **Actions** → dernière exécution → télécharger
-   **site-hostinger** (zip) — ou, sur ton ordinateur, `npm run build:hostinger` ;
-2. hPanel → Gestionnaire de fichiers → `public_html` → importer le zip → **Extraire**.
+1. à chaque mise à jour de `main`, GitHub construit et contrôle le site, puis le publie, prêt à servir, sur la branche
+   **`hostinger`** ;
+2. le déploiement Git d'Hostinger (hPanel → Avancé → Git) suit cette branche et la récupère dans `public_html`.
 
-En ajoutant tes accès FTP dans les secrets GitHub, l'envoi sur Hostinger devient automatique.
+Hostinger ne doit jamais suivre `main` (code source). Sans Git : zip téléchargeable dans l'onglet **Actions**
+(ou `npm run build:hostinger`) ou envoi FTP automatique.
 
 ## Documentation
 
@@ -97,7 +98,7 @@ En ajoutant tes accès FTP dans les secrets GitHub, l'envoi sur Hostinger devien
 content/blog/          Articles en Markdown
 public/                Fichiers servis tels quels (favicon, vérification Google, clé IndexNow)
 scripts/               postbuild.mjs (.htaccess), build-hostinger.mjs, check-build.mjs (contrôle qualité), indexnow.mjs
-.github/workflows/     deploy-hostinger.yml (zip du site à chaque mise à jour, envoi FTP facultatif)
+.github/workflows/     deploy-hostinger.yml (branche hostinger + zip à chaque mise à jour, FTP facultatif)
 src/app/               Pages (App Router) + routes générées : sitemap, robots, llms.txt, RSS, images OG, icônes
 src/components/        Composants d'interface (Header, Footer, formulaires, FAQ, cartes…)
 src/data/              Contenus structurés (services, villes, FAQ, communauté…)

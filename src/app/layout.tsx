@@ -15,11 +15,12 @@ const outfit = localFont({
   display: 'swap',
 })
 
+// Pas de fichier italique : les rares passages en italique sont dessinés par le navigateur,
+// ce qui évite de précharger 40 Ko de police sur chaque page.
 const dmSans = localFont({
-  src: [
-    { path: '../fonts/dm-sans-latin-wght-normal.woff2', weight: '100 1000', style: 'normal' },
-    { path: '../fonts/dm-sans-latin-wght-italic.woff2', weight: '100 1000', style: 'italic' },
-  ],
+  src: '../fonts/dm-sans-latin-wght-normal.woff2',
+  weight: '100 1000',
+  style: 'normal',
   variable: '--font-dm',
   display: 'swap',
 })

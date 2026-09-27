@@ -3,8 +3,9 @@
  * Étape lancée automatiquement après `next build` (script npm « postbuild »).
  *
  * 1. Écrit out/.htaccess pour les serveurs Apache / LiteSpeed (Hostinger) : HTTPS forcé,
- *    domaine unique (avec ou sans www selon le domaine du site), page 404, en-têtes de
- *    sécurité, cache, types de fichiers, robots IA.
+ *    domaine unique (avec ou sans www selon le domaine du site), page 404, fichiers cachés
+ *    (dont le dossier .git du déploiement Git) interdits, en-têtes de sécurité, cache,
+ *    types de fichiers, robots IA.
  * 2. Écrit out/_next/static/.htaccess : cache long pour les fichiers versionnés de Next.js.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -61,11 +62,16 @@ ErrorDocument 404 /404.html
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 ${canonicalHostRules()}
-  # 3. Les navigateurs demandent /favicon.ico par défaut
+  # 3. Dossiers et fichiers cachés (.git du déploiement Git, état FTP…) : interdits,
+  #    sauf .well-known (certificat SSL, vérifications de domaine).
+  RewriteCond %{REQUEST_URI} !^/\\.well-known/ [NC]
+  RewriteRule (^|/)\\. - [F,L]
+
+  # 4. Les navigateurs demandent /favicon.ico par défaut
   RewriteRule ^favicon\\.ico$ /brand/favicon-48.png [L]
 </IfModule>
 
-# Fichiers cachés (.htaccess, état de synchronisation FTP…) : jamais servis.
+# Fichiers cachés (si la réécriture d'URL est indisponible) : jamais servis.
 <FilesMatch "^\\.">
   <IfModule mod_authz_core.c>
     Require all denied
@@ -83,7 +89,7 @@ ${canonicalHostRules()}
 </IfModule>
 
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/javascript application/json application/xml application/rss+xml application/manifest+json image/svg+xml
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml text/javascript application/javascript application/json application/xml application/rss+xml application/manifest+json image/svg+xml
 </IfModule>
 
 <IfModule mod_headers.c>
@@ -107,6 +113,10 @@ ${canonicalHostRules()}
   </FilesMatch>
   # Fichiers pour les assistants IA : lisibles par les robots, absents des résultats Google.
   <FilesMatch "^llms(-full)?\\.txt$">
+    Header set X-Robots-Tag "noindex"
+  </FilesMatch>
+  # Données de navigation de Next.js (index.txt, __next.*.txt) : utiles au site, pas aux résultats de recherche.
+  <FilesMatch "^(index|__next\\..+)\\.txt$">
     Header set X-Robots-Tag "noindex"
   </FilesMatch>
 </IfModule>
