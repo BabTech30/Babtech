@@ -5,10 +5,11 @@ import os from 'node:os'
 import path from 'node:path'
 import type { MetricKey } from '@/data/admin'
 import type { Appointment, BookingSettings } from '@/data/booking'
+import type { InboxRequest } from '@/data/requests'
 
 /**
  * Données enregistrées par l'espace /admin : tes coches, tes chiffres du mois, les scans des QR codes,
- * les rendez-vous, l'usage de l'assistant IA et ton mot de passe (haché). Un simple fichier JSON sur le serveur, rangé hors du
+ * les rendez-vous, les demandes reçues, l'usage de l'assistant IA et ton mot de passe (haché). Un simple fichier JSON sur le serveur, rangé hors du
  * dossier du site pour survivre aux déploiements : ADMIN_DATA_DIR s'il est défini, sinon ~/.babtech-admin.
  */
 export type Kpi = { month: string; note?: string; updatedAt: string } & Partial<Record<MetricKey, number>>
@@ -27,6 +28,10 @@ export type AdminStore = {
   scans: Record<string, Record<string, number>>
   /** Rendez-vous pris sur /rendez-vous/ (effacés 12 mois après leur date). */
   appointments: Appointment[]
+  /** Demandes reçues par le site (onglet « Demandes »), effacées après leur durée de conservation. */
+  requests: InboxRequest[]
+  /** Résultat du dernier envoi d'e-mails (affiché dans Réglages pour vérifier la configuration). */
+  mailLast?: { ok: boolean; at: string; code?: string }
   /** Réglages de la prise de rendez-vous modifiés dans le tableau de bord (sinon, ceux de src/data/booking.ts). */
   booking?: BookingSettings
   /** Notifications : clés propres au serveur et appareils abonnés. */
@@ -43,7 +48,7 @@ export type AssistantUsage = { count: number; input: number; output: number }
 export type AssistantOutcome = { ok: boolean; at: string; status?: number; reason?: 'refusal' | 'incomplete' }
 
 const FILE = 'admin.json'
-const empty = (): AdminStore => ({ sessionVersion: 1, tasks: {}, kpis: {}, scans: {}, appointments: [], push: { devices: [] } })
+const empty = (): AdminStore => ({ sessionVersion: 1, tasks: {}, kpis: {}, scans: {}, appointments: [], requests: [], push: { devices: [] } })
 
 type Location = { dir: string; persistent: boolean }
 let location: Promise<Location | null> | null = null
@@ -86,6 +91,7 @@ async function readFrom(loc: Location): Promise<AdminStore> {
     kpis: data.kpis ?? {},
     scans: data.scans ?? {},
     appointments: data.appointments ?? [],
+    requests: data.requests ?? [],
     push: { devices: [], ...data.push },
   }
 }

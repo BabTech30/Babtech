@@ -253,6 +253,7 @@ function Confirmation({ booked, contact }: { booked: Booked; contact: Contact })
       </p>
       <p className="mb-6 text-[15px] text-txt-secondary">
         {fr(`Heure de Paris, ${booked.minutes} minutes, ${booked.mode === 'telephone' ? 'par téléphone' : 'en visio'}. ${how}`)}
+        {booked.emailed && <span className="mt-1 block">{fr('Un e-mail de confirmation part à ton adresse, avec le rendez-vous à ajouter à ton agenda.')}</span>}
       </p>
       <div className="flex flex-wrap justify-center gap-3">
         <a href={`data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`} download="rendez-vous-babtech.ics" className="btn-primary btn-sm">

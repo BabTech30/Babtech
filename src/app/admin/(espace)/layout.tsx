@@ -2,10 +2,13 @@ import Link from 'next/link'
 import { AdminNav } from '@/components/admin/AdminNav'
 import { InstallButton } from '@/components/admin/InstallApp'
 import { requireAdmin } from '@/lib/admin/auth'
+import { readStore } from '@/lib/admin/store'
 import { logout } from '../actions'
 
 export default async function AdminSpaceLayout({ children }: { children: React.ReactNode }) {
   await requireAdmin()
+  const { requests } = await readStore()
+  const fresh = requests.filter((r) => r.status === 'new').length
   return (
     <>
       <header className="border-b border-bord bg-nuit">
@@ -17,7 +20,7 @@ export default async function AdminSpaceLayout({ children }: { children: React.R
             BabTech <span className="font-medium text-txt-muted">admin</span>
           </Link>
           <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
-            <AdminNav />
+            <AdminNav counts={{ '/admin/demandes/': fresh }} />
             <InstallButton />
             <a href="/" target="_blank" rel="noopener" className="rounded-lg px-3 py-2 text-sm font-medium text-txt-secondary hover:bg-white/[0.04] hover:text-white">
               Voir le site ↗

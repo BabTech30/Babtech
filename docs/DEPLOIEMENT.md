@@ -32,6 +32,7 @@ Les pages publiques sont préparées à l'avance au moment du build : le site re
 | `ADMIN_USERNAME` | Identifiant de l'espace `/admin` |
 | `ADMIN_PASSWORD` | Mot de passe de départ de `/admin`, à remplacer ensuite dans **Réglages** |
 | `ADMIN_DATA_DIR` | Facultatif : dossier des données de `/admin` (par défaut `~/.babtech-admin`, hors du dossier du site) |
+| `SMTP_PASSWORD` | Mot de passe de la boîte contact@babtech.fr : le site envoie ses e-mails depuis cette adresse (alertes, accusés de réception, confirmations de rendez-vous). Sans lui, les demandes arrivent quand même dans le tableau de bord |
 | `ANTHROPIC_API_KEY` | Facultatif : active l'assistant IA de la page Contact (clé créée sur [platform.claude.com](https://platform.claude.com/settings/keys), facturée à l'usage par Anthropic). Sans elle, la page affiche le formulaire classique |
 | `NEXT_PUBLIC_PHONE`, `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`… | Facultatives : téléphone, mesure d'audience… (liste dans `.env.example`) |
 
@@ -44,7 +45,8 @@ Ces valeurs ne s'écrivent que dans hPanel, jamais dans le code : le dépôt Git
   rendez-vous, santé du site, chiffres du mois à saisir chaque début de mois, zones visées, décisions prises, liens utiles.
 - **Rendez-vous** : les appels découverte réservés sur `https://babtech.fr/rendez-vous/` (appeler, écrire, envoyer le lien
   de visio, annuler), tes disponibilités (plages par jour, durée, délai minimum, jours fermés, pause), les notifications
-  sur tes appareils et un lien d'agenda privé pour ton téléphone. Chaque réservation t'envoie aussi un e-mail via Formspree.
+  sur tes appareils et un lien d'agenda privé pour ton téléphone. Chaque réservation t'envoie aussi un e-mail, et la personne
+  reçoit sa confirmation.
   Sur iPhone et iPad, les notifications ne marchent que dans le tableau de bord installé sur l'écran d'accueil.
 - **Partager** : les QR codes de ta présentation, du site et de ta carte de visite (fichiers pour l'impression,
   affichage en grand, lien à copier) et le nombre de scans de chaque mois.
@@ -78,8 +80,11 @@ Le site n'utilise plus Netlify. Tu peux supprimer l'ancien site `agence-babtech`
 - [ ] **IndexNow** : `npm run indexnow` pour signaler toutes les pages à Bing ; après un nouvel article : `npm run indexnow -- /blog/<slug>/`.
 - [ ] **Google Business Profile** : créer la fiche « BabTech » (zone de service : Montpellier et l'Hérault), avec le lien du
       site, les services et des photos, puis demander un avis à chaque client. C'est le levier n° 1 pour le référencement local.
-- [ ] Envoyer un message test avec le formulaire de contact et celui de la communauté. En cas d'erreur, désactiver le
-      reCAPTCHA dans les réglages du formulaire Formspree (le site a déjà son propre anti-spam).
+- [ ] **E-mails** : créer la boîte contact@babtech.fr (hPanel → Emails), ajouter la variable `SMTP_PASSWORD` avec son mot
+      de passe, redéployer, puis Réglages → E-mails → « Envoyer un e-mail de test ». Dans hPanel → Emails, vérifier que
+      les enregistrements DNS de la messagerie (SPF, DKIM) sont en place : ils évitent que tes e-mails finissent en spam.
+- [ ] Envoyer un message test avec le formulaire de contact et celui de la communauté : il doit arriver dans l'onglet
+      Demandes et sur contact@babtech.fr, avec un accusé de réception pour l'expéditeur.
 - [ ] **Assistant IA** (facultatif) : créer une clé sur [platform.claude.com](https://platform.claude.com/settings/keys),
       la coller dans hPanel (variable `ANTHROPIC_API_KEY`), redéployer, puis tester la page Contact. Réglages indique
       s'il est actif et son coût du mois.

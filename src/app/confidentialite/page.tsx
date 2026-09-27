@@ -27,7 +27,8 @@ export default function Confidentialite() {
           <li>
             <strong>Formulaire de contact&nbsp;:</strong> nom, entreprise ou activité, email, téléphone (facultatif), ville, budget envisagé, type de
             besoin et message. Avec l&apos;assistant IA&nbsp;: nom, email, téléphone (facultatif), description de ton projet, synthèse proposée par
-            l&apos;assistant et tes précisions.
+            l&apos;assistant et tes précisions. Ta demande est enregistrée sur le serveur du site et m&apos;est transmise par email et par une
+            notification sur mes appareils&nbsp;; tu reçois un accusé de réception envoyé depuis {site.email}.
           </li>
           <li>
             <strong>Assistant IA de la page Contact&nbsp;:</strong> si tu lances l&apos;assistant, le texte qui décrit ton projet est transmis à
@@ -36,12 +37,13 @@ export default function Confidentialite() {
           </li>
           <li>
             <strong>Inscription à la communauté&nbsp;:</strong> prénom, email, activité, ville, thèmes et formats souhaités, niveau, message
-            (facultatif) et consentement.
+            (facultatif) et consentement, enregistrés sur le serveur du site et transmis par email&nbsp;; tu reçois un email de bienvenue.
           </li>
           <li>
             <strong>Prise de rendez-vous&nbsp;:</strong> nom, email, téléphone (obligatoire pour un rendez-vous par téléphone), entreprise
             (facultatif), sujet, message (facultatif), ainsi que la date et le mode du rendez-vous choisis. Ces informations sont
-            enregistrées sur le serveur du site et me sont transmises par email et par une notification sur mes appareils.
+            enregistrées sur le serveur du site et me sont transmises par email et par une notification sur mes appareils&nbsp;; tu reçois
+            une confirmation par email, et un email si je dois annuler.
           </li>
           <li>
             <strong>Vidéos YouTube&nbsp;:</strong> sur certaines pages, une vidéo YouTube ne se charge que si tu cliques pour la lancer.
@@ -73,12 +75,11 @@ export default function Confidentialite() {
         <h2>4. Destinataires et sous-traitants</h2>
         <p>Les données sont destinées uniquement à {site.name}. Elles transitent par des prestataires techniques&nbsp;:</p>
         <ul>
-          <li>Formspree (réception des formulaires et des alertes de rendez-vous)&nbsp;;</li>
-          <li>{site.legal.host.name} (hébergement du site et des rendez-vous)&nbsp;;</li>
+          <li>{site.legal.host.name} (hébergement du site, des demandes et des rendez-vous, et messagerie {site.email})&nbsp;;</li>
           <li>Anthropic (IA Claude de l&apos;assistant de la page Contact), seulement si tu lances l&apos;assistant&nbsp;;</li>
           <li>
             les services de notification d&apos;Apple, de Google ou de Mozilla, qui acheminent jusqu&apos;à mes appareils les alertes de
-            rendez-vous sous forme chiffrée, sans pouvoir les lire&nbsp;;
+            demandes et de rendez-vous sous forme chiffrée, sans pouvoir les lire&nbsp;;
           </li>
           <li>l&apos;agenda que j&apos;utilise (Apple Calendrier ou Google Agenda, par exemple), où j&apos;inscris les rendez-vous&nbsp;;</li>
           <li>YouTube (Google), seulement si tu lances une vidéo&nbsp;;</li>

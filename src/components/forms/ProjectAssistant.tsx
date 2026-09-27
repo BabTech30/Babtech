@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { startTransition, useEffect, useRef, useState } from 'react'
+import { startTransition, useActionState, useEffect, useRef, useState } from 'react'
 import { type AssistantResult, analyzeProject, assistantAvailable } from '@/app/contact/actions'
+import { type RequestFormState, sendRequest } from '@/app/contact/request-actions'
 import { track } from '@/components/Analytics'
 import { Icon, type IconName } from '@/components/Icon'
 import type { ServiceSlug } from '@/data/services'
@@ -10,7 +11,6 @@ import type { Proposal } from '@/lib/assistant/prompt'
 import { site } from '@/lib/site'
 import { fr } from '@/lib/typography'
 import { ContactForm } from './ContactForm'
-import { useFormspree } from './useFormspree'
 
 export type OfferCard = { slug: ServiceSlug; name: string; promise: string; price: string; icon: IconName }
 export type WorkCard = { slug: string; title: string; sector: string; result: string; image?: { src: string; alt: string; width: number; height: number } }
@@ -91,7 +91,8 @@ export function ProjectAssistant({ offers, works }: { offers: OfferCard[]; works
     })
   }
 
-  if (available === false || phase === 'classic') {
+  // Tant qu'on ne sait pas si l'assistant est actif (et sans clé d'API), c'est le formulaire classique.
+  if (available !== true || phase === 'classic') {
     return (
       <>
         <h2 className="mb-2 font-outfit text-[22px] font-semibold tracking-tight text-white">Envoie-moi un message</h2>
@@ -272,7 +273,11 @@ function ProposalView({
   works: WorkCard[]
   onEdit: () => void
 }) {
-  const { status, submit } = useFormspree(site.forms.contact, 'contact_form')
+  const [state, formAction, pending] = useActionState(async (prev: RequestFormState, data: FormData) => {
+    const result = await sendRequest(prev, data)
+    if (result.ok) track('contact_form', { via: 'assistant' })
+    return result
+  }, {})
   // La réponse remplace l'analyse : on y amène le visiteur, et le focus pour les lecteurs d'écran.
   const top = useRef<HTMLElement>(null)
   useEffect(() => {
@@ -291,7 +296,7 @@ function ProposalView({
     .filter(Boolean)
     .join('\n')
 
-  if (status === 'success') {
+  if (state.ok) {
     return (
       <div role="status" className="rounded-2xl border border-emerald-b/30 bg-emerald-b/[0.08] p-8 text-center">
         <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-b/20 text-emerald-b">
@@ -415,11 +420,11 @@ function ProposalView({
       )}
 
       <form
-        action={site.forms.contact}
-        method="POST"
+        action={formAction}
         onSubmit={(e) => {
           e.preventDefault()
-          submit(e.currentTarget)
+          const data = new FormData(e.currentTarget)
+          startTransition(() => formAction(data))
         }}
         className="grid gap-5 rounded-2xl border border-bord bg-white/[0.02] p-5 sm:p-6"
         aria-labelledby="assistant-send"
@@ -430,12 +435,12 @@ function ProposalView({
           </h3>
           <p className="mt-1 text-sm text-txt-secondary">Ton projet et cette synthèse me parviennent ensemble&nbsp;: tu n&apos;as rien à réécrire.</p>
         </div>
-        <input type="hidden" name="_subject" value="Nouvelle demande (assistant IA) via le site BabTech" />
+        <input type="hidden" name="source" value="assistant" />
         <input type="hidden" name="projet" value={text} />
         <input type="hidden" name="synthese_ia" value={synthesis} />
         <div aria-hidden="true" className="hidden">
           <label htmlFor="assistant-gotcha">Ne pas remplir</label>
-          <input id="assistant-gotcha" type="text" name="_gotcha" tabIndex={-1} autoComplete="off" />
+          <input id="assistant-gotcha" type="text" name="site_web" tabIndex={-1} autoComplete="off" />
         </div>
         {proposal.questions.length > 0 && (
           <div>
@@ -474,9 +479,9 @@ function ProposalView({
           </div>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
-          <button type="submit" disabled={status === 'sending'} className="btn-primary w-full disabled:cursor-wait disabled:opacity-70">
-            {status === 'sending' ? 'Envoi en cours…' : 'Envoyer ma demande'}
-            {status !== 'sending' && <Icon name="arrow-right" className="h-[18px] w-[18px]" />}
+          <button type="submit" disabled={pending} className="btn-primary w-full disabled:cursor-wait disabled:opacity-70">
+            {pending ? 'Envoi en cours…' : 'Envoyer ma demande'}
+            {!pending && <Icon name="arrow-right" className="h-[18px] w-[18px]" />}
           </button>
           <Link href={site.bookingPath} className="btn-secondary w-full" data-track="rendez-vous">
             <Icon name="calendar" className="h-[18px] w-[18px]" />
@@ -484,13 +489,9 @@ function ProposalView({
           </Link>
         </div>
         <div aria-live="polite">
-          {status === 'error' && (
-            <p className="rounded-xl border border-red-400/30 bg-red-400/[0.08] p-4 text-sm text-red-200">
-              L&apos;envoi n&apos;a pas fonctionné. Réessaie dans un instant ou écris-moi directement à{' '}
-              <a href={`mailto:${site.email}`} className="underline">
-                {site.email}
-              </a>
-              .
+          {state.error && (
+            <p role="alert" className="rounded-xl border border-red-400/30 bg-red-400/[0.08] p-4 text-sm text-red-200">
+              {fr(state.error)}
             </p>
           )}
         </div>

@@ -12,7 +12,7 @@ export function GET() {
     id: '/admin/',
     name: 'BabTech — Tableau de bord',
     short_name: 'BabTech admin',
-    description: 'Ton tableau de bord BabTech : avancement, rendez-vous, chiffres du mois, QR codes.',
+    description: 'Ton tableau de bord BabTech : demandes, rendez-vous, avancement, chiffres du mois, QR codes.',
     lang: 'fr-FR',
     start_url: '/admin/',
     scope: '/admin/',
@@ -25,6 +25,7 @@ export function GET() {
       { src: '/brand/admin-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
     ],
     shortcuts: [
+      { name: 'Demandes', url: '/admin/demandes/' },
       { name: 'Rendez-vous', url: '/admin/rendez-vous/' },
       { name: 'Partager (QR codes)', short_name: 'Partager', url: '/admin/partager/' },
       { name: 'Réglages', url: '/admin/reglages/' },

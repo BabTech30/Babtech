@@ -10,8 +10,8 @@ démontrée (E-E-A-T, GEO), et une source naturelle de clients.
 
 - Page [`/communaute`](../src/app/communaute/page.tsx) : concept, formats, thèmes, feuille de route, FAQ.
 - **Liste des membres fondateurs** : formulaire (prénom, email, activité, ville, thèmes, format, niveau, consentement RGPD)
-  envoyé à Formspree. Pour séparer ces inscriptions des demandes de devis, créer un 2ᵉ formulaire Formspree et renseigner
-  `NEXT_PUBLIC_FORMSPREE_COMMUNITY_ID`.
+  rangé dans l'onglet Demandes du tableau de bord (source « Communauté ») et envoyé sur contact@babtech.fr ; la personne
+  reçoit un e-mail de bienvenue.
 - **Le blog comme porte d'entrée** : ses 4 catégories (IA & automatisation, Visibilité & référencement, Outils métier,
   Entreprendre) correspondent aux thèmes des futurs groupes, et chaque article invite à rejoindre la communauté.
 - Contenus centralisés dans [`src/data/community.ts`](../src/data/community.ts).
@@ -20,7 +20,7 @@ démontrée (E-E-A-T, GEO), et une source naturelle de clients.
 
 ### Étape 1 — Membres fondateurs (maintenant)
 - Faire connaître la page : LinkedIn, clients, réseaux d'entrepreneurs, fiche Google Business Profile.
-- Exporter régulièrement les inscriptions (Formspree → CSV) et envoyer un email de bienvenue.
+- Suivre les inscriptions dans l'onglet Demandes (l'e-mail de bienvenue part tout seul).
 - Repérer les 2 ou 3 thèmes et le format les plus demandés.
 
 ### Étape 2 — Premiers ateliers et rencontres (sans développement)

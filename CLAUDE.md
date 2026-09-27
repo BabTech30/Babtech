@@ -19,13 +19,18 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
   Exceptions publiques : `/q/<code>/` (`src/app/q`), l'adresse courte des QR codes, qui compte le scan puis redirige
   (codes dans `src/data/qr.ts`, jamais d'adresse déjà imprimée à supprimer ; exclue de robots.txt) ; la prise de rendez-vous
   de `/rendez-vous/` (page prérendue, créneaux lus et réservés par les Server Actions de `src/app/rendez-vous/actions.ts`) ;
-  l'assistant IA de `/contact/` (Server Actions de `src/app/contact/actions.ts`, API Claude avec la variable
-  `ANTHROPIC_API_KEY`, jamais dans le code ; sans clé, formulaire classique). Consignes et catalogue de l'assistant :
+  les formulaires de contact et de la communauté (Server Actions `src/app/contact/request-actions.ts` et
+  `src/app/communaute/actions.ts`) ; l'assistant IA de `/contact/`, en sommeil (Server Actions de `src/app/contact/actions.ts`,
+  API Claude avec la variable `ANTHROPIC_API_KEY`, jamais dans le code ; sans clé, formulaire classique). Consignes et catalogue de l'assistant :
   `src/lib/assistant/prompt.ts`, construits depuis `src/data/services.ts` et `src/data/portfolio.ts` (rien d'inventé).
 
 ## Espace /admin (tableau de bord privé)
 - Partie dynamique du site : connexion, réglages, chiffres du mois, QR codes à partager, rendez-vous (`src/app/admin`,
   `src/lib/admin`, `src/lib/booking`). Jamais indexée (noindex, robots.txt), jamais liée depuis le site public, absente du sitemap.
+- Demandes : tout message du site est rangé dans `/admin/demandes/` (`src/lib/requests.ts`, types dans `src/data/requests.ts`)
+  et envoyé sur contact@babtech.fr. E-mails envoyés depuis contact@babtech.fr par le SMTP d'Hostinger (`src/lib/mail.ts`,
+  modèles `src/lib/emails.ts`, variable `SMTP_PASSWORD`) ; sans mot de passe, rien ne part mais rien ne se perd.
+  Pas de Formspree.
 - Rendez-vous : réglages de départ dans `src/data/booking.ts`, puis modifiés dans `/admin/rendez-vous/` (enregistrés sur le
   serveur). Heures de Paris (`src/lib/booking/time.ts`). Notifications Web Push (`src/lib/admin/push.ts`, clés créées sur le
   serveur, jamais dans le code) affichées par le service worker. Agenda privé `/admin/agenda/<jeton>.ics` : 404 sans le bon jeton.
@@ -34,7 +39,7 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
 - Installable comme application : manifeste `/admin/manifest.webmanifest` et service worker `/admin/sw.js` (portée
   `/admin/` seulement). Le service worker ne met rien en cache (pages privées toujours servies par le serveur) ; il
   affiche seulement une page « Pas de connexion » et les notifications. Le site public n'a pas de service worker.
-- Les coches, les chiffres, les scans, les rendez-vous et le mot de passe changé (haché) de l'utilisateur sont dans un fichier JSON sur le serveur,
+- Les coches, les chiffres, les scans, les rendez-vous, les demandes et le mot de passe changé (haché) de l'utilisateur sont dans un fichier JSON sur le serveur,
   jamais dans le dépôt. Ce que Claude tient à jour est dans `src/data/admin.ts` : cocher ses propres tâches, ajouter
   les décisions prises, mettre à jour la santé du site et `adminUpdatedAt` à chaque étape.
 

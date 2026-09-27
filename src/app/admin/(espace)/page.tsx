@@ -13,6 +13,7 @@ import {
   type Owner,
 } from '@/data/admin'
 import { qrCodes } from '@/data/qr'
+import { SOURCE_LABELS } from '@/data/requests'
 import { zones } from '@/data/zones'
 import { requireAdmin } from '@/lib/admin/auth'
 import { currentMonth, formatDay, formatMonth, formatNumber } from '@/lib/admin/format'
@@ -58,6 +59,8 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
   const kpis = Object.values(store.kpis).sort((a, b) => a.month.localeCompare(b.month))
   const toDo = { toi: pending.filter((t) => t.owner === 'toi').length, claude: pending.filter((t) => t.owner === 'claude').length }
   const { upcoming } = splitAppointments(store.appointments)
+  const pendingRequests = store.requests.filter((r) => r.status !== 'done').sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+  const freshRequests = pendingRequests.filter((r) => r.status === 'new').length
   const bookingPaused = settingsOf(store).paused
 
   const query = (change: Search) => {
@@ -206,6 +209,37 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         </section>
 
         <div className="grid gap-6">
+          <section className={panel} aria-labelledby="requests-title">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 id="requests-title" className={h2}>
+                Demandes à traiter
+              </h2>
+              <Link href="/admin/demandes/" className="text-sm font-medium text-emerald-300 hover:underline">
+                Tout voir →
+              </Link>
+            </div>
+            {freshRequests > 0 && (
+              <p className="mt-1 text-xs text-emerald-300">
+                {freshRequests} nouvelle{freshRequests > 1 ? 's' : ''}
+              </p>
+            )}
+            {pendingRequests.length ? (
+              <ul className="mt-2">
+                {pendingRequests.slice(0, 3).map((r) => (
+                  <li key={r.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-3 border-b border-bord py-2 last:border-0">
+                    <span className="truncate text-txt-primary">
+                      {r.name} <span className="text-txt-muted">· {r.need ?? SOURCE_LABELS[r.source]}</span>
+                    </span>
+                    <span className="text-xs tabular-nums text-txt-muted">{formatDay(r.createdAt.slice(0, 10))}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-2 text-sm text-txt-secondary">Aucune demande en attente.</p>
+            )}
+            {pendingRequests.length > 3 && <p className="mt-2 text-xs text-txt-muted">Et {pendingRequests.length - 3} autre{pendingRequests.length > 4 ? 's' : ''}.</p>}
+          </section>
+
           <section className={panel} aria-labelledby="rdv-title">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <h2 id="rdv-title" className={h2}>

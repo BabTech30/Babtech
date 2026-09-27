@@ -1,18 +1,25 @@
 'use client'
 
 import Link from 'next/link'
+import { startTransition, useActionState } from 'react'
+import { type JoinState, joinCommunity } from '@/app/communaute/actions'
+import { track } from '@/components/Analytics'
 import { Icon } from '@/components/Icon'
 import { community } from '@/data/community'
-import { site } from '@/lib/site'
-import { useFormspree } from './useFormspree'
+import { fr } from '@/lib/typography'
 
 const formats = ['En présentiel à Montpellier', 'En visio', 'Les deux']
 const levels = ['Je débute', "J'utilise déjà quelques outils", "Je suis à l'aise et je veux aller plus loin"]
 
+/** Inscription à la liste des membres fondateurs : rangée dans « Demandes » du tableau de bord, e-mail de bienvenue. */
 export function CommunityForm() {
-  const { status, submit } = useFormspree(site.forms.community, 'community_signup')
+  const [state, formAction, pending] = useActionState(async (prev: JoinState, data: FormData) => {
+    const result = await joinCommunity(prev, data)
+    if (result.ok) track('community_signup')
+    return result
+  }, {})
 
-  if (status === 'success') {
+  if (state.ok) {
     return (
       <div role="status" className="rounded-2xl border border-emerald-b/30 bg-emerald-b/[0.08] p-8 text-center">
         <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-b/20 text-emerald-b">
@@ -20,6 +27,7 @@ export function CommunityForm() {
         </span>
         <p className="mb-2 font-outfit text-xl font-semibold text-white">Bienvenue parmi les membres fondateurs&nbsp;!</p>
         <p className="text-[15px] leading-relaxed text-txt-secondary">
+          {state.receipt && `${fr('Un e-mail de bienvenue vient de partir à ton adresse.')} `}
           Tu seras parmi les premiers informés des ateliers et des rencontres. Merci de ta confiance.
         </p>
       </div>
@@ -28,24 +36,17 @@ export function CommunityForm() {
 
   return (
     <form
-      action={site.forms.community}
-      method="POST"
+      action={formAction}
       onSubmit={(e) => {
         e.preventDefault()
-        submit(e.currentTarget, (data) => {
-          const themes = data.getAll('themes').map(String)
-          data.delete('themes')
-          data.set('themes', themes.join(', ') || 'Non précisé')
-          return data
-        })
+        const data = new FormData(e.currentTarget)
+        startTransition(() => formAction(data))
       }}
       className="space-y-6"
     >
-      <input type="hidden" name="_subject" value="Nouvelle inscription — communauté BabTech" />
-      <input type="hidden" name="source" value="communaute" />
       <div aria-hidden="true" className="hidden">
         <label htmlFor="community-gotcha">Ne pas remplir</label>
-        <input id="community-gotcha" type="text" name="_gotcha" tabIndex={-1} autoComplete="off" />
+        <input id="community-gotcha" type="text" name="site_web" tabIndex={-1} autoComplete="off" />
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
@@ -134,19 +135,15 @@ export function CommunityForm() {
         </span>
       </label>
 
-      <button type="submit" disabled={status === 'sending'} className="btn-primary w-full disabled:cursor-wait disabled:opacity-70">
-        {status === 'sending' ? 'Inscription en cours…' : 'Rejoindre les membres fondateurs'}
-        {status !== 'sending' && <Icon name="arrow-right" className="h-[18px] w-[18px]" />}
+      <button type="submit" disabled={pending} className="btn-primary w-full disabled:cursor-wait disabled:opacity-70">
+        {pending ? 'Inscription en cours…' : 'Rejoindre les membres fondateurs'}
+        {!pending && <Icon name="arrow-right" className="h-[18px] w-[18px]" />}
       </button>
 
       <div aria-live="polite">
-        {status === 'error' && (
-          <p className="rounded-xl border border-red-400/30 bg-red-400/[0.08] p-4 text-sm text-red-200">
-            L&apos;inscription n&apos;a pas fonctionné. Réessaie dans un instant ou écris à{' '}
-            <a href={`mailto:${site.email}`} className="underline">
-              {site.email}
-            </a>
-            .
+        {state.error && (
+          <p role="alert" className="rounded-xl border border-red-400/30 bg-red-400/[0.08] p-4 text-sm text-red-200">
+            {fr(state.error)}
           </p>
         )}
       </div>

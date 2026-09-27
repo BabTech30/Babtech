@@ -138,7 +138,7 @@ Chaque article : une vraie question de client, une réponse dès le premier para
 | Pages indexées, erreurs | Search Console, Bing Webmaster Tools |
 | Appels, itinéraires, clics vers le site depuis la fiche | Google Business Profile |
 | Nombre et note des avis | Google Business Profile |
-| Demandes de contact, rendez-vous réservés, inscriptions communauté | Formspree, onglet Rendez-vous du tableau de bord, outil d'audience (événements `contact_form`, `rendez_vous`, `community_signup`) |
+| Demandes de contact, rendez-vous réservés, inscriptions communauté | Onglets Demandes et Rendez-vous du tableau de bord, outil d'audience (événements `contact_form`, `rendez_vous`, `community_signup`) |
 | Citations dans les assistants IA (grille du §6) | Tests manuels mensuels |
 | Visites venant des assistants IA | Plausible / Umami |
 

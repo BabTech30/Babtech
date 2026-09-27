@@ -21,9 +21,6 @@ const DEFAULT_SITE_URL = 'https://babtech.fr'
  */
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL).trim().replace(/\/+$/, '')
 
-const FORMSPREE_CONTACT_ID = process.env.NEXT_PUBLIC_FORMSPREE_CONTACT_ID || 'xykbpjbz'
-const FORMSPREE_COMMUNITY_ID = process.env.NEXT_PUBLIC_FORMSPREE_COMMUNITY_ID || FORMSPREE_CONTACT_ID
-
 export const site = {
   name: 'BabTech',
   url: SITE_URL,
@@ -44,11 +41,6 @@ export const site = {
   bookingPath: '/rendez-vous',
   /** URL de l'espace client (ex. https://app.babtech.fr). Vide = bouton masqué. */
   clientSpaceUrl: process.env.NEXT_PUBLIC_CLIENT_SPACE_URL || '',
-
-  forms: {
-    contact: `https://formspree.io/f/${FORMSPREE_CONTACT_ID}`,
-    community: `https://formspree.io/f/${FORMSPREE_COMMUNITY_ID}`,
-  },
 
   founder: {
     name: 'Bastien Ferrer',

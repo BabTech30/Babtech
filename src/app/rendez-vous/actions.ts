@@ -2,12 +2,15 @@
 
 import { randomBytes } from 'node:crypto'
 import { after } from 'next/server'
-import { type Appointment, type AppointmentMode, TOPICS, topicLabel } from '@/data/booking'
+import { type Appointment, type AppointmentMode, TOPICS } from '@/data/booking'
 import { notifyDevices } from '@/lib/admin/push'
 import { readStore, updateStore } from '@/lib/admin/store'
 import { purgeOld, settingsOf } from '@/lib/booking/settings'
+import { whenText } from '@/lib/booking/calendar'
 import { freeSlots, isFree, type SlotDay } from '@/lib/booking/slots'
-import { frDay, frTime, isDate, isTime, parisToUtc, utcToParis } from '@/lib/booking/time'
+import { isDate, isTime, parisToUtc } from '@/lib/booking/time'
+import { bookingAlert, bookingConfirmation } from '@/lib/emails'
+import { mailConfigured, sendMails } from '@/lib/mail'
 import { formatPhone, site } from '@/lib/site'
 import { visitorAddress } from '@/lib/visitor'
 
@@ -23,7 +26,8 @@ export async function getAvailability(): Promise<Availability> {
   return { days: freeSlots(settings, store.appointments), minutes: settings.slotMinutes }
 }
 
-export type Booked = { id: string; start: string; minutes: number; mode: AppointmentMode; date: string; time: string }
+/** `emailed` : un e-mail de confirmation part à la personne (envoi des e-mails configuré). */
+export type Booked = { id: string; start: string; minutes: number; mode: AppointmentMode; date: string; time: string; emailed: boolean }
 export type BookingState = { error?: string; conflict?: boolean; booked?: Booked }
 
 const HOUR = 3_600_000
@@ -110,37 +114,15 @@ export async function bookAppointment(_prev: BookingState, formData: FormData): 
   allRecent.push(now)
   // Notifications envoyées après la réponse : le visiteur n'attend pas.
   after(() => announce(booked))
-  return { booked: { id: booked.id, start: booked.start, minutes: booked.minutes, mode, date, time } }
+  return { booked: { id: booked.id, start: booked.start, minutes: booked.minutes, mode, date, time, emailed: mailConfigured() } }
 }
 
-/** Te prévient d'un nouveau rendez-vous : notification sur tes appareils et e-mail (via Formspree). */
+/** Te prévient d'un nouveau rendez-vous (notification et e-mail) et envoie sa confirmation à la personne. */
 async function announce(a: Appointment) {
-  const when = describe(a)
   const how = a.mode === 'telephone' ? `téléphone${a.phone ? ` (${a.phone})` : ''}` : 'visio'
   const results = await Promise.allSettled([
-    notifyDevices({ title: 'Nouveau rendez-vous', body: `${a.name} · ${when} · ${how}`, url: '/admin/rendez-vous/', tag: `rdv-${a.id}` }),
-    fetch(site.forms.contact, {
-      method: 'POST',
-      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        _subject: `Nouveau rendez-vous : ${a.name}, ${when}`,
-        email: a.email,
-        nom: a.name,
-        rendez_vous: `${when} (heure de Paris), ${how}`,
-        telephone: a.phone ?? '',
-        entreprise: a.company ?? '',
-        sujet: topicLabel(a.topic),
-        message: a.message ?? '',
-      }),
-      signal: AbortSignal.timeout(10_000),
-    }).then((res) => {
-      if (!res.ok) throw new Error(`Formspree ${res.status}`)
-    }),
+    notifyDevices({ title: 'Nouveau rendez-vous', body: `${a.name} · ${whenText(a)} · ${how}`, url: '/admin/rendez-vous/', tag: `rdv-${a.id}` }),
+    sendMails([bookingAlert(a), bookingConfirmation(a)]),
   ])
   for (const r of results) if (r.status === 'rejected') console.error('rendez-vous : alerte non envoyée', r.reason)
-}
-
-function describe(a: Appointment) {
-  const { date, time } = utcToParis(Date.parse(a.start))
-  return `${frDay(date)} à ${frTime(time)}`
 }

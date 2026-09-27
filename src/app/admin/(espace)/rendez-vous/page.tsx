@@ -13,6 +13,7 @@ import { appointmentEvent } from '@/lib/booking/calendar'
 import { settingsOf } from '@/lib/booking/settings'
 import { addDays, frDay, frTime, utcToParis } from '@/lib/booking/time'
 import { buildCalendar } from '@/lib/ics'
+import { mailConfigured } from '@/lib/mail'
 import { absoluteUrl, site, telLink } from '@/lib/site'
 import { reopenDays, resetCalendarToken } from '../../booking-actions'
 
@@ -47,8 +48,8 @@ export default async function AppointmentsPage() {
         <p className="section-tag text-emerald-b">Administration</p>
         <h1 className="font-outfit text-3xl font-bold tracking-tight text-white md:text-4xl">Rendez-vous</h1>
         <p className="mt-3 max-w-2xl text-txt-secondary">
-          Les appels découverte réservés sur ta page de rendez-vous. Chaque réservation t&apos;envoie une notification et un e-mail&nbsp;;
-          le créneau disparaît aussitôt de la page.
+          Les appels découverte réservés sur ta page de rendez-vous. Chaque réservation t&apos;envoie une notification et un e-mail, et
+          la personne reçoit sa confirmation&nbsp;; le créneau disparaît aussitôt de la page.
         </p>
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <a href={site.bookingPath} target="_blank" rel="noopener" className="btn-secondary btn-sm">
@@ -341,7 +342,7 @@ function AppointmentCard({ appointment: a }: { appointment: Appointment }) {
         </p>
       </div>
       <div className="sm:justify-self-end">
-        <CancelAppointmentButton id={a.id} name={a.name} />
+        <CancelAppointmentButton id={a.id} name={a.name} notify={mailConfigured()} />
       </div>
     </li>
   )

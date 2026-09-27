@@ -2,13 +2,16 @@
 
 import { cancelAppointment } from '@/app/admin/booking-actions'
 
-/** Annule un rendez-vous après confirmation ; le créneau redevient libre. */
-export function CancelAppointmentButton({ id, name }: { id: string; name: string }) {
+/** Annule un rendez-vous après confirmation ; le créneau redevient libre. `notify` : un e-mail prévient la personne. */
+export function CancelAppointmentButton({ id, name, notify }: { id: string; name: string; notify: boolean }) {
   return (
     <form
       action={cancelAppointment}
       onSubmit={(e) => {
-        if (!window.confirm(`Annuler le rendez-vous de ${name} ? Pense à prévenir cette personne.`)) e.preventDefault()
+        const message = notify
+          ? `Annuler le rendez-vous de ${name} ? Un e-mail la prévient aussitôt, avec un lien pour choisir un autre créneau.`
+          : `Annuler le rendez-vous de ${name} ? Pense à prévenir cette personne (les e-mails ne sont pas encore configurés).`
+        if (!window.confirm(message)) e.preventDefault()
       }}
     >
       <input type="hidden" name="id" value={id} />

@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import { InstallApp } from '@/components/admin/InstallApp'
+import { MailTest } from '@/components/admin/MailTest'
 import { PasswordForm } from '@/components/admin/PasswordForm'
 import { adminUsername, MIN_PASSWORD_LENGTH, passwordChanged, requireAdmin } from '@/lib/admin/auth'
 import { currentMonth, formatDay } from '@/lib/admin/format'
 import { type AssistantOutcome, readStore, storageInfo } from '@/lib/admin/store'
 import { frTime, utcToParis } from '@/lib/booking/time'
+import { MAIL_FROM, mailConfigured, mailProblem } from '@/lib/mail'
 import { fr } from '@/lib/typography'
 import { logout } from '../../actions'
 
@@ -16,11 +18,16 @@ const h2 = 'font-outfit text-lg font-semibold tracking-tight text-white'
 const PRICE = { input: 5, output: 25 }
 const dollars = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
+/** « le 27 septembre 2026 à 14 h 05 » (heure de Paris). */
+function when(iso: string) {
+  const { date, time } = utcToParis(Date.parse(iso))
+  return `le ${formatDay(date)} à ${frTime(time)}`
+}
+
 /** Dernière analyse de l'assistant, avec la cause probable d'un échec et quoi faire. */
 function lastOutcome(last: AssistantOutcome) {
-  const { date, time } = utcToParis(Date.parse(last.at))
-  const when = `le ${formatDay(date)} à ${frTime(time)}`
-  if (last.ok) return `Dernière analyse réussie ${when}.`
+  const at = when(last.at)
+  if (last.ok) return `Dernière analyse réussie ${at}.`
   const status = last.status
   const why =
     last.reason === 'refusal'
@@ -40,13 +47,14 @@ function lastOutcome(last: AssistantOutcome) {
                   : status
                     ? `erreur ${status} renvoyée par Anthropic.`
                     : "pas de réponse d'Anthropic (réseau ou délai dépassé)."
-  return `Dernière analyse en échec ${when} : ${why} Le visiteur a alors vu le formulaire classique.`
+  return `Dernière analyse en échec ${at} : ${why} Le visiteur a alors vu le formulaire classique.`
 }
 
 export default async function SettingsPage() {
   await requireAdmin()
   const [changed, storage, store] = await Promise.all([passwordChanged(), storageInfo(), readStore()])
   const assistantOn = Boolean(process.env.ANTHROPIC_API_KEY)
+  const mailOn = mailConfigured()
   const usage = store.assistant?.[currentMonth()] ?? { count: 0, input: 0, output: 0 }
   const cost = (usage.input * PRICE.input + usage.output * PRICE.output) / 1_000_000
   return (
@@ -82,6 +90,33 @@ export default async function SettingsPage() {
           notifications dans l&apos;onglet Rendez-vous pour recevoir une alerte à chaque réservation.
         </p>
         <InstallApp />
+      </section>
+
+      <section className={panel} aria-labelledby="mail-title">
+        <h2 id="mail-title" className={h2}>
+          E-mails
+        </h2>
+        {mailOn ? (
+          <p className="mt-2 text-sm text-emerald-300">
+            Actifs&nbsp;: le site envoie ses e-mails depuis {MAIL_FROM} (alertes pour toi, confirmations pour tes clients).
+          </p>
+        ) : (
+          <p className="mt-2 text-sm text-bronze">
+            Pas encore actifs. Crée la boîte {MAIL_FROM} dans hPanel → Emails, ajoute dans l&apos;application Node.js la variable{' '}
+            <code>SMTP_PASSWORD</code> avec son mot de passe, puis redéploie. En attendant, les demandes arrivent quand même dans
+            l&apos;onglet Demandes.
+          </p>
+        )}
+        {store.mailLast && (
+          <p className={`mt-2 text-sm ${store.mailLast.ok ? 'text-txt-secondary' : 'text-bronze'}`}>
+            {fr(
+              store.mailLast.ok
+                ? `Dernier envoi réussi ${when(store.mailLast.at)}.`
+                : `Dernier envoi en échec ${when(store.mailLast.at)} : ${mailProblem(store.mailLast.code ?? 'ERREUR')}`,
+            )}
+          </p>
+        )}
+        <MailTest />
       </section>
 
       <section className={panel} aria-labelledby="assistant-title">
@@ -131,7 +166,7 @@ export default async function SettingsPage() {
         </h2>
         {storage ? (
           <p className="mt-2 text-sm text-txt-secondary">
-            Tes coches, tes chiffres du mois, les scans des QR codes, les rendez-vous et ton mot de passe (sous une forme illisible, jamais en clair) sont
+            Tes coches, tes chiffres du mois, les scans des QR codes, les rendez-vous, les demandes et ton mot de passe (sous une forme illisible, jamais en clair) sont
             enregistrés sur le serveur, dans{' '}
             <code className="break-all text-txt-primary">{storage.dir}</code>
             {storage.persistent ? (

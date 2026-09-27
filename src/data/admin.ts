@@ -100,8 +100,9 @@ export const adminTasks: AdminTask[] = [
     id: 'email-pro',
     phase: 'launch',
     owner: 'toi',
-    title: "Créer l'adresse contact@babtech.fr",
-    detail: "Le site l'affiche déjà : crée la boîte dans hPanel → Emails avant de déployer, sinon les messages envoyés à cette adresse seront perdus.",
+    title: 'Créer la boîte contact@babtech.fr et brancher les e-mails du site',
+    detail:
+      "hPanel → Emails : crée la boîte. Puis, dans l'application Node.js, ajoute la variable SMTP_PASSWORD avec son mot de passe et redéploie. Vérifie avec Réglages → E-mails → « Envoyer un e-mail de test ».",
     link: 'https://hpanel.hostinger.com',
     linkLabel: 'hPanel',
   },
@@ -128,7 +129,7 @@ export const adminTasks: AdminTask[] = [
     phase: 'launch',
     owner: 'toi',
     title: 'Envoyer un message test avec les deux formulaires',
-    detail: "Contact et communauté : vérifie qu'ils arrivent dans Formspree.",
+    detail: "Contact et communauté : vérifie qu'ils arrivent dans l'onglet Demandes et sur contact@babtech.fr, et que tu reçois bien l'accusé de réception.",
     link: 'https://babtech.fr/contact/',
     linkLabel: 'Contact',
   },
@@ -200,18 +201,19 @@ export const adminTasks: AdminTask[] = [
     owner: 'claude',
     done: true,
     title: 'Ajouter un assistant IA au formulaire de contact',
-    detail: "Le visiteur décrit son projet ; Claude lui propose aussitôt des offres, des idées et tes réalisations proches, puis la demande t'arrive avec la synthèse.",
-    link: 'https://babtech.fr/contact/',
-    linkLabel: 'Contact',
+    detail:
+      "Prêt mais en sommeil pour maîtriser le budget : il s'activera le jour où tu ajouteras une clé d'API (Réglages). D'ici là, la page Contact affiche le formulaire classique.",
   },
   {
-    id: 'assistant-key',
+    id: 'inbox',
     phase: 'launch',
-    owner: 'toi',
-    title: "Activer l'assistant IA de la page Contact",
-    detail: "Crée une clé sur platform.claude.com (paiement à l'usage), ajoute-la dans hPanel (variable ANTHROPIC_API_KEY), puis redéploie. Sans clé, la page affiche le formulaire classique.",
-    link: 'https://platform.claude.com/settings/keys',
-    linkLabel: 'Créer la clé',
+    owner: 'claude',
+    done: true,
+    title: 'Recevoir les demandes dans le tableau de bord et par e-mail',
+    detail:
+      'Onglet Demandes (statut, note, réponse) ; e-mails depuis contact@babtech.fr : alerte pour toi, accusé de réception, confirmation et annulation de rendez-vous.',
+    link: '/admin/demandes/',
+    linkLabel: 'Demandes',
   },
   {
     id: 'install-app',
@@ -353,6 +355,19 @@ export const adminDecisions = [
     date: '2026-09-27',
     text: "Page Contact : assistant IA (Claude, d'Anthropic), actif avec ta clé d'API. Au plus 60 analyses par jour ; les prix affichés viennent du site, jamais de l'IA.",
   },
+  { date: '2026-09-27', text: "Assistant IA mis en sommeil pour maîtriser le budget : on l'activera quand les premiers clients seront là." },
+  {
+    date: '2026-09-27',
+    text: "Demandes du site : dans l'onglet Demandes du tableau de bord et sur contact@babtech.fr. Les e-mails aux clients partent de contact@babtech.fr ; Formspree n'est plus utilisé.",
+  },
+  {
+    date: '2026-09-27',
+    text: "Espace communauté : ouvert à tous (compte validé par e-mail), forum lisible par tous, projets et groupes dès le lancement. Tu le gères en super admin depuis le tableau de bord ; données dans une base MySQL d'Hostinger.",
+  },
+  {
+    date: '2026-09-27',
+    text: 'Ordre des étapes : 1. e-mails et demandes, 2. référencement ville par ville et pour les IA, 3. comptes et forum, 4. projets et groupes.',
+  },
 ]
 
 /** Dernière mesure Lighthouse (mobile), mise à jour par Claude. */
@@ -374,7 +389,7 @@ export const adminHealth = {
 }
 
 export const METRICS = [
-  { key: 'leads', label: 'Demandes de devis', source: 'Formulaires et emails', primary: true },
+  { key: 'leads', label: 'Demandes de devis', source: 'Onglet Demandes', primary: true },
   { key: 'contracts', label: 'Contrats signés', source: 'Ton suivi', primary: true },
   { key: 'gscClicks', label: 'Clics depuis Google', source: 'Search Console', primary: false },
   { key: 'gscImpressions', label: 'Affichages dans Google', source: 'Search Console', primary: false },
@@ -411,7 +426,7 @@ export const adminLinks = [
   {
     group: 'Clients',
     items: [
-      { label: 'Formspree', hint: 'demandes reçues', href: 'https://formspree.io/forms' },
+      { label: 'Boîte mail', hint: 'contact@babtech.fr', href: 'https://mail.hostinger.com' },
       { label: 'Claude Platform', hint: 'assistant IA : clé, dépenses', href: 'https://platform.claude.com' },
       { label: 'Page de rendez-vous', hint: 'ce que voient tes clients', href: 'https://babtech.fr/rendez-vous/' },
     ],

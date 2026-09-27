@@ -8,7 +8,7 @@ Gemini, Claude, Copilot…), grâce au GEO (*Generative Engine Optimization*).
 
 - Stack : **Next.js 16** (App Router, pages prérendues servies par Node.js), **React 19**, **Tailwind CSS 3**, **TypeScript**
 - Hébergement : **Hostinger**, application Node.js qui construit la branche `main` (déploiement depuis hPanel)
-- Formulaires : **Formspree** (page Contact avec assistant IA **Claude**, facultatif) · Rendez-vous : **page intégrée** (`/rendez-vous/`, gérée dans `/admin`) · Mesure d'audience optionnelle et sans cookie : **Plausible** ou **Umami**
+- Formulaires et rendez-vous : **intégrés** (demandes et rendez-vous dans `/admin`, e-mails envoyés depuis contact@babtech.fr) · Assistant IA **Claude** sur la page Contact, facultatif et en sommeil sans clé · Mesure d'audience optionnelle et sans cookie : **Plausible** ou **Umami**
 
 ## Démarrer
 
@@ -94,12 +94,20 @@ Les QR codes à imprimer sont dans le tableau de bord, rubrique **Partager** : p
 mène à une adresse courte (`/q/presentation/`, `/q/site/`, `/q/carte/`) qui compte les scans du mois, sans aucune donnée
 personnelle, puis redirige vers la page. Pour en ajouter un : `src/data/qr.ts`.
 
+## Demandes et e-mails
+
+Les messages du formulaire de contact et les inscriptions à la communauté arrivent dans l'onglet **Demandes** du tableau
+de bord (statut, note privée, réponse par e-mail) et sur contact@babtech.fr, avec une notification sur tes appareils. La
+personne reçoit un accusé de réception. Tous les e-mails partent de contact@babtech.fr, par le serveur d'envoi
+d'Hostinger (`src/lib/mail.ts`, modèles dans `src/lib/emails.ts`) : il suffit de la variable `SMTP_PASSWORD` dans hPanel
+(mot de passe de la boîte). **Réglages → E-mails** indique si l'envoi marche et permet d'envoyer un e-mail de test.
+
 ## Assistant IA de la page Contact
 
 Sur `/contact/`, le visiteur décrit son projet en quelques phrases ; Claude (l'IA d'Anthropic) lui répond aussitôt :
 ce qu'il a compris, les offres adaptées (avec leur prix, tiré de `src/data/services.ts`), trois idées, les réalisations
 proches (`src/data/portfolio.ts`) et des questions pour préparer l'échange. Le visiteur envoie ensuite sa demande, avec
-la synthèse, via Formspree. Consignes et catalogue : `src/lib/assistant/prompt.ts` ; appel à l'API :
+la synthèse, qui arrive dans l'onglet **Demandes**. Consignes et catalogue : `src/lib/assistant/prompt.ts` ; appel à l'API :
 `src/app/contact/actions.ts` (modèle `claude-opus-5`, limites anti-abus, 60 analyses par jour au plus).
 
 Il ne s'active qu'avec la variable `ANTHROPIC_API_KEY` dans hPanel ; sans elle, ou en cas de souci, la page affiche le
@@ -108,8 +116,8 @@ formulaire classique. **Réglages** indique s'il est actif et ce qu'il a coûté
 ## Prise de rendez-vous
 
 `https://babtech.fr/rendez-vous/` : le visiteur choisit téléphone ou visio, un jour, une heure, puis laisse ses coordonnées.
-Le créneau est réservé aussitôt ; tu reçois une notification sur tes appareils et un e-mail (via Formspree, comme les
-formulaires). Tout se gère dans le tableau de bord, onglet **Rendez-vous** : rendez-vous à venir (appeler, écrire, annuler),
+Le créneau est réservé aussitôt ; tu reçois une notification sur tes appareils et un e-mail, et la personne reçoit sa
+confirmation (avec le fichier agenda) depuis contact@babtech.fr, puis un e-mail si tu annules. Tout se gère dans le tableau de bord, onglet **Rendez-vous** : rendez-vous à venir (appeler, écrire, annuler),
 disponibilités par jour, durée, délai minimum, jours fermés, pause, notifications et lien d'agenda privé à ajouter à ton
 téléphone (Apple Calendrier, Google Agenda). Les rendez-vous sont enregistrés sur le serveur avec les autres données du
 tableau de bord et effacés 12 mois après leur date.

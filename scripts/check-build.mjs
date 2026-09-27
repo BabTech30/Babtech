@@ -197,6 +197,8 @@ while (queue.length) {
 
   const h1 = (html.match(/<h1[\s>]/g) ?? []).length
   if (h1 !== 1) errors.push(`${where} ${h1} balise(s) <h1> (1 attendue)`)
+  // Les formulaires passent par le site (onglet Demandes et e-mails depuis contact@), plus par Formspree.
+  if (html.includes('formspree.io')) errors.push(`${where} formulaire encore relié à Formspree`)
 
   if (!/<html lang="fr"/.test(html)) errors.push(`${where} attribut lang="fr" manquant`)
   const noindex = /<meta name="robots" content="[^"]*noindex/.test(html)
@@ -307,7 +309,7 @@ const admin = await get('/admin/')
 if (![302, 303, 307].includes(admin.status) || !admin.location.includes('/admin/connexion/')) {
   errors.push(`/admin/ sans connexion : redirection vers /admin/connexion/ attendue (reçu ${admin.status} ${admin.location})`)
 }
-for (const privatePath of ['/admin/reglages/', '/admin/partager/', '/admin/rendez-vous/', '/admin/export/', '/admin/qr/site.png']) {
+for (const privatePath of ['/admin/reglages/', '/admin/partager/', '/admin/rendez-vous/', '/admin/demandes/', '/admin/export/', '/admin/qr/site.png']) {
   const res = await get(privatePath)
   if (res.status === 200) errors.push(`${privatePath} accessible sans connexion`)
 }

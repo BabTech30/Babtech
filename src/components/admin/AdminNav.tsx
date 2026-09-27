@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 
 const items = [
   { href: '/admin/', label: 'Tableau de bord' },
+  { href: '/admin/demandes/', label: 'Demandes' },
   { href: '/admin/rendez-vous/', label: 'Rendez-vous' },
   { href: '/admin/partager/', label: 'Partager' },
   { href: '/admin/reglages/', label: 'Réglages' },
@@ -12,7 +13,8 @@ const items = [
 
 const clean = (path: string) => path.replace(/\/+$/, '')
 
-export function AdminNav() {
+/** `counts` : pastille à côté d'un onglet (ex. nouvelles demandes), par adresse. */
+export function AdminNav({ counts = {} }: { counts?: Record<string, number> }) {
   const pathname = clean(usePathname() ?? '')
   return (
     <nav aria-label="Administration" className="flex flex-wrap items-center gap-1">
@@ -28,6 +30,12 @@ export function AdminNav() {
             }`}
           >
             {item.label}
+            {Boolean(counts[item.href]) && (
+              <span className="ml-1.5 rounded-full bg-emerald-b px-1.5 py-px text-xs font-semibold tabular-nums text-[#0a1a10]">
+                {counts[item.href]}
+                <span className="sr-only"> nouvelle{counts[item.href] > 1 ? 's' : ''}</span>
+              </span>
+            )}
           </Link>
         )
       })}

@@ -3,21 +3,26 @@
 import { randomBytes } from 'node:crypto'
 import { revalidatePath } from 'next/cache'
 import { headers } from 'next/headers'
-import { type BookingSettings, type TimeRange, WEEKDAYS } from '@/data/booking'
+import { after } from 'next/server'
+import { type Appointment, type BookingSettings, type TimeRange, WEEKDAYS } from '@/data/booking'
 import { requireAdmin } from '@/lib/admin/auth'
 import { notifyDevices, vapidKeys } from '@/lib/admin/push'
 import { updateStore } from '@/lib/admin/store'
 import { purgeOld, settingsOf } from '@/lib/booking/settings'
 import { addDays, isDate, isTime, toMinutes, utcToParis } from '@/lib/booking/time'
+import { bookingCancelled } from '@/lib/emails'
+import { sendMails } from '@/lib/mail'
 import type { FormState } from './actions'
 
 /** Actions du tableau de bord pour les rendez-vous (toutes réservées à la personne connectée). */
 const PAGE = '/admin/rendez-vous/'
 const WRITE_ERROR = "Enregistrement impossible : le serveur refuse l'écriture des données (voir Réglages)."
 
+/** Annule un rendez-vous ; la personne est prévenue par e-mail (si l'envoi est configuré), après la réponse. */
 export async function cancelAppointment(formData: FormData) {
   await requireAdmin()
   const id = String(formData.get('id') ?? '')
+  let cancelled: Appointment | undefined
   try {
     await updateStore((store) => {
       purgeOld(store)
@@ -25,11 +30,14 @@ export async function cancelAppointment(formData: FormData) {
       if (appointment && appointment.status === 'confirmed') {
         appointment.status = 'cancelled'
         appointment.cancelledAt = new Date().toISOString()
+        cancelled = { ...appointment }
       }
     })
   } catch (error) {
     console.error('rendez-vous : annulation non enregistrée', error)
   }
+  const notice = cancelled
+  if (notice && Date.parse(notice.start) > Date.now()) after(() => sendMails([bookingCancelled(notice)]))
   revalidatePath(PAGE)
   revalidatePath('/admin/')
 }
