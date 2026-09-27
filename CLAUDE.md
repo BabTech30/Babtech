@@ -60,7 +60,8 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
   (`src/lib/typography.ts`) qui pose les espaces insécables ; dans le JSX écrit en dur, utiliser `&nbsp;` avant `: ; ! ?`.
 - Articles : `content/blog/*.md` (format décrit dans le README). Réponse dès le premier paragraphe, intertitres en questions,
   `tldr` et `faq` renseignés, liens internes vers services / articles / contact / communauté.
-- Pages villes : contenu local réellement différent pour chaque ville (pas de pages « copier-coller »).
+- Pages villes : contenu local réellement différent pour chaque ville (pas de pages « copier-coller »), faits vérifiés.
+  Nom de ville après « à » ou « de » dans le code : `inCity()` / `ofCity()` (`src/data/zones.ts`), pour « au Grau-du-Roi », « d'Agde ».
 
 ## SEO / GEO
 - Toute nouvelle page : `pageMetadata()` (`src/lib/seo.ts`) avec un `path` canonique, une image OG déclarée dans

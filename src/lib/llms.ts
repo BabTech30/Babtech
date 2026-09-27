@@ -7,7 +7,7 @@ import { community } from '@/data/community'
 import { faqGroups } from '@/data/faq'
 import { caseStudies } from '@/data/portfolio'
 import { process, services } from '@/data/services'
-import { departments, zonesIn } from '@/data/zones'
+import { departments, inCity, zonesIn } from '@/data/zones'
 import { formatDate, getAllPosts, getPost } from './blog'
 import { absoluteUrl, formatPhone, site } from './site'
 
@@ -48,7 +48,7 @@ export function buildLlmsTxt(): string {
     ...departments.flatMap((d) => [
       '',
       `### ${d.name}`,
-      ...zonesIn(d.name).map((z) => link(`BabTech à ${z.name} (${z.postalCode})`, `/zones-intervention/${z.slug}`, z.lead)),
+      ...zonesIn(d.name).map((z) => link(`BabTech ${inCity(z.name)} (${z.postalCode})`, `/zones-intervention/${z.slug}`, z.lead)),
     ]),
     '',
     '## Blog',

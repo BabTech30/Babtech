@@ -12,7 +12,7 @@ import { PostCard } from '@/components/PostCard'
 import { accentStyles, ServiceCard } from '@/components/ServiceCard'
 import { getCaseStudy } from '@/data/portfolio'
 import { getService, services, type ServiceSlug } from '@/data/services'
-import { departments, zonesIn } from '@/data/zones'
+import { departments, inCity, zonesIn } from '@/data/zones'
 import { getAllPosts } from '@/lib/blog'
 import { faqNode, graph, serviceNode, webPageNode } from '@/lib/schema'
 import { pageMetadata } from '@/lib/seo'
@@ -257,7 +257,7 @@ export default async function ServicePage({ params }: Props) {
                         className="inline-flex items-center gap-2 rounded-full border border-bord bg-white/[0.03] px-4 py-2.5 text-sm text-txt-secondary transition-colors hover:border-white/20 hover:text-white"
                       >
                         <Icon name="map-pin" className="h-4 w-4 text-txt-muted" />
-                        {localLabel[service.slug]} à {z.name}
+                        {localLabel[service.slug]} {inCity(z.name)}
                       </Link>
                     </li>
                   ))}

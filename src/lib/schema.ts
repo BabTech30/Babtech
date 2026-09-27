@@ -32,7 +32,7 @@ export function graph(...nodes: (Json | false | undefined | null)[]) {
 const WIKIPEDIA = {
   metropole: 'https://fr.wikipedia.org/wiki/Montpellier_M%C3%A9diterran%C3%A9e_M%C3%A9tropole',
   herault: 'https://fr.wikipedia.org/wiki/H%C3%A9rault_(d%C3%A9partement)',
-  gard: 'https://fr.wikipedia.org/wiki/Gard_(d%C3%A9partement)',
+  gard: 'https://fr.wikipedia.org/wiki/Gard',
   occitanie: 'https://fr.wikipedia.org/wiki/Occitanie_(r%C3%A9gion_administrative)',
 }
 

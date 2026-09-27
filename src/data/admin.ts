@@ -225,6 +225,17 @@ export const adminTasks: AdminTask[] = [
     linkLabel: 'Réglages',
   },
   {
+    id: 'zones-herault-gard',
+    phase: 'local',
+    owner: 'claude',
+    done: true,
+    title: "Pages villes : 17 dans l'Hérault, 8 dans le Gard",
+    detail:
+      'Un contenu propre à chaque ville (faits vérifiés, aucun chiffre inventé), le service le plus utile sur place mis en avant, des liens entre villes voisines et des données lisibles par Google et les IA.',
+    link: '/zones-intervention/',
+    linkLabel: 'Voir les villes',
+  },
+  {
     id: 'gsc',
     phase: 'local',
     owner: 'toi',
@@ -247,14 +258,15 @@ export const adminTasks: AdminTask[] = [
     phase: 'local',
     owner: 'claude',
     title: 'Signaler toutes les pages à Bing (IndexNow)',
-    detail: 'Dès que le site est en ligne.',
+    detail: 'Dès que la version avec les villes du Gard est en ligne : dis-le à Claude, il envoie la liste des pages.',
   },
   {
     id: 'gbp',
     phase: 'local',
     owner: 'toi',
     title: 'Créer la fiche Google Business Profile',
-    detail: "Zone de service : Montpellier et l'Hérault. Le premier levier pour être trouvé en local.",
+    detail:
+      "Zone de service : l'Hérault, le Gard et les villes principales (Montpellier, Nîmes, Béziers, Sète, Alès, Uzès…). Le premier levier pour être trouvé en local.",
     link: 'https://business.google.com',
     linkLabel: 'Business Profile',
   },
@@ -368,6 +380,10 @@ export const adminDecisions = [
     date: '2026-09-27',
     text: 'Ordre des étapes : 1. e-mails et demandes, 2. référencement ville par ville et pour les IA, 3. comptes et forum, 4. projets et groupes.',
   },
+  {
+    date: '2026-09-27',
+    text: "Référencement local étendu au Gard : 25 pages villes (17 dans l'Hérault, 8 dans le Gard), chacune avec son contenu. Dans les villes touristiques, le site de réservation passe en premier.",
+  },
 ]
 
 /** Dernière mesure Lighthouse (mobile), mise à jour par Claude. */
@@ -381,9 +397,9 @@ export const adminHealth = {
     { label: 'SEO', value: 100 },
   ],
   facts: [
-    { label: 'Pages', value: '37' },
+    { label: 'Pages', value: '54' },
     { label: 'Articles de blog', value: '7' },
-    { label: 'Zones couvertes', value: '9' },
+    { label: 'Villes couvertes', value: '25' },
     { label: 'Affichage principal', value: '2,4 s' },
   ],
 }

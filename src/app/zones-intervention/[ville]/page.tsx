@@ -9,7 +9,7 @@ import { JsonLd } from '@/components/JsonLd'
 import { PageHero } from '@/components/PageHero'
 import { ProcessSteps } from '@/components/ProcessSteps'
 import { services } from '@/data/services'
-import { getZone, type Zone, zones } from '@/data/zones'
+import { getZone, inCity, ofCity, type Zone, zones } from '@/data/zones'
 import { faqNode, graph, ids, webPageNode } from '@/lib/schema'
 import { pageMetadata } from '@/lib/seo'
 import { absoluteUrl, site } from '@/lib/site'
@@ -45,6 +45,7 @@ export default async function ZonePage({ params }: Props) {
     .filter((z, i, list): z is Zone => Boolean(z) && list.indexOf(z) === i)
   const nearbyTowns = zone.nearbyTowns.filter((t) => !nearby.some((z) => z.name === t))
   const city = { '@type': 'City', name: zone.name, sameAs: zone.wikipedia }
+  const inZone = inCity(zone.name)
   // Le service le plus utile localement passe en premier (ex. site de réservation dans les villes touristiques).
   const localServices = [...services].sort((a, b) => Number(b.slug === zone.featured) - Number(a.slug === zone.featured))
   const featured = localServices.find((s) => s.slug === zone.featured)
@@ -70,10 +71,10 @@ export default async function ZonePage({ params }: Props) {
             areaServed: city,
             hasOfferCatalog: {
               '@type': 'OfferCatalog',
-              name: `Services BabTech à ${zone.name}`,
+              name: `Services BabTech ${inZone}`,
               itemListElement: localServices.map((s) => ({
                 '@type': 'Offer',
-                itemOffered: { '@type': 'Service', name: `${s.name} à ${zone.name}`, url: absoluteUrl(`/services/${s.slug}`) },
+                itemOffered: { '@type': 'Service', name: `${s.name} ${inZone}`, url: absoluteUrl(`/services/${s.slug}`) },
                 ...(s.priceFrom
                   ? { priceSpecification: { '@type': 'PriceSpecification', minPrice: s.priceFrom, priceCurrency: 'EUR' } }
                   : {}),
@@ -94,7 +95,7 @@ export default async function ZonePage({ params }: Props) {
         ]}
         aside={
           <FactsCard
-            title={`En bref à ${zone.name}`}
+            title={`En bref ${inZone}`}
             facts={[
               ...(featured?.slug === 'site-reservation-location-saisonniere'
                 ? [{ label: 'Site de réservation', value: 'Dès 250 €' }]
@@ -122,7 +123,7 @@ export default async function ZonePage({ params }: Props) {
         <div className="container-b grid gap-12 lg:grid-cols-[1.5fr_1fr]">
           <div>
             <h2 id="contexte" className="section-title mb-7">
-              Le digital pour les entreprises de {zone.name}
+              Le digital pour les entreprises {ofCity(zone.name)}
             </h2>
             <div className="space-y-5 text-[16.5px] leading-[1.85] text-txt-secondary">
               {zone.context.map((paragraph) => (
@@ -153,7 +154,7 @@ export default async function ZonePage({ params }: Props) {
           <div className="mb-10 max-w-[720px]">
             <p className="section-tag text-bronze">Sur le terrain</p>
             <h2 id="metiers" className="section-title">
-              Les métiers que j&apos;accompagne à {zone.name}
+              Les métiers que j&apos;accompagne {inZone}
             </h2>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -172,7 +173,7 @@ export default async function ZonePage({ params }: Props) {
           <div className="mb-10 max-w-[720px]">
             <p className="section-tag text-emerald-b">Services</p>
             <h2 id="offre-locale" className="section-title">
-              Ce que je propose à {zone.name}
+              Ce que je propose {inZone}
             </h2>
           </div>
           <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -186,12 +187,12 @@ export default async function ZonePage({ params }: Props) {
                     <Icon name={s.icon} className="h-6 w-6 text-emerald-b" />
                     {s.slug === zone.featured && (
                       <span className="rounded-full border border-emerald-b/30 bg-emerald-b/[0.08] px-2.5 py-0.5 text-[12px] font-semibold text-emerald-b">
-                        À la une à {zone.name}
+                        À la une {inZone}
                       </span>
                     )}
                   </span>
                   <span className="mb-2 font-outfit text-lg font-semibold text-white">
-                    {s.name} à {zone.name}
+                    {s.name} {inZone}
                   </span>
                   <span className="mb-4 flex-1 text-[14px] leading-relaxed text-txt-secondary">{fr(s.summary)}</span>
                   <span className="text-sm font-semibold text-txt-primary">{fr(s.priceLabel)}</span>
@@ -216,7 +217,7 @@ export default async function ZonePage({ params }: Props) {
           <div>
             <p className="section-tag text-emerald-b">Questions fréquentes</p>
             <h2 id="faq-locale" className="section-title">
-              Le digital à {zone.name}, en questions
+              Le digital {inZone}, en questions
             </h2>
           </div>
           <FaqList items={zone.faq} openFirst />
@@ -226,7 +227,7 @@ export default async function ZonePage({ params }: Props) {
       <section className="border-t border-bord py-14" aria-labelledby="alentours">
         <div className="container-b">
           <h2 id="alentours" className="mb-6 font-outfit text-xl font-semibold text-white">
-            J&apos;interviens aussi aux alentours de {zone.name}
+            J&apos;interviens aussi aux alentours {ofCity(zone.name)}
           </h2>
           <ul className="flex flex-wrap gap-2.5">
             {nearby.map((z) => (
@@ -253,7 +254,7 @@ export default async function ZonePage({ params }: Props) {
         </div>
       </section>
 
-      <CtaSection title={`Une entreprise à ${zone.name} ? Parlons-en.`} />
+      <CtaSection title={`Une entreprise ${inZone} ? Parlons-en.`} />
     </>
   )
 }

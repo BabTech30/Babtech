@@ -6,7 +6,7 @@ import { JsonLd } from '@/components/JsonLd'
 import { PageHero } from '@/components/PageHero'
 import { otherCommunes } from '@/data/area'
 import { services } from '@/data/services'
-import { departments, zonesIn } from '@/data/zones'
+import { departments, inCity, zonesIn } from '@/data/zones'
 import { areaServed, graph, ids, webPageNode } from '@/lib/schema'
 import { pageMetadata } from '@/lib/seo'
 import { absoluteUrl } from '@/lib/site'
@@ -35,7 +35,7 @@ export default function ZonesPage() {
               itemListElement: departments.flatMap((d) => zonesIn(d.name)).map((z, i) => ({
                 '@type': 'ListItem',
                 position: i + 1,
-                name: `BabTech à ${z.name}`,
+                name: `BabTech ${inCity(z.name)}`,
                 url: absoluteUrl(`/zones-intervention/${z.slug}`),
               })),
             },
