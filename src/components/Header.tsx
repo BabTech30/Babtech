@@ -1,57 +1,113 @@
 'use client'
+
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { site } from '@/lib/site'
+import { Icon } from './Icon'
+import { Logo } from './Logo'
+
+const links = [
+  { href: '/services', label: 'Services' },
+  { href: '/portfolio', label: 'Réalisations' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/communaute', label: 'Communauté' },
+  { href: '/a-propos', label: 'À propos' },
+]
+
+const mobileLinks = [...links, { href: '/zones-intervention', label: "Zones d'intervention" }, { href: '/faq', label: 'FAQ' }, { href: '/contact', label: 'Contact' }]
 
 export default function Header() {
   const pathname = usePathname()
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
-  const links = [
-    { href: '/services', label: 'Services' },
-    { href: '/portfolio', label: 'Portfolio' },
-    { href: '/a-propos', label: 'À propos' },
-    { href: '/contact', label: 'Contact' },
-  ]
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
+
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`)
 
   return (
-    <header className="sticky top-0 z-50 bg-nuit/85 backdrop-blur-xl border-b border-bord">
-      <div className="container-b">
-        <div className="flex justify-between items-center py-[18px]">
-          <Link href="/" className="font-outfit font-bold text-[22px] text-white tracking-tight">
-            Bab<span className="text-emerald-b">Tech</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-8">
-            {links.map((link) => (
-              <Link key={link.href} href={link.href}
-                className={`text-sm transition-colors duration-200 hover:text-white ${pathname === link.href ? 'text-white font-medium' : 'text-txt-secondary'}`}>
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="flex items-center gap-4">
-            <Link href="https://app.babtech.fr"
-              className="text-[13px] font-medium px-5 py-[9px] rounded-lg bg-bronze-glow text-bronze border border-bronze/20 transition-all duration-200 hover:bg-bronze/[0.18] hover:border-bronze/35">
-              Espace client
+    <header className="sticky top-0 z-50 border-b border-bord bg-nuit/85 backdrop-blur-xl">
+      <a href="#contenu" className="skip-link">
+        Aller au contenu
+      </a>
+      <div className="container-b flex h-[68px] items-center justify-between gap-6">
+        <Logo />
+
+        <nav aria-label="Navigation principale" className="hidden items-center gap-7 lg:flex">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              aria-current={isActive(link.href) ? 'page' : undefined}
+              className={`text-sm transition-colors duration-200 hover:text-white ${isActive(link.href) ? 'font-medium text-white' : 'text-txt-secondary'}`}
+            >
+              {link.label}
             </Link>
-            <button className="md:hidden flex flex-col gap-[5px] p-1" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menu">
-              <span className={`w-5 h-[2px] bg-white transition-all ${mobileOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
-              <span className={`w-5 h-[2px] bg-white transition-all ${mobileOpen ? 'opacity-0' : ''}`} />
-              <span className={`w-5 h-[2px] bg-white transition-all ${mobileOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
-            </button>
-          </div>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-3">
+          {site.clientSpaceUrl && (
+            <a
+              href={site.clientSpaceUrl}
+              className="hidden rounded-lg border border-bronze/25 bg-bronze-glow px-4 py-2.5 text-[13px] font-medium text-bronze transition-all hover:border-bronze/40 hover:bg-bronze/[0.18] md:inline-flex"
+            >
+              Espace client
+            </a>
+          )}
+          <Link href="/contact" className="btn-primary btn-sm hidden sm:inline-flex" data-track="header-contact">
+            Parlons de ton projet
+          </Link>
+          <button
+            type="button"
+            className="-mr-1 flex h-10 w-10 items-center justify-center rounded-lg text-white hover:bg-white/5 lg:hidden"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="menu-mobile"
+            aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
+          >
+            <span aria-hidden="true" className="flex w-5 flex-col gap-[5px]">
+              <span className={`h-[2px] w-5 bg-current transition-all ${open ? 'translate-y-[7px] rotate-45' : ''}`} />
+              <span className={`h-[2px] w-5 bg-current transition-all ${open ? 'opacity-0' : ''}`} />
+              <span className={`h-[2px] w-5 bg-current transition-all ${open ? '-translate-y-[7px] -rotate-45' : ''}`} />
+            </span>
+          </button>
         </div>
-        {mobileOpen && (
-          <nav className="md:hidden pb-6 pt-2 border-t border-bord flex flex-col gap-4">
-            {links.map((link) => (
-              <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}
-                className={`text-sm transition-colors ${pathname === link.href ? 'text-white font-medium' : 'text-txt-secondary'}`}>
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-        )}
       </div>
+
+      <nav
+        id="menu-mobile"
+        aria-label="Navigation mobile"
+        hidden={!open}
+        className="border-t border-bord bg-nuit/95 lg:hidden"
+      >
+        <ul className="container-b flex flex-col py-4">
+          {mobileLinks.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                onClick={() => setOpen(false)}
+                aria-current={isActive(link.href) ? 'page' : undefined}
+                className={`flex items-center justify-between border-b border-white/[0.04] py-3.5 text-[15px] ${isActive(link.href) ? 'font-medium text-white' : 'text-txt-secondary'}`}
+              >
+                {link.label}
+                <Icon name="arrow-right" className="h-4 w-4 text-txt-muted" />
+              </Link>
+            </li>
+          ))}
+          <li className="pt-5">
+            <a href={site.calendlyUrl} target="_blank" rel="noopener noreferrer" className="btn-primary w-full" data-track="calendly">
+              <Icon name="calendar" className="h-[18px] w-[18px]" />
+              Réserver un appel gratuit
+            </a>
+          </li>
+        </ul>
+      </nav>
     </header>
   )
 }

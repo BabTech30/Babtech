@@ -1,0 +1,38 @@
+# Contrôle qualité à chaque envoi sur GitHub : TypeScript, ESLint, build (comme chez Hostinger)
+# et vérification de chaque page (liens, balises SEO, données structurées…). Détails : docs/DEPLOIEMENT.md
+#
+# La mise en ligne est faite par Hostinger (application Node.js reliée à la branche main) :
+# vérifier que ce contrôle est vert avant de valider une modification dans main.
+
+name: Contrôle qualité
+
+on:
+  push:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run verify
+        env:
+          NEXT_TELEMETRY_DISABLED: 1

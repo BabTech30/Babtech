@@ -1,119 +1,195 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { CtaSection } from '@/components/CtaSection'
+import { Icon } from '@/components/Icon'
+import { JsonLd } from '@/components/JsonLd'
+import { PageHero } from '@/components/PageHero'
+import { ProcessSteps } from '@/components/ProcessSteps'
+import { accentStyles } from '@/components/ServiceCard'
+import { levels, services, transversal } from '@/data/services'
+import { graph, webPageNode } from '@/lib/schema'
+import { pageMetadata } from '@/lib/seo'
+import { absoluteUrl } from '@/lib/site'
+import { fr } from '@/lib/typography'
 
-export const metadata: Metadata = {
-  title: 'Services — Visibilité, Outils Métier, IA',
-  description: "3 niveaux d'accompagnement digital : visibilité en ligne dès 800€, outils métier sur mesure, et automatisations IA pour TPE et artisans.",
-}
+const title = 'Services digitaux pour TPE à Montpellier : site, application, IA'
+const description =
+  "Création de site internet dès 800 €, applications métier dès 1 500 €, automatisation IA dès 3 000 €, référencement local + GEO et formation IA pour les TPE de l'Hérault."
 
-const levels = [
-  {
-    badge: 'Niveau 1', badgeClass: 'bg-emerald-b/[0.12] text-emerald-b border-emerald-b/20',
-    title: 'Être trouvé. Être crédible.',
-    audience: "Tu lances ton activité ou tu n'existes pas encore en ligne.",
-    descBefore: "La base de tout. Avant de vendre, il faut qu'on te trouve — et qu'on te prenne au sérieux. ",
-    descBold: 'Je pose les fondations de ta présence digitale',
-    descAfter: ' pour que tes clients arrivent à toi naturellement.',
-    price: '800', topColor: 'bg-emerald-b',
-    items: ['Site vitrine professionnel et responsive', 'QR menus pour restaurants et commerces', 'Fiche Google Business optimisée', 'Présence réseaux sociaux', 'SEO local pour être trouvé sur Google'],
-    result: 'Tes clients te trouvent sur Google, ton image est pro, tu inspires confiance dès le premier clic.',
-    checkBg: 'bg-emerald-b/[0.12]', checkColor: 'text-emerald-b', priceColor: 'text-emerald-b', resultColor: 'text-emerald-b',
-  },
-  {
-    badge: 'Niveau 2', badgeClass: 'bg-bronze/10 text-bronze border-bronze/20',
-    title: 'Travailler plus vite. Mieux.',
-    audience: 'Tu perds du temps sur des tâches répétitives ou tu gères tout sur papier / Excel.',
-    descBefore: 'Tu es visible, mais tu croules sous la gestion. ',
-    descBold: 'Je crée des outils sur mesure',
-    descAfter: " qui s'adaptent à ta façon de bosser — pas l'inverse.",
-    price: '1 500', topColor: 'bg-bronze',
-    items: ['Applications web progressives (PWA)', 'Dashboards de suivi et pilotage', 'Apps de gestion interne', 'Outils métier sur mesure'],
-    result: 'Tu gagnes des heures chaque semaine et tu pilotes ton activité avec des outils taillés pour toi.',
-    checkBg: 'bg-bronze/10', checkColor: 'text-bronze', priceColor: 'text-bronze', resultColor: 'text-bronze',
-  },
-  {
-    badge: 'Niveau 3', badgeClass: 'bg-white/5 text-white border-white/10',
-    title: 'Faire bosser la tech à ta place.',
-    audience: "Tu veux scaler sans embaucher ou automatiser ce qui te bouffe du temps.",
-    descBefore: 'Le niveau au-dessus. ',
-    descBold: "Je connecte tes outils entre eux et je mets l'IA au travail",
-    descAfter: ' pour que les tâches répétitives tournent toutes seules.',
-    price: '3 000', topColor: 'bg-gradient-to-r from-emerald-b to-bronze',
-    items: ['Workflows automatisés (n8n)', 'Intégrations IA sur mesure', 'Automatisation de process métier', 'Connexion entre outils existants'],
-    result: 'Les tâches répétitives tournent toutes seules. Tu te concentres sur ce qui compte.',
-    checkBg: 'bg-white/[0.06]', checkColor: 'text-txt-primary', priceColor: 'text-white', resultColor: 'text-txt-primary',
-  },
+export const metadata: Metadata = pageMetadata({ title, description, path: '/services', og: 'services' })
+
+const comparison = [
+  { need: 'Être trouvé en ligne et inspirer confiance', answer: 'Site internet + SEO local', slug: 'creation-site-internet', price: 'Dès 800 €', delay: '2 à 4 semaines' },
+  { need: 'Arrêter Excel, le papier et les doubles saisies', answer: 'Application métier / PWA', slug: 'application-metier', price: 'Dès 1 500 €', delay: 'Par étapes' },
+  { need: 'Supprimer les tâches répétitives', answer: 'Automatisation & IA (n8n)', slug: 'automatisation-ia', price: 'Dès 3 000 €', delay: 'Selon les processus' },
+  { need: 'Apparaître dans Google Maps et les réponses des IA', answer: 'Référencement local & GEO', slug: 'referencement-local-geo', price: 'Inclus dans les sites', delay: 'Effets en quelques semaines' },
+  { need: "Savoir par où commencer, former l'équipe à l'IA", answer: 'Accompagnement & formation IA', slug: 'accompagnement-formation-ia', price: 'Sur devis', delay: 'Selon le format' },
 ]
 
-export default function Services() {
+export default function ServicesPage() {
   return (
     <>
-      <section className="pt-24 md:pt-28 pb-16 relative">
-        <div className="absolute -top-16 -right-48 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(16,185,129,0.05)_0%,transparent_70%)] pointer-events-none" />
-        <div className="container-b">
-          <div className="max-w-[680px] relative">
-            <span className="section-tag text-emerald-b">Services</span>
-            <h1 className="font-outfit text-4xl md:text-5xl font-bold text-white leading-[1.12] tracking-tight mb-5">
-              Ce dont tu as besoin. Rien de plus, rien de moins.
-            </h1>
-            <p className="text-lg text-txt-secondary leading-relaxed">
-              Pas de pack tout fait. Pas de formule magique. Je construis ce dont tu as vraiment besoin — au bon moment, au bon niveau.
-            </p>
-          </div>
-        </div>
-      </section>
+      <JsonLd
+        data={graph(
+          webPageNode({
+            path: '/services',
+            name: title,
+            description,
+            type: 'CollectionPage',
+            og: 'services',
+            mainEntity: {
+              '@type': 'ItemList',
+              itemListElement: services.map((s, i) => ({
+                '@type': 'ListItem',
+                position: i + 1,
+                name: s.name,
+                url: absoluteUrl(`/services/${s.slug}`),
+              })),
+            },
+          }),
+        )}
+      />
 
-      {levels.map((l, i) => (
-        <section key={i} className={`py-20 border-t border-bord ${i % 2 === 1 ? 'bg-nuit-light' : ''}`}>
-          <div className="container-b">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-              <div className="max-w-[500px]">
-                <span className={`inline-flex items-center gap-2 text-[11px] tracking-[2px] uppercase font-semibold mb-4 px-3.5 py-1.5 rounded-full border ${l.badgeClass}`}>
-                  {l.badge}
-                </span>
-                <h2 className="font-outfit text-3xl md:text-4xl font-bold text-white tracking-tight mb-3 leading-tight">{l.title}</h2>
-                <p className="text-[15px] text-txt-secondary leading-relaxed mb-6 pl-4 border-l-[3px] border-bord italic">{l.audience}</p>
-                <p className="text-base text-txt-secondary leading-[1.8] mb-7">
-                  {l.descBefore}<strong className="text-txt-primary font-medium">{l.descBold}</strong>{l.descAfter}
-                </p>
-                <div className="flex items-baseline gap-1.5 mb-1.5">
-                  <span className="text-[13px] text-txt-muted">À partir de</span>
-                  <span className={`font-outfit text-[28px] font-bold ${l.priceColor}`}>{l.price} €</span>
-                </div>
-                <p className="text-xs text-txt-muted mb-7">Tarif adapté selon le périmètre du projet</p>
+      <PageHero
+        eyebrow="Services"
+        title="Ce dont tu as besoin. Rien de plus, rien de moins."
+        lead="Pas de pack tout fait ni de formule magique. Sites internet, applications métier, automatisations IA : je construis ce dont ton entreprise a vraiment besoin, au bon moment et au bon niveau."
+        crumbs={[{ name: 'Services', path: '/services' }]}
+      >
+        <a href="#comparatif" className="btn-secondary">
+          Quel service pour quel besoin&nbsp;?
+        </a>
+      </PageHero>
+
+      {levels.map((s, i) => {
+        const a = accentStyles[s.accent]
+        return (
+          <section key={s.slug} className={`border-t border-bord py-16 md:py-20 ${i % 2 === 0 ? 'bg-nuit-light' : ''}`} aria-labelledby={`titre-${s.slug}`}>
+            <div className="container-b grid gap-12 lg:grid-cols-2 lg:items-start">
+              <div className="max-w-[520px]">
+                <span className={`chip mb-5 ${a.chip}`}>{s.badge}</span>
+                <h2 id={`titre-${s.slug}`} className="mb-3 font-outfit text-3xl font-bold leading-tight tracking-tight text-white md:text-4xl">
+                  {s.promise}
+                </h2>
+                <p className={`mb-5 font-medium ${a.text}`}>{s.name}</p>
+                <p className="mb-7 text-base leading-[1.8] text-txt-secondary">{fr(s.lead)}</p>
+                <p className="mb-1 font-outfit text-[28px] font-bold text-white">{fr(s.priceLabel)}</p>
+                <p className="mb-7 text-[13px] text-txt-muted">{fr(s.priceNote)}</p>
+                <Link href={`/services/${s.slug}`} className="btn-secondary">
+                  Tout savoir sur ce service
+                  <Icon name="arrow-right" className="h-4 w-4" />
+                </Link>
               </div>
-              <div className="bg-white/[0.03] border border-bord rounded-[20px] p-9 relative overflow-hidden">
-                <div className={`absolute top-0 left-0 right-0 h-[3px] ${l.topColor}`} />
-                <p className="font-outfit text-sm font-semibold tracking-[2px] uppercase text-txt-muted mb-6">Ce que je fais</p>
+              <div className="card relative overflow-hidden p-8">
+                <div aria-hidden="true" className={`absolute inset-x-0 top-0 h-[3px] ${a.bar}`} />
+                <p className="mb-6 font-outfit text-sm font-semibold uppercase tracking-[2px] text-txt-muted">Ce que je fais</p>
                 <ul className="space-y-4">
-                  {l.items.map((item, j) => (
-                    <li key={j} className="flex items-start gap-3 text-[15px] text-txt-secondary leading-relaxed pb-4 border-b border-bord last:border-0 last:pb-0">
-                      <span className={`w-5 h-5 rounded-md flex items-center justify-center text-xs shrink-0 mt-0.5 ${l.checkBg} ${l.checkColor}`}>✓</span>
-                      {item}
+                  {s.deliverables.slice(0, 5).map((d) => (
+                    <li key={d.title} className="flex items-start gap-3 border-b border-bord pb-4 text-[15px] leading-relaxed text-txt-secondary last:border-0 last:pb-0">
+                      <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md ${a.iconBg}`}>
+                        <Icon name="check" className="h-3.5 w-3.5" strokeWidth={2.5} />
+                      </span>
+                      <span>
+                        <strong className="font-medium text-txt-primary">{d.title}</strong> — {fr(d.desc)}
+                      </span>
                     </li>
                   ))}
                 </ul>
-                <div className="mt-7 p-5 rounded-xl border border-dashed border-white/[0.08] bg-white/[0.015]">
-                  <p className={`text-[11px] tracking-[2px] uppercase font-semibold mb-2 ${l.resultColor}`}>Résultat</p>
-                  <p className="text-base text-txt-primary leading-relaxed">{l.result}</p>
+                <div className="mt-7 rounded-xl border border-dashed border-white/[0.1] bg-white/[0.015] p-5">
+                  <p className={`mb-2 text-[11px] font-semibold uppercase tracking-[2px] ${a.text}`}>Résultat</p>
+                  <p className="leading-relaxed text-txt-primary">{fr(s.result)}</p>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      ))}
+          </section>
+        )
+      })}
 
-      <section className="py-24 text-center border-t border-bord relative">
-        <div className="absolute bottom-[-100px] left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[radial-gradient(ellipse,rgba(16,185,129,0.05)_0%,transparent_70%)] pointer-events-none" />
-        <div className="container-b relative">
-          <h2 className="section-title mb-3">Tu ne sais pas quel niveau te correspond ?</h2>
-          <p className="text-[17px] text-txt-secondary mb-9">Pas de problème — on en discute. Zéro engagement, juste un premier échange.</p>
-          <div className="flex flex-wrap gap-3.5 justify-center">
-            <Link href="/contact" className="btn-primary">Prendre rendez-vous →</Link>
-            <Link href="/contact" className="btn-secondary">Me contacter</Link>
+      <section className="border-t border-bord py-16 md:py-20" aria-labelledby="transversal-titre">
+        <div className="container-b">
+          <div className="mb-10 max-w-[720px]">
+            <p className="section-tag text-emerald-b">Et pour aller plus loin</p>
+            <h2 id="transversal-titre" className="section-title">
+              Être visible partout, et monter en compétence
+            </h2>
+          </div>
+          <div className="grid gap-5 md:grid-cols-2">
+            {transversal.map((s) => {
+              const a = accentStyles[s.accent]
+              return (
+                <article key={s.slug} className="card card-hover relative flex flex-col overflow-hidden p-8">
+                  <div aria-hidden="true" className={`absolute inset-x-0 top-0 h-[3px] ${a.bar}`} />
+                  <span className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl ${a.iconBg}`}>
+                    <Icon name={s.icon} className="h-6 w-6" />
+                  </span>
+                  <p className="mb-2 text-[11px] uppercase tracking-[1.5px] text-txt-muted">{s.badge}</p>
+                  <h3 className="mb-3 font-outfit text-2xl font-semibold tracking-tight text-white">
+                    <Link href={`/services/${s.slug}`} className="after:absolute after:inset-0">
+                      {s.name}
+                    </Link>
+                  </h3>
+                  <p className="mb-6 flex-1 leading-relaxed text-txt-secondary">{fr(s.summary)}</p>
+                  <span className={`inline-flex items-center gap-1.5 text-sm font-medium ${a.text}`}>
+                    {s.priceLabel} · Découvrir <Icon name="arrow-right" className="h-4 w-4" />
+                  </span>
+                </article>
+              )
+            })}
           </div>
         </div>
       </section>
+
+      <section id="comparatif" className="border-t border-bord bg-nuit-light py-16 md:py-20" aria-labelledby="comparatif-titre">
+        <div className="container-b">
+          <div className="mb-10 max-w-[720px]">
+            <p className="section-tag text-bronze">Comparatif</p>
+            <h2 id="comparatif-titre" className="section-title">
+              Quel service pour quel besoin&nbsp;?
+            </h2>
+          </div>
+          <div tabIndex={0} role="region" aria-label="Tableau comparatif des services, tarifs et délais" className="overflow-x-auto rounded-2xl border border-bord">
+            <table className="w-full min-w-[720px] text-left text-[15px]">
+              <caption className="sr-only">Correspondance entre les besoins, les services BabTech, les tarifs et les délais</caption>
+              <thead className="bg-white/[0.04] text-[13px] uppercase tracking-[1px] text-txt-primary">
+                <tr>
+                  <th scope="col" className="px-5 py-4 font-semibold">Ton besoin</th>
+                  <th scope="col" className="px-5 py-4 font-semibold">Le service</th>
+                  <th scope="col" className="px-5 py-4 font-semibold">Tarif</th>
+                  <th scope="col" className="px-5 py-4 font-semibold">Délai</th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparison.map((row) => (
+                  <tr key={row.slug} className="border-t border-bord">
+                    <td className="px-5 py-4 text-txt-secondary">{row.need}</td>
+                    <td className="px-5 py-4">
+                      <Link href={`/services/${row.slug}`} className="font-medium text-emerald-b hover:underline">
+                        {row.answer}
+                      </Link>
+                    </td>
+                    <td className="px-5 py-4 text-txt-primary">{fr(row.price)}</td>
+                    <td className="px-5 py-4 text-txt-secondary">{row.delay}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-bord py-16 md:py-20" aria-labelledby="methode-titre">
+        <div className="container-b">
+          <div className="mb-10 max-w-[720px]">
+            <p className="section-tag text-emerald-b">Méthode</p>
+            <h2 id="methode-titre" className="section-title">
+              Comment se déroule un projet
+            </h2>
+          </div>
+          <ProcessSteps />
+        </div>
+      </section>
+
+      <CtaSection title="Tu ne sais pas quel niveau te correspond ?" text="Pas de problème : on en discute. Trente minutes, zéro engagement, et tu repars avec des idées claires." />
     </>
   )
 }
