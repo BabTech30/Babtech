@@ -1,27 +1,32 @@
 #!/usr/bin/env node
 /**
- * Contrôle qualité du site généré (dossier out/), à lancer après `npm run build`.
+ * Contrôle qualité : construit une copie statique du site (dossier out/, mêmes pages que
+ * celles prérendues en ligne) puis la vérifie.
  *
  * Vérifie : fichiers SEO/GEO présents, pages du sitemap générées, balises essentielles
  * (title, description, canonical, h1 unique, Open Graph), JSON-LD valide, liens internes
  * et images référencées existants, URL de pages cohérentes (« / » final), titres et
- * descriptions en double, fichier .htaccess pour Hostinger.
+ * descriptions en double.
  */
+import { spawnSync } from 'node:child_process'
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import path from 'node:path'
 
+const require = createRequire(import.meta.url)
 /** Même réglage que Next.js : avec trailingSlash, toute URL de page se termine par « / ». */
-const { trailingSlash = false } = createRequire(import.meta.url)('../next.config.js')
+const { trailingSlash = false } = require('../next.config.js')
+
+console.log('Construction de la copie statique de contrôle (out/)…')
+const build = spawnSync(process.execPath, [require.resolve('next/dist/bin/next'), 'build'], {
+  stdio: 'inherit',
+  env: { ...process.env, BABTECH_STATIC_EXPORT: '1' },
+})
+if (build.status !== 0) process.exit(build.status ?? 1)
 
 const OUT = path.resolve('out')
 const errors = []
 const warnings = []
-
-if (!existsSync(OUT)) {
-  console.error("Dossier out/ absent : lance d'abord `npm run build`.")
-  process.exit(1)
-}
 
 const read = (file) => readFileSync(file, 'utf8')
 const decode = (s) =>
@@ -39,8 +44,6 @@ const REQUIRED = [
   'brand/icon-512.png',
   'brand/apple-touch-icon.png',
   'og/default.png',
-  '.htaccess',
-  '_next/static/.htaccess',
 ]
 for (const f of REQUIRED) if (!existsSync(path.join(OUT, f))) errors.push(`Fichier manquant : ${f}`)
 
@@ -57,7 +60,7 @@ function badSlash(pathname) {
 }
 const slashRule = trailingSlash ? 'devrait finir par « / »' : 'ne devrait pas finir par « / »'
 
-/** Fichier servi pour un chemin d'URL (comportement d'Apache / LiteSpeed chez Hostinger). */
+/** Fichier généré pour un chemin d'URL. */
 function fileFor(urlPath) {
   const clean = decodeURIComponent(urlPath.split('#')[0].split('?')[0])
   if (clean === '/' || clean === '') return path.join(OUT, 'index.html')

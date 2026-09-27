@@ -7,7 +7,7 @@ Le site est pensé pour être trouvé **sur Google** (SEO local) **et dans les r
 Gemini, Claude, Copilot…), grâce au GEO (*Generative Engine Optimization*).
 
 - Stack : **Next.js 16** (App Router, export statique), **React 19**, **Tailwind CSS 3**, **TypeScript**
-- Hébergement : **Hostinger** (fichiers statiques + `.htaccess` généré au build)
+- Hébergement : **Hostinger**, application Node.js reliée à la branche `main` (mise en ligne automatique)
 - Formulaires : **Formspree** · Rendez-vous : **Calendly** · Mesure d'audience optionnelle et sans cookie : **Plausible** ou **Umami**
 
 ## Démarrer
@@ -20,11 +20,10 @@ npm run dev        # http://localhost:3000
 | Commande | Rôle |
 |---|---|
 | `npm run dev` | Serveur de développement |
-| `npm run build` | Génère le site statique dans `out/` (avec le `.htaccess` pour Hostinger) |
-| `npm run build:hostinger` | Build + contrôle + archive `hostinger-site.zip` à importer dans `public_html` |
-| `npm run check` | Contrôle qualité du site généré : liens cassés, balises SEO, JSON-LD, sitemap… |
+| `npm run build` | Construit le site, comme Hostinger |
+| `npm start` | Lance le site construit, comme en production (après `npm run build`) |
+| `npm run check` | Contrôle qualité : exporte une copie statique dans `out/` et vérifie liens, balises SEO, JSON-LD, sitemap… |
 | `npm run verify` | Tout d'un coup : TypeScript + ESLint + build + contrôle |
-| `npm run preview` | Sert `out/` en local, comme en production |
 | `npm run indexnow` | Signale les pages à Bing & co. après une mise en ligne (voir `docs/DEPLOIEMENT.md`) |
 
 ## Où modifier quoi ?
@@ -77,18 +76,13 @@ et un appel à l'action vers `/contact` ou `/communaute`.
 
 ## Déployer
 
-Le guide pas à pas est dans **[`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md)**. En résumé :
-
-1. à chaque mise à jour de `main`, GitHub construit et contrôle le site, puis le publie, prêt à servir, sur la branche
-   **`hostinger`** ;
-2. le déploiement Git d'Hostinger (hPanel → Avancé → Git) suit cette branche et la récupère dans `public_html`.
-
-Hostinger ne doit jamais suivre `main` (code source). Sans Git : zip téléchargeable dans l'onglet **Actions**
-(ou `npm run build:hostinger`) ou envoi FTP automatique.
+Hostinger (application Node.js) est relié à la branche **`main`** : chaque mise à jour de `main` est construite et mise en
+ligne automatiquement. On travaille donc sur une branche, on vérifie que le **Contrôle qualité** GitHub est vert, puis on
+fusionne dans `main`. Réglages et dépannage : **[`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md)**.
 
 ## Documentation
 
-- [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md) — mise en ligne sur Hostinger et check-list après la mise en ligne
+- [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md) — mise en ligne sur Hostinger (Node.js) et check-list après la mise en ligne
 - [`docs/STRATEGIE-SEO-GEO.md`](docs/STRATEGIE-SEO-GEO.md) — positionnement, mots-clés, plan local, GEO, calendrier éditorial
 - [`docs/COMMUNAUTE.md`](docs/COMMUNAUTE.md) — feuille de route et architecture de la future plateforme communautaire
 
@@ -97,8 +91,8 @@ Hostinger ne doit jamais suivre `main` (code source). Sans Git : zip télécharg
 ```
 content/blog/          Articles en Markdown
 public/                Fichiers servis tels quels (favicon, vérification Google, clé IndexNow)
-scripts/               postbuild.mjs (.htaccess), build-hostinger.mjs, check-build.mjs (contrôle qualité), indexnow.mjs
-.github/workflows/     deploy-hostinger.yml (branche hostinger + zip à chaque mise à jour, FTP facultatif)
+scripts/               check-build.mjs (contrôle qualité), postbuild.mjs (serveur Node.js autonome), indexnow.mjs
+.github/workflows/     ci.yml (contrôle qualité à chaque envoi sur GitHub)
 src/app/               Pages (App Router) + routes générées : sitemap, robots, llms.txt, RSS, images OG, icônes
 src/components/        Composants d'interface (Header, Footer, formulaires, FAQ, cartes…)
 src/data/              Contenus structurés (services, villes, FAQ, communauté…)

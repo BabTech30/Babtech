@@ -11,7 +11,7 @@
 
 /**
  * Domaine du site. Si tu choisis un autre nom de domaine, c'est la seule ligne à changer :
- * canonicals, sitemap, Open Graph, données structurées, RSS, llms.txt et .htaccess suivent.
+ * canonicals, sitemap, Open Graph, données structurées, RSS et llms.txt suivent.
  */
 const DEFAULT_SITE_URL = 'https://babtech.fr'
 
