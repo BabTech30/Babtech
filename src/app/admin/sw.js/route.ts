@@ -2,6 +2,7 @@
  * Service worker de l'application « tableau de bord » (portée : /admin/ seulement, jamais le site public).
  * Il ne met rien en cache : les pages de l'espace privé viennent toujours du serveur, à jour, et ne restent
  * pas sur l'appareil. Sans connexion, il affiche une page « Pas de connexion » au lieu de l'erreur du navigateur.
+ * Il affiche aussi les notifications de nouveaux rendez-vous et ouvre la bonne page quand on touche l'une d'elles.
  */
 export const dynamic = 'force-dynamic'
 
@@ -47,6 +48,43 @@ self.addEventListener('fetch', (event) => {
     fetch(event.request).catch(
       () => new Response(OFFLINE_PAGE, { status: 503, headers: { 'Content-Type': 'text/html; charset=utf-8' } }),
     ),
+  )
+})
+
+// Notification envoyée par le serveur (nouveau rendez-vous, test) : contenu chiffré jusqu'à cet appareil.
+self.addEventListener('push', (event) => {
+  let notice = {}
+  try {
+    notice = event.data ? event.data.json() : {}
+  } catch {
+    notice = { body: event.data ? event.data.text() : '' }
+  }
+  const url = typeof notice.url === 'string' && notice.url.startsWith('/admin/') ? notice.url : '/admin/'
+  event.waitUntil(
+    self.registration.showNotification(notice.title || 'BabTech', {
+      body: notice.body || '',
+      icon: '/brand/admin-192.png',
+      badge: '/brand/admin-badge-96.png',
+      tag: notice.tag || undefined,
+      lang: 'fr',
+      data: { url },
+    }),
+  )
+})
+
+// Toucher la notification ouvre le tableau de bord sur la bonne page (fenêtre déjà ouverte si possible).
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close()
+  const url = new URL((event.notification.data && event.notification.data.url) || '/admin/', self.location.origin).href
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windows) => {
+      const open = windows.find((w) => w.url.startsWith(self.registration.scope))
+      if (!open) return self.clients.openWindow(url)
+      return open
+        .focus()
+        .then((w) => w.navigate(url))
+        .catch(() => self.clients.openWindow(url))
+    }),
   )
 })
 `

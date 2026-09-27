@@ -41,6 +41,7 @@ export function getOgEntries(): OgEntry[] {
     { key: 'a-propos', eyebrow: 'À propos', title: "Derrière BabTech, il y a un parcours d'entrepreneur.", photo: true },
     { key: 'portfolio', eyebrow: 'Réalisations', title: 'Des projets concrets. Des résultats qui parlent.' },
     { key: 'contact', eyebrow: 'Contact', title: 'Parlons de ton projet.' },
+    { key: 'rendez-vous', eyebrow: 'Rendez-vous', title: 'Réserve ton appel découverte gratuit de 30 minutes', photo: true },
     { key: 'faq', eyebrow: 'FAQ', title: 'Toutes les réponses à tes questions.' },
     // Pages partagées par QR code (hors Google) : le visage rassure dans l'aperçu du lien.
     {

@@ -97,10 +97,10 @@ export default async function Carte() {
                 </a>
               </li>
               <li>
-                <a href={site.calendlyUrl} target="_blank" rel="noopener noreferrer" className={actionClass} data-track="calendly">
+                <Link href={site.bookingPath} className={actionClass} data-track="rendez-vous">
                   <Icon name="calendar" className="h-5 w-5 shrink-0 text-emerald-b" />
                   Réserver un appel gratuit de 30 minutes
-                </a>
+                </Link>
               </li>
               <li>
                 <Link href="/bastien" className={actionClass}>

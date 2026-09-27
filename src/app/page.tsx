@@ -104,10 +104,10 @@ export default function Home() {
               outils qui te font gagner des heures, et de l&apos;IA qui travaille pour toi.
             </p>
             <div className="flex flex-wrap gap-3.5">
-              <a href={site.calendlyUrl} target="_blank" rel="noopener noreferrer" className="btn-primary" data-track="calendly">
+              <Link href={site.bookingPath} className="btn-primary" data-track="rendez-vous">
                 <Icon name="calendar" className="h-[18px] w-[18px]" />
                 Réserver un appel gratuit
-              </a>
+              </Link>
               <Link href="/services" className="btn-secondary">
                 Découvrir les services
               </Link>

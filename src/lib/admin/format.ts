@@ -2,7 +2,8 @@
 const PARIS = 'Europe/Paris'
 
 export function formatDay(iso: string) {
-  return new Date(`${iso}T12:00:00Z`).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+  const text = new Date(`${iso}T12:00:00Z`).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+  return text.replace(/^1 /, '1er ')
 }
 
 export function formatMonth(month: string, style: 'long' | 'short' = 'long') {

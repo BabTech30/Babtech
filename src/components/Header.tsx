@@ -101,10 +101,10 @@ export default function Header() {
             </li>
           ))}
           <li className="pt-5">
-            <a href={site.calendlyUrl} target="_blank" rel="noopener noreferrer" className="btn-primary w-full" data-track="calendly">
+            <Link href={site.bookingPath} onClick={() => setOpen(false)} className="btn-primary w-full" data-track="rendez-vous">
               <Icon name="calendar" className="h-[18px] w-[18px]" />
               Réserver un appel gratuit
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>

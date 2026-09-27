@@ -45,9 +45,9 @@ export function ContactForm() {
         <p className="mb-2 font-outfit text-xl font-semibold text-white">Message bien reçu, merci&nbsp;!</p>
         <p className="text-[15px] leading-relaxed text-txt-secondary">
           Je te réponds sous 24 heures. En attendant, tu peux{' '}
-          <a href={site.calendlyUrl} target="_blank" rel="noopener noreferrer" className="text-emerald-b underline" data-track="calendly">
+          <Link href={site.bookingPath} className="text-emerald-b underline" data-track="rendez-vous">
             réserver directement un créneau
-          </a>
+          </Link>
           .
         </p>
       </div>

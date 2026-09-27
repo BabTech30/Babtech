@@ -7,9 +7,10 @@ export const dynamicParams = false
 
 /**
  * Icônes PNG générées au build (favicon, écran d'accueil mobile, logo Schema.org). Les icônes « admin- »
- * (B vert sur fond sombre) distinguent l'application du tableau de bord de celle du site.
+ * (B vert sur fond sombre) distinguent l'application du tableau de bord de celle du site ; le « badge »
+ * (B blanc sur fond transparent) est la petite icône des notifications sur Android.
  */
-const ICONS: Record<string, { size: number; rounded: boolean; admin?: boolean }> = {
+const ICONS: Record<string, { size: number; rounded: boolean; admin?: boolean; badge?: boolean }> = {
   'favicon-48.png': { size: 48, rounded: true },
   'apple-touch-icon.png': { size: 180, rounded: false },
   'icon-192.png': { size: 192, rounded: true },
@@ -19,6 +20,7 @@ const ICONS: Record<string, { size: number; rounded: boolean; admin?: boolean }>
   'admin-512.png': { size: 512, rounded: true, admin: true },
   'admin-maskable-512.png': { size: 512, rounded: false, admin: true },
   'admin-apple-touch-icon.png': { size: 180, rounded: false, admin: true },
+  'admin-badge-96.png': { size: 96, rounded: false, badge: true },
 }
 
 export function generateStaticParams() {
@@ -31,7 +33,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
   if (!icon) return new Response('Not found', { status: 404 })
 
   const font = await readFile(path.join(process.cwd(), 'src/fonts/og/outfit-latin-700-normal.woff'))
-  const { size, rounded, admin } = icon
+  const { size, rounded, admin, badge } = icon
 
   return new ImageResponse(
     (
@@ -42,11 +44,11 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: admin ? '#0f1923' : '#10b981',
+          background: badge ? 'transparent' : admin ? '#0f1923' : '#10b981',
           borderRadius: rounded ? size * 0.22 : 0,
-          color: admin ? '#10b981' : '#0a1a10',
+          color: badge ? '#ffffff' : admin ? '#10b981' : '#0a1a10',
           fontFamily: 'Outfit',
-          fontSize: size * (rounded ? 0.66 : 0.5),
+          fontSize: size * (rounded ? 0.66 : badge ? 0.8 : 0.5),
           lineHeight: 1,
           paddingBottom: size * 0.04,
         }}

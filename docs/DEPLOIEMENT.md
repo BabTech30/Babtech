@@ -39,15 +39,19 @@ Ces valeurs ne s'écrivent que dans hPanel, jamais dans le code : le dépôt Git
 ## Tableau de bord `/admin`
 
 `https://babtech.fr/admin/` : connexion avec l'identifiant et le mot de passe ci-dessus.
-- **Tableau de bord** : avancement, prochaine action, checklist (tu coches tes tâches, Claude tient les siennes), santé
-  du site, chiffres du mois à saisir chaque début de mois, zones visées, décisions prises, liens utiles.
+- **Tableau de bord** : avancement, prochaine action, checklist (tu coches tes tâches, Claude tient les siennes), prochains
+  rendez-vous, santé du site, chiffres du mois à saisir chaque début de mois, zones visées, décisions prises, liens utiles.
+- **Rendez-vous** : les appels découverte réservés sur `https://babtech.fr/rendez-vous/` (appeler, écrire, envoyer le lien
+  de visio, annuler), tes disponibilités (plages par jour, durée, délai minimum, jours fermés, pause), les notifications
+  sur tes appareils et un lien d'agenda privé pour ton téléphone. Chaque réservation t'envoie aussi un e-mail via Formspree.
+  Sur iPhone et iPad, les notifications ne marchent que dans le tableau de bord installé sur l'écran d'accueil.
 - **Partager** : les QR codes de ta présentation, du site et de ta carte de visite (fichiers pour l'impression,
   affichage en grand, lien à copier) et le nombre de scans de chaque mois.
 - **Réglages** : changer le mot de passe (il remplace alors celui de hPanel et déconnecte les autres appareils),
   installer le tableau de bord comme une application, télécharger une sauvegarde de tes données.
 - Après 5 mots de passe faux, la connexion est bloquée 15 minutes.
-- Tes coches, tes chiffres, les scans et ton mot de passe (sous une forme illisible) sont enregistrés sur le serveur, hors du dossier
-  du site : un déploiement ne les efface pas. Si **Réglages** signale le contraire, renseigne `ADMIN_DATA_DIR`.
+- Tes coches, tes chiffres, les scans, les rendez-vous et ton mot de passe (sous une forme illisible) sont enregistrés sur le serveur,
+  hors du dossier du site : un déploiement ne les efface pas. Si **Réglages** signale le contraire, renseigne `ADMIN_DATA_DIR`.
 
 ## Si une mise à jour n'apparaît pas
 
@@ -74,6 +78,8 @@ Le site n'utilise plus Netlify. Tu peux supprimer l'ancien site `agence-babtech`
       site, les services et des photos, puis demander un avis à chaque client. C'est le levier n° 1 pour le référencement local.
 - [ ] Envoyer un message test avec le formulaire de contact et celui de la communauté. En cas d'erreur, désactiver le
       reCAPTCHA dans les réglages du formulaire Formspree (le site a déjà son propre anti-spam).
+- [ ] **Rendez-vous** : régler tes disponibilités dans le tableau de bord (onglet Rendez-vous), activer les notifications
+      sur ton téléphone, puis réserver un créneau test sur `https://babtech.fr/rendez-vous/` et l'annuler.
 
 ## À compléter dans `src/lib/site.ts`
 

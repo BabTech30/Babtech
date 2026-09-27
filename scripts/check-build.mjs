@@ -307,9 +307,14 @@ const admin = await get('/admin/')
 if (![302, 303, 307].includes(admin.status) || !admin.location.includes('/admin/connexion/')) {
   errors.push(`/admin/ sans connexion : redirection vers /admin/connexion/ attendue (reçu ${admin.status} ${admin.location})`)
 }
-for (const privatePath of ['/admin/reglages/', '/admin/partager/', '/admin/export/', '/admin/qr/site.png']) {
+for (const privatePath of ['/admin/reglages/', '/admin/partager/', '/admin/rendez-vous/', '/admin/export/', '/admin/qr/site.png']) {
   const res = await get(privatePath)
   if (res.status === 200) errors.push(`${privatePath} accessible sans connexion`)
+}
+// Agenda privé des rendez-vous : introuvable sans le bon jeton (aucun jeton n'existe encore ici).
+for (const agendaPath of ['/admin/agenda/mauvais.ics', '/admin/agenda/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.ics']) {
+  const res = await get(agendaPath)
+  if (res.status !== 404) errors.push(`${agendaPath} : réponse 404 attendue (reçu ${res.status})`)
 }
 const login = await get('/admin/connexion/')
 if (login.status !== 200) errors.push(`/admin/connexion/ : réponse ${login.status}`)
@@ -341,7 +346,13 @@ if (sw.status !== 200 || !(sw.headers.get('content-type') ?? '').includes('javas
 else {
   if (!(sw.headers.get('cache-control') ?? '').includes('no-cache')) errors.push('/admin/sw.js : doit être revalidé à chaque visite (Cache-Control: no-cache)')
   if (!sw.body.includes("addEventListener('fetch'") || /caches\.open/.test(sw.body)) errors.push('/admin/sw.js : service worker sans cache attendu')
+  for (const event of ['push', 'notificationclick']) {
+    if (!sw.body.includes(`addEventListener('${event}'`)) errors.push(`/admin/sw.js : gestion de l'évènement « ${event} » absente (notifications)`)
+  }
 }
+const badge = await fetch(`${base}/brand/admin-badge-96.png`)
+await badge.arrayBuffer()
+if (badge.status !== 200 || badge.headers.get('content-type') !== 'image/png') errors.push('/brand/admin-badge-96.png : icône des notifications introuvable')
 
 console.log(`Contrôle de ${pages} pages HTML et ${locs.length} URLs du sitemap (${siteUrl})`)
 for (const w of warnings) console.log(`  ⚠ ${w}`)

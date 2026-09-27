@@ -33,7 +33,9 @@ export default function Confidentialite() {
             (facultatif) et consentement.
           </li>
           <li>
-            <strong>Prise de rendez-vous&nbsp;:</strong> les informations saisies sur le service Calendly lorsque tu réserves un créneau.
+            <strong>Prise de rendez-vous&nbsp;:</strong> nom, email, téléphone (obligatoire pour un rendez-vous par téléphone), entreprise
+            (facultatif), sujet, message (facultatif), ainsi que la date et le mode du rendez-vous choisis. Ces informations sont
+            enregistrées sur le serveur du site et me sont transmises par email et par une notification sur mes appareils.
           </li>
           <li>
             <strong>Vidéos YouTube&nbsp;:</strong> sur certaines pages, une vidéo YouTube ne se charge que si tu cliques pour la lancer.
@@ -53,7 +55,7 @@ export default function Confidentialite() {
 
         <h2>3. Finalités et bases légales</h2>
         <ul>
-          <li>Répondre à tes demandes et établir un devis&nbsp;: mesures précontractuelles et intérêt légitime.</li>
+          <li>Répondre à tes demandes, organiser les rendez-vous que tu réserves et établir un devis&nbsp;: mesures précontractuelles et intérêt légitime.</li>
           <li>Te tenir informé(e) du lancement de la communauté et organiser les ateliers&nbsp;: consentement, retirable à tout moment.</li>
           <li>Mesurer la fréquentation de façon anonyme et sécuriser le site&nbsp;: intérêt légitime.</li>
         </ul>
@@ -64,9 +66,13 @@ export default function Confidentialite() {
         <h2>4. Destinataires et sous-traitants</h2>
         <p>Les données sont destinées uniquement à {site.name}. Elles transitent par des prestataires techniques&nbsp;:</p>
         <ul>
-          <li>Formspree (réception des formulaires)&nbsp;;</li>
-          <li>Calendly (prise de rendez-vous)&nbsp;;</li>
-          <li>{site.legal.host.name} (hébergement du site)&nbsp;;</li>
+          <li>Formspree (réception des formulaires et des alertes de rendez-vous)&nbsp;;</li>
+          <li>{site.legal.host.name} (hébergement du site et des rendez-vous)&nbsp;;</li>
+          <li>
+            les services de notification d&apos;Apple, de Google ou de Mozilla, qui acheminent jusqu&apos;à mes appareils les alertes de
+            rendez-vous sous forme chiffrée, sans pouvoir les lire&nbsp;;
+          </li>
+          <li>l&apos;agenda que j&apos;utilise (Apple Calendrier ou Google Agenda, par exemple), où j&apos;inscris les rendez-vous&nbsp;;</li>
           <li>YouTube (Google), seulement si tu lances une vidéo&nbsp;;</li>
           <li>le cas échéant, l&apos;outil de mesure d&apos;audience sans cookie.</li>
         </ul>
@@ -79,6 +85,7 @@ export default function Confidentialite() {
         <h2>5. Durées de conservation</h2>
         <ul>
           <li>Demandes de contact&nbsp;: 12 mois après le dernier échange (hors relation commerciale, régie par les durées légales).</li>
+          <li>Rendez-vous&nbsp;: effacés du serveur du site 12 mois après leur date.</li>
           <li>Liste de la communauté&nbsp;: jusqu&apos;à ta désinscription, et au plus 3 ans après ton dernier échange.</li>
           <li>Statistiques de fréquentation&nbsp;: données anonymes et agrégées.</li>
         </ul>
@@ -86,7 +93,7 @@ export default function Confidentialite() {
         <h2>6. Cookies</h2>
         <p>
           Le site fonctionne sans cookie de mesure ni cookie publicitaire&nbsp;: aucun bandeau de consentement n&apos;est donc nécessaire. Les
-          services tiers ouverts depuis le site (Calendly, par exemple) appliquent leur propre politique lorsque tu les utilises. Les vidéos
+          services tiers vers lesquels le site renvoie appliquent leur propre politique lorsque tu les utilises. Les vidéos
           YouTube restent inactives tant que tu ne cliques pas dessus&nbsp;: lancer une vidéo vaut accord pour les cookies de YouTube.
         </p>
 

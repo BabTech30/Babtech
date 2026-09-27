@@ -109,10 +109,10 @@ export default function Presentation() {
               jargon, avec des prix clairs, et une réponse sous 24&nbsp;heures.
             </p>
             <div className="flex flex-wrap gap-3.5">
-              <a href={site.calendlyUrl} target="_blank" rel="noopener noreferrer" className="btn-primary" data-track="calendly">
+              <Link href={site.bookingPath} className="btn-primary" data-track="rendez-vous">
                 <Icon name="calendar" className="h-[18px] w-[18px]" />
                 Réserver un appel gratuit
-              </a>
+              </Link>
               {site.phone && (
                 <a href={telLink()} className="btn-secondary" data-track="phone">
                   <Icon name="phone" className="h-[18px] w-[18px]" />

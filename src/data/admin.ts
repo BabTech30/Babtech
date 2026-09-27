@@ -167,6 +167,34 @@ export const adminTasks: AdminTask[] = [
     detail: 'Icône sur ton ordinateur ou ton téléphone, fenêtre à part, page « Pas de connexion » quand Internet coupe.',
   },
   {
+    id: 'booking',
+    phase: 'launch',
+    owner: 'claude',
+    done: true,
+    title: 'Remplacer Calendly par ta propre prise de rendez-vous',
+    detail: "Page babtech.fr/rendez-vous/, réglée dans l'onglet Rendez-vous : disponibilités, jours fermés, notification et e-mail à chaque réservation, agenda pour ton téléphone.",
+    link: '/admin/rendez-vous/',
+    linkLabel: 'Rendez-vous',
+  },
+  {
+    id: 'booking-setup',
+    phase: 'launch',
+    owner: 'toi',
+    title: 'Régler tes disponibilités et activer les notifications',
+    detail: "Après le déploiement, onglet Rendez-vous. Sur iPhone, installe d'abord le tableau de bord sur l'écran d'accueil : les notifications ne marchent que dans l'application.",
+    link: '/admin/rendez-vous/',
+    linkLabel: 'Rendez-vous',
+  },
+  {
+    id: 'booking-test',
+    phase: 'launch',
+    owner: 'toi',
+    title: 'Faire une réservation test',
+    detail: "Réserve un créneau avec ton adresse e-mail, vérifie la notification et l'e-mail reçus, puis annule-le dans l'onglet Rendez-vous.",
+    link: 'https://babtech.fr/rendez-vous/',
+    linkLabel: 'Réserver',
+  },
+  {
     id: 'install-app',
     phase: 'launch',
     owner: 'toi',
@@ -298,6 +326,10 @@ export const adminDecisions = [
     text: 'Site de réservation : le tableau de bord est une option (+ 350 €). Calendriers synchronisés avec Airbnb et Booking.com par iCal (mise à jour toutes les 2 à 3 heures, pas en temps réel).',
   },
   { date: '2026-09-27', text: 'Téléphone affiché sur le site, la carte de visite et les données pour Google : 07 63 51 93 63.' },
+  {
+    date: '2026-09-27',
+    text: "Rendez-vous : ta propre page babtech.fr/rendez-vous/ remplace Calendly. Tu règles tes disponibilités dans le tableau de bord ; chaque réservation t'envoie une notification et un e-mail.",
+  },
 ]
 
 /** Dernière mesure Lighthouse (mobile), mise à jour par Claude. */
@@ -311,7 +343,7 @@ export const adminHealth = {
     { label: 'SEO', value: 100 },
   ],
   facts: [
-    { label: 'Pages', value: '36' },
+    { label: 'Pages', value: '37' },
     { label: 'Articles de blog', value: '7' },
     { label: 'Zones couvertes', value: '9' },
     { label: 'Affichage principal', value: '2,4 s' },
@@ -325,7 +357,7 @@ export const METRICS = [
   { key: 'gscImpressions', label: 'Affichages dans Google', source: 'Search Console', primary: false },
   { key: 'gbpActions', label: 'Actions sur la fiche Google', source: 'Appels, itinéraires, visites', primary: false },
   { key: 'reviews', label: 'Avis Google', source: 'Total sur la fiche', primary: false },
-  { key: 'calls', label: 'Appels et rendez-vous', source: 'Téléphone et Calendly', primary: false },
+  { key: 'calls', label: 'Appels et rendez-vous', source: 'Téléphone et page Rendez-vous', primary: false },
   { key: 'visits', label: 'Visites du site', source: 'Plausible ou Umami', primary: false },
 ] as const
 
@@ -357,7 +389,7 @@ export const adminLinks = [
     group: 'Clients',
     items: [
       { label: 'Formspree', hint: 'demandes reçues', href: 'https://formspree.io/forms' },
-      { label: 'Calendly', hint: 'rendez-vous', href: 'https://calendly.com/app/scheduled_events/user/me' },
+      { label: 'Page de rendez-vous', hint: 'ce que voient tes clients', href: 'https://babtech.fr/rendez-vous/' },
     ],
   },
 ]

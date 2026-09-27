@@ -21,6 +21,10 @@
     background: rgba(16, 185, 129, 0.3);
     color: #ffffff;
   }
+  /* Par défaut, un fieldset s'élargit à son contenu (ex. une rangée qui défile) et déborde de sa colonne. */
+  fieldset {
+    min-width: 0;
+  }
   :focus-visible {
     outline: 2px solid #10b981;
     outline-offset: 3px;

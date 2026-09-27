@@ -98,10 +98,10 @@ export default async function ServicePage({ params }: Props) {
           Demander un devis gratuit
           <Icon name="arrow-right" className="h-[18px] w-[18px]" />
         </Link>
-        <a href={site.calendlyUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary" data-track="calendly">
+        <Link href={site.bookingPath} className="btn-secondary" data-track="rendez-vous">
           <Icon name="calendar" className="h-[18px] w-[18px]" />
           Réserver un appel
-        </a>
+        </Link>
       </PageHero>
 
       {/* Pour qui + résultat */}

@@ -43,7 +43,8 @@ export default async function SettingsPage() {
         </h2>
         <p className="mt-2 text-sm text-txt-secondary">
           Installe le tableau de bord sur ton ordinateur ou ton téléphone&nbsp;: une icône à part, qui s&apos;ouvre dans sa propre
-          fenêtre, sans passer par le navigateur. Les données restent sur le serveur, toujours à jour.
+          fenêtre, sans passer par le navigateur. Les données restent sur le serveur, toujours à jour. Active ensuite les
+          notifications dans l&apos;onglet Rendez-vous pour recevoir une alerte à chaque réservation.
         </p>
         <InstallApp />
       </section>
@@ -69,7 +70,7 @@ export default async function SettingsPage() {
         </h2>
         {storage ? (
           <p className="mt-2 text-sm text-txt-secondary">
-            Tes coches, tes chiffres du mois, les scans des QR codes et ton mot de passe (sous une forme illisible, jamais en clair) sont
+            Tes coches, tes chiffres du mois, les scans des QR codes, les rendez-vous et ton mot de passe (sous une forme illisible, jamais en clair) sont
             enregistrés sur le serveur, dans{' '}
             <code className="break-all text-txt-primary">{storage.dir}</code>
             {storage.persistent ? (

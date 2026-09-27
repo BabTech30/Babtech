@@ -40,7 +40,8 @@ export const site = {
   email: 'contact@babtech.fr',
   /** Téléphone au format international (07 63 51 93 63) : site, carte de visite, fiche contact, données structurées. */
   phone: process.env.NEXT_PUBLIC_PHONE || '+33763519363',
-  calendlyUrl: process.env.NEXT_PUBLIC_CALENDLY_URL || 'https://calendly.com/babferrer',
+  /** Prise de rendez-vous interne (créneaux gérés dans le tableau de bord). */
+  bookingPath: '/rendez-vous',
   /** URL de l'espace client (ex. https://app.babtech.fr). Vide = bouton masqué. */
   clientSpaceUrl: process.env.NEXT_PUBLIC_CLIENT_SPACE_URL || '',
 

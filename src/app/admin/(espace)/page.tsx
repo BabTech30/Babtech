@@ -18,6 +18,9 @@ import { requireAdmin } from '@/lib/admin/auth'
 import { currentMonth, formatDay, formatMonth, formatNumber } from '@/lib/admin/format'
 import { scanStats } from '@/lib/admin/scans'
 import { type Kpi, readStore, storageInfo } from '@/lib/admin/store'
+import { splitAppointments } from '@/lib/booking/appointments'
+import { settingsOf } from '@/lib/booking/settings'
+import { frDay, frTime, utcToParis } from '@/lib/booking/time'
 import { fr } from '@/lib/typography'
 import { toggleTask } from '../actions'
 
@@ -54,6 +57,8 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
   const metric = METRICS.find((m) => m.key === params.courbe) ?? METRICS[0]
   const kpis = Object.values(store.kpis).sort((a, b) => a.month.localeCompare(b.month))
   const toDo = { toi: pending.filter((t) => t.owner === 'toi').length, claude: pending.filter((t) => t.owner === 'claude').length }
+  const { upcoming } = splitAppointments(store.appointments)
+  const bookingPaused = settingsOf(store).paused
 
   const query = (change: Search) => {
     const merged = { ...params, ...change }
@@ -201,6 +206,38 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         </section>
 
         <div className="grid gap-6">
+          <section className={panel} aria-labelledby="rdv-title">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 id="rdv-title" className={h2}>
+                Prochains rendez-vous
+              </h2>
+              <Link href="/admin/rendez-vous/" className="text-sm font-medium text-emerald-300 hover:underline">
+                Tout voir →
+              </Link>
+            </div>
+            {bookingPaused && <p className="mt-1 text-xs text-bronze">Réservations en pause</p>}
+            {upcoming.length ? (
+              <ul className="mt-2">
+                {upcoming.slice(0, 3).map((a) => {
+                  const { date, time } = utcToParis(Date.parse(a.start))
+                  return (
+                    <li key={a.id} className="grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-3 border-b border-bord py-2 last:border-0">
+                      <span className="text-sm tabular-nums text-txt-muted">
+                        {frDay(date, 'short')}, {frTime(time)}
+                      </span>
+                      <span className="truncate text-txt-primary">
+                        {a.name} <span className="text-txt-muted">· {a.mode === 'telephone' ? 'téléphone' : 'visio'}</span>
+                      </span>
+                    </li>
+                  )
+                })}
+              </ul>
+            ) : (
+              <p className="mt-2 text-sm text-txt-secondary">Aucun rendez-vous à venir.</p>
+            )}
+            {upcoming.length > 3 && <p className="mt-2 text-xs text-txt-muted">Et {upcoming.length - 3} autre{upcoming.length > 4 ? 's' : ''}.</p>}
+          </section>
+
           <section className={panel} aria-labelledby="health-title">
             <h2 id="health-title" className={h2}>
               Santé du site

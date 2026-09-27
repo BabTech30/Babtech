@@ -34,6 +34,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry('/portfolio', 0.7, 'monthly'),
     entry('/a-propos', 0.7, 'monthly'),
     entry('/contact', 0.8, 'yearly'),
+    entry('/rendez-vous', 0.8, 'monthly'),
     entry('/faq', 0.7, 'monthly'),
     entry('/mentions-legales', 0.2, 'yearly'),
     entry('/confidentialite', 0.2, 'yearly'),

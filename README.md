@@ -8,7 +8,7 @@ Gemini, Claude, Copilot…), grâce au GEO (*Generative Engine Optimization*).
 
 - Stack : **Next.js 16** (App Router, pages prérendues servies par Node.js), **React 19**, **Tailwind CSS 3**, **TypeScript**
 - Hébergement : **Hostinger**, application Node.js qui construit la branche `main` (déploiement depuis hPanel)
-- Formulaires : **Formspree** · Rendez-vous : **Calendly** · Mesure d'audience optionnelle et sans cookie : **Plausible** ou **Umami**
+- Formulaires : **Formspree** · Rendez-vous : **page intégrée** (`/rendez-vous/`, gérée dans `/admin`) · Mesure d'audience optionnelle et sans cookie : **Plausible** ou **Umami**
 
 ## Démarrer
 
@@ -41,6 +41,7 @@ npm run dev        # http://localhost:3000
 | Les catégories du blog | `src/data/blog.ts` |
 | Un article | `content/blog/<slug>.md` |
 | Le tableau de bord `/admin` (étapes, tâches, décisions, santé du site) | `src/data/admin.ts` |
+| Les rendez-vous : réglages de départ, sujets proposés | `src/data/booking.ts` (ensuite, tout se règle dans `/admin/rendez-vous/`) |
 
 Tout le reste (sitemap, robots.txt, llms.txt, flux RSS, images de partage, données structurées Schema.org) est **généré
 automatiquement** à partir de ces fichiers.
@@ -93,9 +94,18 @@ Les QR codes à imprimer sont dans le tableau de bord, rubrique **Partager** : p
 mène à une adresse courte (`/q/presentation/`, `/q/site/`, `/q/carte/`) qui compte les scans du mois, sans aucune donnée
 personnelle, puis redirige vers la page. Pour en ajouter un : `src/data/qr.ts`.
 
+## Prise de rendez-vous
+
+`https://babtech.fr/rendez-vous/` : le visiteur choisit téléphone ou visio, un jour, une heure, puis laisse ses coordonnées.
+Le créneau est réservé aussitôt ; tu reçois une notification sur tes appareils et un e-mail (via Formspree, comme les
+formulaires). Tout se gère dans le tableau de bord, onglet **Rendez-vous** : rendez-vous à venir (appeler, écrire, annuler),
+disponibilités par jour, durée, délai minimum, jours fermés, pause, notifications et lien d'agenda privé à ajouter à ton
+téléphone (Apple Calendrier, Google Agenda). Les rendez-vous sont enregistrés sur le serveur avec les autres données du
+tableau de bord et effacés 12 mois après leur date.
+
 ## Tableau de bord privé
 
-`https://babtech.fr/admin/` : avancement du projet, checklist, santé du site, chiffres du mois (demandes de devis,
+`https://babtech.fr/admin/` : avancement du projet, checklist, prochains rendez-vous, santé du site, chiffres du mois (demandes de devis,
 contrats, Google…), scans des QR codes, zones visées et décisions. Connexion par identifiant et mot de passe (variables `ADMIN_USERNAME` et
 `ADMIN_PASSWORD` dans hPanel), mot de passe modifiable dans **Réglages**.
 

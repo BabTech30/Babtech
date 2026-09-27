@@ -49,10 +49,10 @@ export default function Contact() {
               <p className="mb-5 text-sm leading-relaxed text-txt-secondary">
                 30 minutes pour parler de ton projet, en visio ou par téléphone. Gratuit, sans engagement, sans jargon.
               </p>
-              <a href={site.calendlyUrl} target="_blank" rel="noopener noreferrer" className="btn-bronze w-full" data-track="calendly">
+              <Link href={site.bookingPath} className="btn-bronze w-full" data-track="rendez-vous">
                 Choisir un créneau
-                <Icon name="arrow-up-right" className="h-4 w-4" />
-              </a>
+                <Icon name="arrow-right" className="h-4 w-4" />
+              </Link>
             </div>
 
             <div className="card p-7">

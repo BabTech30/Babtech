@@ -4,13 +4,17 @@ import { access, mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import type { MetricKey } from '@/data/admin'
+import type { Appointment, BookingSettings } from '@/data/booking'
 
 /**
- * Données enregistrées par l'espace /admin : tes coches, tes chiffres du mois, les scans des QR codes
- * et ton mot de passe (haché). Un simple fichier JSON sur le serveur, rangé hors du dossier du site
- * pour survivre aux déploiements : ADMIN_DATA_DIR s'il est défini, sinon ~/.babtech-admin.
+ * Données enregistrées par l'espace /admin : tes coches, tes chiffres du mois, les scans des QR codes,
+ * les rendez-vous et ton mot de passe (haché). Un simple fichier JSON sur le serveur, rangé hors du
+ * dossier du site pour survivre aux déploiements : ADMIN_DATA_DIR s'il est défini, sinon ~/.babtech-admin.
  */
 export type Kpi = { month: string; note?: string; updatedAt: string } & Partial<Record<MetricKey, number>>
+
+/** Appareil abonné aux notifications (format standard PushSubscription du navigateur). */
+export type PushDevice = { endpoint: string; keys: { p256dh: string; auth: string }; createdAt: string; label: string }
 
 export type AdminStore = {
   passwordHash?: string
@@ -21,10 +25,18 @@ export type AdminStore = {
   kpis: Record<string, Kpi>
   /** Scans des QR codes par mois (AAAA-MM) puis par code : de simples compteurs, aucune donnée personnelle. */
   scans: Record<string, Record<string, number>>
+  /** Rendez-vous pris sur /rendez-vous/ (effacés 12 mois après leur date). */
+  appointments: Appointment[]
+  /** Réglages de la prise de rendez-vous modifiés dans le tableau de bord (sinon, ceux de src/data/booking.ts). */
+  booking?: BookingSettings
+  /** Notifications : clés propres au serveur et appareils abonnés. */
+  push: { vapid?: { publicKey: string; privateKey: string }; devices: PushDevice[] }
+  /** Jeton du lien d'agenda privé (abonnement iCal pour ton téléphone). */
+  calendarToken?: string
 }
 
 const FILE = 'admin.json'
-const empty = (): AdminStore => ({ sessionVersion: 1, tasks: {}, kpis: {}, scans: {} })
+const empty = (): AdminStore => ({ sessionVersion: 1, tasks: {}, kpis: {}, scans: {}, appointments: [], push: { devices: [] } })
 
 type Location = { dir: string; persistent: boolean }
 let location: Promise<Location | null> | null = null
@@ -60,7 +72,15 @@ async function readFrom(loc: Location): Promise<AdminStore> {
     throw error
   }
   const data = JSON.parse(raw) as Partial<AdminStore>
-  return { ...empty(), ...data, tasks: data.tasks ?? {}, kpis: data.kpis ?? {}, scans: data.scans ?? {} }
+  return {
+    ...empty(),
+    ...data,
+    tasks: data.tasks ?? {},
+    kpis: data.kpis ?? {},
+    scans: data.scans ?? {},
+    appointments: data.appointments ?? [],
+    push: { devices: [], ...data.push },
+  }
 }
 
 /** Lecture pour l'affichage : un fichier absent ou illisible donne des données vides. */

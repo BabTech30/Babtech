@@ -23,10 +23,10 @@ export function CtaSection({
         <h2 className="section-title mx-auto mb-4 max-w-[720px]">{fr(title)}</h2>
         <p className="mx-auto mb-9 max-w-[600px] text-[17px] leading-relaxed text-txt-secondary">{fr(text)}</p>
         <div className="flex flex-wrap justify-center gap-3.5">
-          <a href={site.calendlyUrl} target="_blank" rel="noopener noreferrer" className="btn-primary" data-track="calendly">
+          <Link href={site.bookingPath} className="btn-primary" data-track="rendez-vous">
             <Icon name="calendar" className="h-[18px] w-[18px]" />
             Réserver un appel gratuit
-          </a>
+          </Link>
           <Link href="/contact" className="btn-secondary">
             Écrire un message
           </Link>
