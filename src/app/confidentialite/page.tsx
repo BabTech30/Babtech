@@ -26,7 +26,13 @@ export default function Confidentialite() {
         <ul>
           <li>
             <strong>Formulaire de contact&nbsp;:</strong> nom, entreprise ou activité, email, téléphone (facultatif), ville, budget envisagé, type de
-            besoin et message.
+            besoin et message. Avec l&apos;assistant IA&nbsp;: nom, email, téléphone (facultatif), description de ton projet, synthèse proposée par
+            l&apos;assistant et tes précisions.
+          </li>
+          <li>
+            <strong>Assistant IA de la page Contact&nbsp;:</strong> si tu lances l&apos;assistant, le texte qui décrit ton projet est transmis à
+            Anthropic, qui fournit l&apos;IA Claude, pour générer la réponse affichée à l&apos;écran. Ce texte n&apos;est pas enregistré sur le
+            site et ne m&apos;est transmis que si tu envoies ensuite ta demande. Anthropic ne l&apos;utilise pas pour entraîner ses modèles.
           </li>
           <li>
             <strong>Inscription à la communauté&nbsp;:</strong> prénom, email, activité, ville, thèmes et formats souhaités, niveau, message
@@ -56,6 +62,7 @@ export default function Confidentialite() {
         <h2>3. Finalités et bases légales</h2>
         <ul>
           <li>Répondre à tes demandes, organiser les rendez-vous que tu réserves et établir un devis&nbsp;: mesures précontractuelles et intérêt légitime.</li>
+          <li>Te proposer une première piste avec l&apos;assistant IA, quand tu le lances&nbsp;: mesures précontractuelles prises à ta demande.</li>
           <li>Te tenir informé(e) du lancement de la communauté et organiser les ateliers&nbsp;: consentement, retirable à tout moment.</li>
           <li>Mesurer la fréquentation de façon anonyme et sécuriser le site&nbsp;: intérêt légitime.</li>
         </ul>
@@ -68,6 +75,7 @@ export default function Confidentialite() {
         <ul>
           <li>Formspree (réception des formulaires et des alertes de rendez-vous)&nbsp;;</li>
           <li>{site.legal.host.name} (hébergement du site et des rendez-vous)&nbsp;;</li>
+          <li>Anthropic (IA Claude de l&apos;assistant de la page Contact), seulement si tu lances l&apos;assistant&nbsp;;</li>
           <li>
             les services de notification d&apos;Apple, de Google ou de Mozilla, qui acheminent jusqu&apos;à mes appareils les alertes de
             rendez-vous sous forme chiffrée, sans pouvoir les lire&nbsp;;
@@ -86,6 +94,10 @@ export default function Confidentialite() {
         <ul>
           <li>Demandes de contact&nbsp;: 12 mois après le dernier échange (hors relation commerciale, régie par les durées légales).</li>
           <li>Rendez-vous&nbsp;: effacés du serveur du site 12 mois après leur date.</li>
+          <li>
+            Texte analysé par l&apos;assistant IA&nbsp;: aucune conservation sur le site&nbsp;; Anthropic l&apos;efface de ses serveurs sous 30 jours,
+            sauf obligation légale ou utilisation abusive de son service.
+          </li>
           <li>Liste de la communauté&nbsp;: jusqu&apos;à ta désinscription, et au plus 3 ans après ton dernier échange.</li>
           <li>Statistiques de fréquentation&nbsp;: données anonymes et agrégées.</li>
         </ul>

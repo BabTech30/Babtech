@@ -18,7 +18,10 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
   RSS, images OG, fiche .vcf) utilisent `dynamic = 'force-static'`, les routes dynamiques `dynamicParams = false`.
   Exceptions publiques : `/q/<code>/` (`src/app/q`), l'adresse courte des QR codes, qui compte le scan puis redirige
   (codes dans `src/data/qr.ts`, jamais d'adresse déjà imprimée à supprimer ; exclue de robots.txt) ; la prise de rendez-vous
-  de `/rendez-vous/` (page prérendue, créneaux lus et réservés par les Server Actions de `src/app/rendez-vous/actions.ts`).
+  de `/rendez-vous/` (page prérendue, créneaux lus et réservés par les Server Actions de `src/app/rendez-vous/actions.ts`) ;
+  l'assistant IA de `/contact/` (Server Actions de `src/app/contact/actions.ts`, API Claude avec la variable
+  `ANTHROPIC_API_KEY`, jamais dans le code ; sans clé, formulaire classique). Consignes et catalogue de l'assistant :
+  `src/lib/assistant/prompt.ts`, construits depuis `src/data/services.ts` et `src/data/portfolio.ts` (rien d'inventé).
 
 ## Espace /admin (tableau de bord privé)
 - Partie dynamique du site : connexion, réglages, chiffres du mois, QR codes à partager, rendez-vous (`src/app/admin`,

@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import { InstallApp } from '@/components/admin/InstallApp'
 import { PasswordForm } from '@/components/admin/PasswordForm'
 import { adminUsername, MIN_PASSWORD_LENGTH, passwordChanged, requireAdmin } from '@/lib/admin/auth'
-import { storageInfo } from '@/lib/admin/store'
+import { currentMonth, formatDay } from '@/lib/admin/format'
+import { type AssistantOutcome, readStore, storageInfo } from '@/lib/admin/store'
+import { frTime, utcToParis } from '@/lib/booking/time'
 import { fr } from '@/lib/typography'
 import { logout } from '../../actions'
 
@@ -10,10 +12,43 @@ export const metadata: Metadata = { title: { absolute: 'Réglages · BabTech' } 
 
 const panel = 'rounded-2xl border border-bord bg-nuit p-5 sm:p-6'
 const h2 = 'font-outfit text-lg font-semibold tracking-tight text-white'
+/** Tarif de Claude Opus 5 (dollars par million de jetons), pour estimer le coût de l'assistant. */
+const PRICE = { input: 5, output: 25 }
+const dollars = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
+/** Dernière analyse de l'assistant, avec la cause probable d'un échec et quoi faire. */
+function lastOutcome(last: AssistantOutcome) {
+  const { date, time } = utcToParis(Date.parse(last.at))
+  const when = `le ${formatDay(date)} à ${frTime(time)}`
+  if (last.ok) return `Dernière analyse réussie ${when}.`
+  const status = last.status
+  const why =
+    last.reason === 'refusal'
+      ? 'Claude a refusé cette demande (contenu jugé inapproprié), rien à régler.'
+      : last.reason === 'incomplete'
+        ? "réponse incomplète de Claude. Si ça se répète, signale-le à Claude."
+        : status === 401
+          ? 'clé refusée. Vérifie la variable ANTHROPIC_API_KEY dans hPanel (la clé copiée en entier), puis redéploie.'
+          : status === 403
+            ? 'accès refusé par Anthropic. Vérifie que la clé est active sur platform.claude.com.'
+            : status === 400
+              ? "demande refusée par Anthropic (erreur 400). Vérifie d'abord qu'il reste du crédit sur ton compte platform.claude.com ; sinon, signale-le à Claude."
+              : status === 429
+                ? "trop de demandes d'un coup chez Anthropic, ça repasse tout seul."
+                : status && status >= 500
+                  ? 'Anthropic était momentanément indisponible, ça repasse tout seul.'
+                  : status
+                    ? `erreur ${status} renvoyée par Anthropic.`
+                    : "pas de réponse d'Anthropic (réseau ou délai dépassé)."
+  return `Dernière analyse en échec ${when} : ${why} Le visiteur a alors vu le formulaire classique.`
+}
 
 export default async function SettingsPage() {
   await requireAdmin()
-  const [changed, storage] = await Promise.all([passwordChanged(), storageInfo()])
+  const [changed, storage, store] = await Promise.all([passwordChanged(), storageInfo(), readStore()])
+  const assistantOn = Boolean(process.env.ANTHROPIC_API_KEY)
+  const usage = store.assistant?.[currentMonth()] ?? { count: 0, input: 0, output: 0 }
+  const cost = (usage.input * PRICE.input + usage.output * PRICE.output) / 1_000_000
   return (
     <div className="grid max-w-3xl gap-6">
       <div>
@@ -47,6 +82,32 @@ export default async function SettingsPage() {
           notifications dans l&apos;onglet Rendez-vous pour recevoir une alerte à chaque réservation.
         </p>
         <InstallApp />
+      </section>
+
+      <section className={panel} aria-labelledby="assistant-title">
+        <h2 id="assistant-title" className={h2}>
+          Assistant IA de la page Contact
+        </h2>
+        {assistantOn ? (
+          <p className="mt-2 text-sm text-emerald-300">
+            Actif&nbsp;: les visiteurs décrivent leur projet et Claude leur propose aussitôt une piste.
+          </p>
+        ) : (
+          <p className="mt-2 text-sm text-bronze">
+            Inactif&nbsp;: la page Contact affiche le formulaire classique. Pour l&apos;activer, crée une clé sur{' '}
+            <a href="https://platform.claude.com/settings/keys" target="_blank" rel="noopener" className="underline">
+              platform.claude.com
+            </a>
+            , ajoute-la dans hPanel (variable <code>ANTHROPIC_API_KEY</code>), puis redéploie.
+          </p>
+        )}
+        <p className="mt-3 text-sm text-txt-secondary">
+          Ce mois-ci&nbsp;: <strong className="text-white">{usage.count}</strong> analyse{usage.count > 1 ? 's' : ''}, environ{' '}
+          <strong className="text-white">{dollars.format(cost)}&nbsp;$</strong> facturés par Anthropic (au plus 60 analyses par jour).
+        </p>
+        {store.assistantLast && (
+          <p className={`mt-2 text-sm ${store.assistantLast.ok ? 'text-txt-secondary' : 'text-bronze'}`}>{fr(lastOutcome(store.assistantLast))}</p>
+        )}
       </section>
 
       <section className={panel} aria-labelledby="account-title">

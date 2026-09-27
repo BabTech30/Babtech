@@ -32,6 +32,7 @@ Les pages publiques sont préparées à l'avance au moment du build : le site re
 | `ADMIN_USERNAME` | Identifiant de l'espace `/admin` |
 | `ADMIN_PASSWORD` | Mot de passe de départ de `/admin`, à remplacer ensuite dans **Réglages** |
 | `ADMIN_DATA_DIR` | Facultatif : dossier des données de `/admin` (par défaut `~/.babtech-admin`, hors du dossier du site) |
+| `ANTHROPIC_API_KEY` | Facultatif : active l'assistant IA de la page Contact (clé créée sur [platform.claude.com](https://platform.claude.com/settings/keys), facturée à l'usage par Anthropic). Sans elle, la page affiche le formulaire classique |
 | `NEXT_PUBLIC_PHONE`, `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`… | Facultatives : téléphone, mesure d'audience… (liste dans `.env.example`) |
 
 Ces valeurs ne s'écrivent que dans hPanel, jamais dans le code : le dépôt GitHub est public.
@@ -48,7 +49,8 @@ Ces valeurs ne s'écrivent que dans hPanel, jamais dans le code : le dépôt Git
 - **Partager** : les QR codes de ta présentation, du site et de ta carte de visite (fichiers pour l'impression,
   affichage en grand, lien à copier) et le nombre de scans de chaque mois.
 - **Réglages** : changer le mot de passe (il remplace alors celui de hPanel et déconnecte les autres appareils),
-  installer le tableau de bord comme une application, télécharger une sauvegarde de tes données.
+  installer le tableau de bord comme une application, voir si l'assistant IA de la page Contact est actif et ce qu'il a
+  coûté ce mois-ci, télécharger une sauvegarde de tes données.
 - Après 5 mots de passe faux, la connexion est bloquée 15 minutes.
 - Tes coches, tes chiffres, les scans, les rendez-vous et ton mot de passe (sous une forme illisible) sont enregistrés sur le serveur,
   hors du dossier du site : un déploiement ne les efface pas. Si **Réglages** signale le contraire, renseigne `ADMIN_DATA_DIR`.
@@ -78,6 +80,9 @@ Le site n'utilise plus Netlify. Tu peux supprimer l'ancien site `agence-babtech`
       site, les services et des photos, puis demander un avis à chaque client. C'est le levier n° 1 pour le référencement local.
 - [ ] Envoyer un message test avec le formulaire de contact et celui de la communauté. En cas d'erreur, désactiver le
       reCAPTCHA dans les réglages du formulaire Formspree (le site a déjà son propre anti-spam).
+- [ ] **Assistant IA** (facultatif) : créer une clé sur [platform.claude.com](https://platform.claude.com/settings/keys),
+      la coller dans hPanel (variable `ANTHROPIC_API_KEY`), redéployer, puis tester la page Contact. Réglages indique
+      s'il est actif et son coût du mois.
 - [ ] **Rendez-vous** : régler tes disponibilités dans le tableau de bord (onglet Rendez-vous), activer les notifications
       sur ton téléphone, puis réserver un créneau test sur `https://babtech.fr/rendez-vous/` et l'annuler.
 

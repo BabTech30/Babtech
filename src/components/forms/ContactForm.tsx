@@ -10,6 +10,7 @@ const needs = [
   { value: 'site-internet', label: 'Site internet — création ou refonte' },
   { value: 'application-metier', label: 'Application métier / PWA' },
   { value: 'automatisation-ia', label: 'Automatisation & IA' },
+  { value: 'site-reservation', label: 'Site de réservation (location saisonnière)' },
   { value: 'referencement-geo', label: 'Référencement Google & IA (SEO / GEO)' },
   { value: 'formation-ia', label: 'Accompagnement ou formation IA' },
   { value: 'autre', label: 'Autre / je ne sais pas encore' },
@@ -20,13 +21,15 @@ const fromService: Record<string, string> = {
   'creation-site-internet': 'site-internet',
   'application-metier': 'application-metier',
   'automatisation-ia': 'automatisation-ia',
+  'site-reservation-location-saisonniere': 'site-reservation',
   'referencement-local-geo': 'referencement-geo',
   'accompagnement-formation-ia': 'formation-ia',
 }
 
 const budgets = ['Moins de 1 000 €', '1 000 à 3 000 €', '3 000 à 6 000 €', 'Plus de 6 000 €', 'Je ne sais pas encore']
 
-export function ContactForm() {
+/** `defaultMessage` : texte déjà écrit ailleurs (assistant de projet), repris dans le message. */
+export function ContactForm({ defaultMessage = '' }: { defaultMessage?: string }) {
   const { status, submit } = useFormspree(site.forms.contact, 'contact_form')
   const selectRef = useRef<HTMLSelectElement>(null)
 
@@ -141,6 +144,7 @@ export function ContactForm() {
           name="message"
           required
           rows={5}
+          defaultValue={defaultMessage}
           placeholder="Dis-moi en quelques lignes où tu en es et ce que tu aimerais obtenir."
           className="input min-h-[140px] resize-y"
         />

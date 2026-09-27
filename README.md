@@ -8,7 +8,7 @@ Gemini, Claude, Copilot…), grâce au GEO (*Generative Engine Optimization*).
 
 - Stack : **Next.js 16** (App Router, pages prérendues servies par Node.js), **React 19**, **Tailwind CSS 3**, **TypeScript**
 - Hébergement : **Hostinger**, application Node.js qui construit la branche `main` (déploiement depuis hPanel)
-- Formulaires : **Formspree** · Rendez-vous : **page intégrée** (`/rendez-vous/`, gérée dans `/admin`) · Mesure d'audience optionnelle et sans cookie : **Plausible** ou **Umami**
+- Formulaires : **Formspree** (page Contact avec assistant IA **Claude**, facultatif) · Rendez-vous : **page intégrée** (`/rendez-vous/`, gérée dans `/admin`) · Mesure d'audience optionnelle et sans cookie : **Plausible** ou **Umami**
 
 ## Démarrer
 
@@ -93,6 +93,17 @@ Deux pages à partager par lien ou par QR code, volontairement absentes de Googl
 Les QR codes à imprimer sont dans le tableau de bord, rubrique **Partager** : présentation, site et carte de visite. Chacun
 mène à une adresse courte (`/q/presentation/`, `/q/site/`, `/q/carte/`) qui compte les scans du mois, sans aucune donnée
 personnelle, puis redirige vers la page. Pour en ajouter un : `src/data/qr.ts`.
+
+## Assistant IA de la page Contact
+
+Sur `/contact/`, le visiteur décrit son projet en quelques phrases ; Claude (l'IA d'Anthropic) lui répond aussitôt :
+ce qu'il a compris, les offres adaptées (avec leur prix, tiré de `src/data/services.ts`), trois idées, les réalisations
+proches (`src/data/portfolio.ts`) et des questions pour préparer l'échange. Le visiteur envoie ensuite sa demande, avec
+la synthèse, via Formspree. Consignes et catalogue : `src/lib/assistant/prompt.ts` ; appel à l'API :
+`src/app/contact/actions.ts` (modèle `claude-opus-5`, limites anti-abus, 60 analyses par jour au plus).
+
+Il ne s'active qu'avec la variable `ANTHROPIC_API_KEY` dans hPanel ; sans elle, ou en cas de souci, la page affiche le
+formulaire classique. **Réglages** indique s'il est actif et ce qu'il a coûté dans le mois.
 
 ## Prise de rendez-vous
 

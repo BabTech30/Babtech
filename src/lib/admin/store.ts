@@ -8,7 +8,7 @@ import type { Appointment, BookingSettings } from '@/data/booking'
 
 /**
  * Données enregistrées par l'espace /admin : tes coches, tes chiffres du mois, les scans des QR codes,
- * les rendez-vous et ton mot de passe (haché). Un simple fichier JSON sur le serveur, rangé hors du
+ * les rendez-vous, l'usage de l'assistant IA et ton mot de passe (haché). Un simple fichier JSON sur le serveur, rangé hors du
  * dossier du site pour survivre aux déploiements : ADMIN_DATA_DIR s'il est défini, sinon ~/.babtech-admin.
  */
 export type Kpi = { month: string; note?: string; updatedAt: string } & Partial<Record<MetricKey, number>>
@@ -33,7 +33,14 @@ export type AdminStore = {
   push: { vapid?: { publicKey: string; privateKey: string }; devices: PushDevice[] }
   /** Jeton du lien d'agenda privé (abonnement iCal pour ton téléphone). */
   calendarToken?: string
+  /** Assistant IA de la page Contact : analyses et jetons consommés par mois (AAAA-MM), pour suivre le coût. */
+  assistant?: Record<string, AssistantUsage>
+  /** Résultat de la dernière analyse (affiché dans Réglages pour vérifier que la clé fonctionne). */
+  assistantLast?: AssistantOutcome
 }
+
+export type AssistantUsage = { count: number; input: number; output: number }
+export type AssistantOutcome = { ok: boolean; at: string; status?: number; reason?: 'refusal' | 'incomplete' }
 
 const FILE = 'admin.json'
 const empty = (): AdminStore => ({ sessionVersion: 1, tasks: {}, kpis: {}, scans: {}, appointments: [], push: { devices: [] } })

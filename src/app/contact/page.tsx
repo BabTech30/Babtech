@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ContactForm } from '@/components/forms/ContactForm'
+import { ProjectAssistant } from '@/components/forms/ProjectAssistant'
 import { Icon } from '@/components/Icon'
 import { JsonLd } from '@/components/JsonLd'
 import { PageHero } from '@/components/PageHero'
+import { caseStudies } from '@/data/portfolio'
+import { services } from '@/data/services'
 import { graph, ids, webPageNode } from '@/lib/schema'
 import { pageMetadata } from '@/lib/seo'
 import { formatPhone, site, telLink } from '@/lib/site'
@@ -13,6 +15,10 @@ const description =
   "Un message ou un appel de 30 minutes offert pour parler de ton site internet, de ton application métier ou de l'IA. Réponse sous 24 h, près de Montpellier."
 
 export const metadata: Metadata = pageMetadata({ title, description, path: '/contact', og: 'contact' })
+
+/** Offres et réalisations que l'assistant peut proposer (seules les données utiles à l'affichage partent au navigateur). */
+const offers = services.map((s) => ({ slug: s.slug, name: s.name, promise: s.promise, price: s.priceLabel, icon: s.icon }))
+const works = caseStudies.map((c) => ({ slug: c.slug, title: c.title, sector: c.sector, result: c.result, image: c.media?.images[0] }))
 
 export default function Contact() {
   return (
@@ -34,9 +40,7 @@ export default function Contact() {
         <div className="container-b grid items-start gap-10 lg:grid-cols-[1fr_380px]">
           <div className="card relative overflow-hidden p-7 md:p-10">
             <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-emerald-b to-bronze" />
-            <h2 className="mb-2 font-outfit text-[22px] font-semibold tracking-tight text-white">Envoie-moi un message</h2>
-            <p className="mb-8 text-sm text-txt-secondary">Décris ton besoin en quelques mots&nbsp;: je reviens vers toi rapidement.</p>
-            <ContactForm />
+            <ProjectAssistant offers={offers} works={works} />
           </div>
 
           <div className="flex flex-col gap-5">

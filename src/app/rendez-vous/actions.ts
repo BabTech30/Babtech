@@ -1,7 +1,6 @@
 'use server'
 
 import { randomBytes } from 'node:crypto'
-import { headers } from 'next/headers'
 import { after } from 'next/server'
 import { type Appointment, type AppointmentMode, TOPICS, topicLabel } from '@/data/booking'
 import { notifyDevices } from '@/lib/admin/push'
@@ -10,6 +9,7 @@ import { purgeOld, settingsOf } from '@/lib/booking/settings'
 import { freeSlots, isFree, type SlotDay } from '@/lib/booking/slots'
 import { frDay, frTime, isDate, isTime, parisToUtc, utcToParis } from '@/lib/booking/time'
 import { formatPhone, site } from '@/lib/site'
+import { visitorAddress } from '@/lib/visitor'
 
 /**
  * Prise de rendez-vous publique (page /rendez-vous/) : lecture des créneaux libres et réservation.
@@ -32,15 +32,6 @@ const perVisitor = new Map<string, number[]>()
 const allRecent: number[] = []
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
-
-/**
- * Qui réserve : la première adresse de X-Forwarded-For est celle du visiteur, même derrière le CDN d'Hostinger
- * (la dernière serait celle du relais, commune à tous). Gardée en mémoire une heure au plus, jamais enregistrée.
- */
-async function visitorAddress() {
-  const h = await headers()
-  return h.get('x-forwarded-for')?.split(',')[0]?.trim() || h.get('x-real-ip') || 'inconnu'
-}
 
 export async function bookAppointment(_prev: BookingState, formData: FormData): Promise<BookingState> {
   const field = (name: string, max: number) => String(formData.get(name) ?? '').trim().slice(0, max)

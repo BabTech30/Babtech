@@ -195,6 +195,25 @@ export const adminTasks: AdminTask[] = [
     linkLabel: 'Réserver',
   },
   {
+    id: 'assistant',
+    phase: 'launch',
+    owner: 'claude',
+    done: true,
+    title: 'Ajouter un assistant IA au formulaire de contact',
+    detail: "Le visiteur décrit son projet ; Claude lui propose aussitôt des offres, des idées et tes réalisations proches, puis la demande t'arrive avec la synthèse.",
+    link: 'https://babtech.fr/contact/',
+    linkLabel: 'Contact',
+  },
+  {
+    id: 'assistant-key',
+    phase: 'launch',
+    owner: 'toi',
+    title: "Activer l'assistant IA de la page Contact",
+    detail: "Crée une clé sur platform.claude.com (paiement à l'usage), ajoute-la dans hPanel (variable ANTHROPIC_API_KEY), puis redéploie. Sans clé, la page affiche le formulaire classique.",
+    link: 'https://platform.claude.com/settings/keys',
+    linkLabel: 'Créer la clé',
+  },
+  {
     id: 'install-app',
     phase: 'launch',
     owner: 'toi',
@@ -330,6 +349,10 @@ export const adminDecisions = [
     date: '2026-09-27',
     text: "Rendez-vous : ta propre page babtech.fr/rendez-vous/ remplace Calendly. Tu règles tes disponibilités dans le tableau de bord ; chaque réservation t'envoie une notification et un e-mail.",
   },
+  {
+    date: '2026-09-27',
+    text: "Page Contact : assistant IA (Claude, d'Anthropic), actif avec ta clé d'API. Au plus 60 analyses par jour ; les prix affichés viennent du site, jamais de l'IA.",
+  },
 ]
 
 /** Dernière mesure Lighthouse (mobile), mise à jour par Claude. */
@@ -389,6 +412,7 @@ export const adminLinks = [
     group: 'Clients',
     items: [
       { label: 'Formspree', hint: 'demandes reçues', href: 'https://formspree.io/forms' },
+      { label: 'Claude Platform', hint: 'assistant IA : clé, dépenses', href: 'https://platform.claude.com' },
       { label: 'Page de rendez-vous', hint: 'ce que voient tes clients', href: 'https://babtech.fr/rendez-vous/' },
     ],
   },
