@@ -49,10 +49,15 @@ export function adminUsername() {
   return process.env.ADMIN_USERNAME?.trim() ?? ''
 }
 
+/** Mot de passe de départ saisi dans hPanel, sans les espaces ajoutés par erreur au début ou à la fin (clavier du téléphone). */
+function initialPassword() {
+  return process.env.ADMIN_PASSWORD?.trim() ?? ''
+}
+
 /** Le compte est prêt quand l'identifiant existe et qu'un mot de passe est connu (réglages ou hPanel). */
 export async function isConfigured() {
   if (!adminUsername()) return false
-  return Boolean((await readStore()).passwordHash || process.env.ADMIN_PASSWORD)
+  return Boolean((await readStore()).passwordHash || initialPassword())
 }
 
 export async function passwordChanged() {
@@ -62,13 +67,14 @@ export async function passwordChanged() {
 export async function checkPassword(password: string) {
   const { passwordHash } = await readStore()
   if (passwordHash) return verifyHash(password, passwordHash)
-  const initial = process.env.ADMIN_PASSWORD
+  const initial = initialPassword()
   return initial ? sameText(password, initial) : false
 }
 
 export async function checkCredentials(username: string, password: string) {
   const expected = adminUsername()
-  const userOk = expected !== '' && sameText(username.trim(), expected)
+  // Identifiant sans distinction de majuscules : un téléphone met souvent une majuscule à la première lettre.
+  const userOk = expected !== '' && sameText(username.trim().toLowerCase(), expected.toLowerCase())
   const passOk = await checkPassword(password)
   return userOk && passOk
 }
