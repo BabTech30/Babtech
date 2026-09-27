@@ -41,10 +41,12 @@ Ces valeurs ne s'écrivent que dans hPanel, jamais dans le code : le dépôt Git
 `https://babtech.fr/admin/` : connexion avec l'identifiant et le mot de passe ci-dessus.
 - **Tableau de bord** : avancement, prochaine action, checklist (tu coches tes tâches, Claude tient les siennes), santé
   du site, chiffres du mois à saisir chaque début de mois, zones visées, décisions prises, liens utiles.
+- **Partager** : les QR codes de ta présentation, du site et de ta carte de visite (fichiers pour l'impression,
+  affichage en grand, lien à copier) et le nombre de scans de chaque mois.
 - **Réglages** : changer le mot de passe (il remplace alors celui de hPanel et déconnecte les autres appareils),
-  télécharger une sauvegarde de tes données.
+  installer le tableau de bord comme une application, télécharger une sauvegarde de tes données.
 - Après 5 mots de passe faux, la connexion est bloquée 15 minutes.
-- Tes coches, tes chiffres et ton mot de passe (sous une forme illisible) sont enregistrés sur le serveur, hors du dossier
+- Tes coches, tes chiffres, les scans et ton mot de passe (sous une forme illisible) sont enregistrés sur le serveur, hors du dossier
   du site : un déploiement ne les efface pas. Si **Réglages** signale le contraire, renseigne `ADMIN_DATA_DIR`.
 
 ## Si une mise à jour n'apparaît pas
@@ -60,6 +62,9 @@ Le site n'utilise plus Netlify. Tu peux supprimer l'ancien site `agence-babtech`
 (*Site configuration → Delete this site*).
 
 ## Après la mise en ligne (pour le référencement)
+
+- [ ] **Adresse e-mail** : créer la boîte `contact@babtech.fr` (hPanel → Emails) avant ou juste après le premier
+      déploiement : c'est l'adresse affichée sur tout le site et dans ta carte de visite.
 
 - [ ] **Google Search Console** : ajouter `babtech.fr` (vérification par enregistrement DNS, à coller dans hPanel →
       Zone DNS), soumettre `https://babtech.fr/sitemap.xml`, demander l'indexation de l'accueil et des pages services.

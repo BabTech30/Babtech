@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { AdminNav } from '@/components/admin/AdminNav'
+import { InstallButton } from '@/components/admin/InstallApp'
 import { requireAdmin } from '@/lib/admin/auth'
 import { logout } from '../actions'
 
@@ -17,6 +18,7 @@ export default async function AdminSpaceLayout({ children }: { children: React.R
           </Link>
           <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
             <AdminNav />
+            <InstallButton />
             <a href="/" target="_blank" rel="noopener" className="rounded-lg px-3 py-2 text-sm font-medium text-txt-secondary hover:bg-white/[0.04] hover:text-white">
               Voir le site ↗
             </a>

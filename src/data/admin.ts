@@ -162,8 +162,18 @@ export const adminTasks: AdminTask[] = [
     id: 'pwa',
     phase: 'launch',
     owner: 'claude',
-    title: 'Installer ce tableau de bord comme une application',
-    detail: "Une icône sur ton ordinateur ou ton téléphone, qui s'ouvre comme une appli.",
+    done: true,
+    title: 'Rendre ce tableau de bord installable comme une application',
+    detail: 'Icône sur ton ordinateur ou ton téléphone, fenêtre à part, page « Pas de connexion » quand Internet coupe.',
+  },
+  {
+    id: 'install-app',
+    phase: 'launch',
+    owner: 'toi',
+    title: 'Installer le tableau de bord sur ton ordinateur',
+    detail: "Après le déploiement : bouton « Installer l'app » en haut, ou Réglages → Application. Tu peux faire pareil sur ton téléphone.",
+    link: '/admin/reglages/',
+    linkLabel: 'Réglages',
   },
   {
     id: 'gsc',
@@ -278,6 +288,10 @@ export const adminDecisions = [
   {
     date: '2026-09-27',
     text: 'QR codes : adresses courtes babtech.fr/q/…, qui comptent les scans par mois sans aucune donnée personnelle.',
+  },
+  {
+    date: '2026-09-27',
+    text: "Tableau de bord installable comme une application (ordinateur et téléphone). Rien n'est gardé sur l'appareil : les chiffres viennent toujours du serveur.",
   },
 ]
 

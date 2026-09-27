@@ -24,6 +24,9 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
   `src/lib/admin`). Jamais indexée (noindex, robots.txt), jamais liée depuis le site public, absente du sitemap.
 - Identifiant et mot de passe de départ : variables `ADMIN_USERNAME` / `ADMIN_PASSWORD` dans hPanel. Ne jamais écrire
   d'identifiant, de mot de passe ou de secret dans le code : le dépôt GitHub est public.
+- Installable comme application : manifeste `/admin/manifest.webmanifest` et service worker `/admin/sw.js` (portée
+  `/admin/` seulement). Le service worker ne met rien en cache (pages privées toujours servies par le serveur) ; il
+  affiche seulement une page « Pas de connexion ». Le site public n'a pas de service worker.
 - Les coches, les chiffres, les scans et le mot de passe changé (haché) de l'utilisateur sont dans un fichier JSON sur le serveur,
   jamais dans le dépôt. Ce que Claude tient à jour est dans `src/data/admin.ts` : cocher ses propres tâches, ajouter
   les décisions prises, mettre à jour la santé du site et `adminUpdatedAt` à chaque étape.

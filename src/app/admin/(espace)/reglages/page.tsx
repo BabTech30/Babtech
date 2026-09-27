@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { InstallApp } from '@/components/admin/InstallApp'
 import { PasswordForm } from '@/components/admin/PasswordForm'
 import { adminUsername, MIN_PASSWORD_LENGTH, passwordChanged, requireAdmin } from '@/lib/admin/auth'
 import { storageInfo } from '@/lib/admin/store'
@@ -34,6 +35,17 @@ export default async function SettingsPage() {
         <div className="mt-5">
           <PasswordForm minLength={MIN_PASSWORD_LENGTH} />
         </div>
+      </section>
+
+      <section className={panel} aria-labelledby="app-title">
+        <h2 id="app-title" className={h2}>
+          Application
+        </h2>
+        <p className="mt-2 text-sm text-txt-secondary">
+          Installe le tableau de bord sur ton ordinateur ou ton téléphone&nbsp;: une icône à part, qui s&apos;ouvre dans sa propre
+          fenêtre, sans passer par le navigateur. Les données restent sur le serveur, toujours à jour.
+        </p>
+        <InstallApp />
       </section>
 
       <section className={panel} aria-labelledby="account-title">

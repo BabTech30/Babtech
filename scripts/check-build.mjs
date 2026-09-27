@@ -8,7 +8,7 @@
  * qui répondent, URL de pages cohérentes (« / » final), titres et descriptions en double, page 404,
  * redirection www, pages partagées par QR code (hors Google), fiche contact .vcf, adresses courtes
  * des QR codes (redirection et compteur de scans), et l'espace /admin : protégé par la connexion,
- * jamais indexé, absent du sitemap.
+ * jamais indexé, absent du sitemap, installable comme application (manifeste, service worker).
  */
 import { spawn } from 'node:child_process'
 import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
@@ -316,6 +316,32 @@ if (login.status !== 200) errors.push(`/admin/connexion/ : réponse ${login.stat
 if (!/<meta name="robots" content="noindex, nofollow/.test(login.body)) errors.push('/admin/connexion/ : balise robots noindex absente')
 if (!(login.headers.get('x-robots-tag') ?? '').includes('noindex')) errors.push('/admin/connexion/ : en-tête X-Robots-Tag noindex absent')
 if (/<header[\s>][\s\S]*?href="\/services\/"/.test(login.body)) errors.push("/admin/connexion/ : le menu du site public s'affiche")
+
+/* ---------- Tableau de bord installable (PWA) ---------- */
+if (!login.body.includes('<link rel="manifest" href="/admin/manifest.webmanifest"')) errors.push('/admin/connexion/ : manifeste du tableau de bord non lié')
+const home = await get('/')
+if (home.body.includes('/admin/manifest.webmanifest')) errors.push("Accueil : le manifeste du tableau de bord ne doit pas y être lié")
+const appManifest = await get('/admin/manifest.webmanifest')
+try {
+  const m = JSON.parse(appManifest.body)
+  if (m.scope !== '/admin/' || m.start_url !== '/admin/' || m.display !== 'standalone') {
+    errors.push(`Manifeste /admin/ : portée, départ ou affichage inattendus (${m.scope}, ${m.start_url}, ${m.display})`)
+  }
+  for (const icon of m.icons ?? []) {
+    const res = await fetch(base + icon.src)
+    await res.arrayBuffer()
+    if (res.status !== 200 || res.headers.get('content-type') !== 'image/png') errors.push(`Manifeste /admin/ : icône ${icon.src} introuvable`)
+  }
+  if (!(m.icons ?? []).some((icon) => icon.purpose === 'maskable')) errors.push('Manifeste /admin/ : icône « maskable » manquante')
+} catch (e) {
+  errors.push(`Manifeste /admin/ illisible (${appManifest.status}) : ${e.message}`)
+}
+const sw = await get('/admin/sw.js')
+if (sw.status !== 200 || !(sw.headers.get('content-type') ?? '').includes('javascript')) errors.push(`/admin/sw.js : réponse ${sw.status} ${sw.headers.get('content-type')}`)
+else {
+  if (!(sw.headers.get('cache-control') ?? '').includes('no-cache')) errors.push('/admin/sw.js : doit être revalidé à chaque visite (Cache-Control: no-cache)')
+  if (!sw.body.includes("addEventListener('fetch'") || /caches\.open/.test(sw.body)) errors.push('/admin/sw.js : service worker sans cache attendu')
+}
 
 console.log(`Contrôle de ${pages} pages HTML et ${locs.length} URLs du sitemap (${siteUrl})`)
 for (const w of warnings) console.log(`  ⚠ ${w}`)

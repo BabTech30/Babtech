@@ -99,6 +99,9 @@ personnelle, puis redirige vers la page. Pour en ajouter un : `src/data/qr.ts`.
 contrats, Google…), scans des QR codes, zones visées et décisions. Connexion par identifiant et mot de passe (variables `ADMIN_USERNAME` et
 `ADMIN_PASSWORD` dans hPanel), mot de passe modifiable dans **Réglages**.
 
+Il s'installe comme une application, sur ordinateur comme sur téléphone : bouton **Installer l'app** en haut du tableau
+de bord (Chrome, Edge, Android), ou **Réglages → Application** pour la marche à suivre sur iPhone, iPad et Mac.
+
 ## Documentation
 
 - [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md) — mise en ligne sur Hostinger (Node.js) et check-list après la mise en ligne
