@@ -22,7 +22,7 @@ export const faqGroups: FaqGroup[] = [
       },
       {
         q: 'Où est basé BabTech et quelle zone couvre-t-il ?',
-        a: "BabTech est basé près de Montpellier et accompagne les entreprises de la métropole et de tout l'Hérault : Castelnau-le-Lez, Lattes, Pérols, Saint-Jean-de-Védas, Mauguio, Lunel, Sète, Béziers… Les projets se font aussi à distance, partout en France.",
+        a: "BabTech est basé près de Montpellier et accompagne les entreprises de l'Hérault et du Gard : Montpellier et sa métropole, Sète, Béziers, Agde, Lunel, mais aussi Nîmes, Alès, Uzès ou Le Grau-du-Roi… Les projets se font aussi à distance, partout en France.",
         link: { href: '/zones-intervention', label: "Voir les zones d'intervention" },
       },
       {

@@ -20,17 +20,17 @@ export function getOgEntries(): OgEntry[] {
     {
       key: 'default',
       eyebrow: 'Studio digital & IA · Montpellier',
-      title: "Sites web, applications métier et IA pour les TPE de l'Hérault",
+      title: "Sites web, applications métier et IA pour les TPE de l'Hérault et du Gard",
     },
     { key: 'services', eyebrow: 'Services', title: 'Ce dont tu as besoin. Rien de plus, rien de moins.' },
     ...services.map((s) => ({ key: `services/${s.slug}`, eyebrow: s.badge, title: s.h1 })),
     {
       key: 'zones-intervention',
       eyebrow: "Zones d'intervention",
-      title: "Montpellier, sa métropole et tout l'Hérault",
+      title: "De Montpellier à Nîmes, partout dans l'Hérault et le Gard",
     },
     ...zones.map((z) => ({ key: `zones/${z.slug}`, eyebrow: `${z.name} · ${z.department}`, title: z.h1 })),
-    { key: 'blog', eyebrow: 'Le blog BabTech', title: "Digital, IA et référencement pour les TPE de l'Hérault" },
+    { key: 'blog', eyebrow: 'Le blog BabTech', title: "Digital, IA et référencement pour les TPE de l'Hérault et du Gard" },
     ...categories.map((c) => ({ key: `blog/categorie/${c.slug}`, eyebrow: 'Le blog BabTech', title: c.name })),
     ...getAllPosts().map((p) => ({ key: `blog/${p.slug}`, eyebrow: p.categoryName, title: p.title })),
     {

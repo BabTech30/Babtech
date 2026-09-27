@@ -29,10 +29,10 @@ export const site = {
   tagline: 'Le digital qui fait tourner ton business',
   /** Phrase courte : cartes, pied de page, balises. */
   shortDescription:
-    "Sites internet, applications métier et automatisations IA pour les TPE, artisans et commerçants de Montpellier et de l'Hérault.",
+    "Sites internet, applications métier et automatisations IA pour les TPE, artisans et commerçants de l'Hérault et du Gard.",
   /** Description complète : Schema.org, llms.txt, page d'accueil. */
   description:
-    "BabTech est un studio digital basé près de Montpellier (Hérault). Il crée des sites internet, des applications métier sur mesure et des automatisations IA pour les TPE, artisans et commerçants, et les accompagne dans leur transition numérique. Fondé par Bastien Ferrer, ancien chef d'entreprise du BTP (14 ans).",
+    "BabTech est un studio digital basé près de Montpellier (Hérault). Il crée des sites internet, des applications métier sur mesure et des automatisations IA pour les TPE, artisans et commerçants de l'Hérault et du Gard, et les accompagne dans leur transition numérique. Fondé par Bastien Ferrer, ancien chef d'entreprise du BTP (14 ans).",
 
   email: 'contact@babtech.fr',
   /** Téléphone au format international (07 63 51 93 63) : site, carte de visite, fiche contact, données structurées. */
@@ -74,9 +74,9 @@ export const site = {
     region: 'Occitanie',
     country: 'FR',
   },
-  /** Centre de Montpellier : point de départ de la zone d'intervention. */
+  /** Centre de Montpellier : point de départ de la zone d'intervention (Hérault et Gard, jusqu'à Bagnols-sur-Cèze). */
   geo: { latitude: 43.6108, longitude: 3.8767 },
-  serviceRadiusKm: 75,
+  serviceRadiusKm: 100,
   priceRange: '€€',
 
   /** À COMPLÉTER : chaque URL renseignée alimente le « sameAs » Schema.org (signal fort pour Google et les IA). */

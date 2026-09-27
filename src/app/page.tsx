@@ -12,7 +12,7 @@ import { community } from '@/data/community'
 import { faqGroups } from '@/data/faq'
 import { caseStudies } from '@/data/portfolio'
 import { levels, transversal, turnkey } from '@/data/services'
-import { zones } from '@/data/zones'
+import { departments, zonesIn } from '@/data/zones'
 import { getAllPosts } from '@/lib/blog'
 import { graph, webPageNode } from '@/lib/schema'
 import { pageMetadata } from '@/lib/seo'
@@ -21,7 +21,7 @@ import { fr } from '@/lib/typography'
 
 const title = 'BabTech — Sites web, applications métier et IA à Montpellier'
 const description =
-  "Studio digital près de Montpellier : sites internet dès 800 €, applications métier, automatisations IA, SEO local et GEO pour les TPE et artisans de l'Hérault."
+  "Studio digital près de Montpellier : sites internet dès 800 €, applications métier, automatisations IA, SEO local et GEO pour les TPE de l'Hérault et du Gard."
 
 export const metadata: Metadata = pageMetadata({ title, description, path: '/', absoluteTitle: true })
 
@@ -51,7 +51,7 @@ const reasons: { icon: IconName; title: string; desc: string }[] = [
   {
     icon: 'map-pin',
     title: 'Local et joignable',
-    desc: "Basé près de Montpellier, je connais le tissu économique de l'Hérault. On se parle en visio ou autour d'un café, et tu as une réponse sous 24 h.",
+    desc: "Basé près de Montpellier, je travaille avec les entreprises de l'Hérault et du Gard. On se parle en visio ou autour d'un café, et tu as une réponse sous 24 h.",
   },
   {
     icon: 'lock',
@@ -94,10 +94,10 @@ export default function Home() {
           <div>
             <p className="section-tag rounded-full border border-emerald-b/25 bg-emerald-b/[0.08] px-3.5 py-1.5 text-emerald-b">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-b" />
-              Studio digital & IA · Montpellier<span className="hidden sm:inline"> · Hérault</span>
+              Studio digital & IA · Montpellier<span className="hidden sm:inline"> · Hérault & Gard</span>
             </p>
             <h1 className="h1 mb-6">
-              Sites internet, applications métier et <span className="text-gradient">IA</span> pour les TPE de Montpellier et de l&apos;Hérault
+              Sites internet, applications métier et <span className="text-gradient">IA</span> pour les TPE de Montpellier, de l&apos;Hérault et du Gard
             </h1>
             <p className="lead mb-9 max-w-[620px]">
               Ancien chef d&apos;entreprise, je construis le digital que j&apos;aurais voulu avoir&nbsp;: un site qui t&apos;amène des clients, des
@@ -306,36 +306,39 @@ export default function Home() {
           <div>
             <p className="section-tag text-emerald-b">Local</p>
             <h2 id="zones-titre" className="section-title mb-5">
-              Ton partenaire digital à Montpellier et dans tout l&apos;Hérault
+              Ton partenaire digital dans l&apos;Hérault et le Gard
             </h2>
             <p className="mb-7 text-[17px] leading-relaxed text-txt-secondary">
-              Basé près de Montpellier, j&apos;accompagne les entreprises de la métropole, du littoral et de l&apos;arrière-pays. Et à distance,
-              partout en France.
+              Basé près de Montpellier, j&apos;accompagne les entreprises de la métropole, du littoral, du Biterrois, de Nîmes, d&apos;Alès et de
+              l&apos;Uzège. Et à distance, partout en France.
             </p>
             <Link href="/zones-intervention" className="btn-secondary">
               Voir les zones d&apos;intervention
             </Link>
           </div>
-          <ul className="flex flex-wrap gap-2.5">
-            <li>
-              <Link
-                href="/zones-intervention"
-                className="inline-flex items-center gap-2 rounded-full border border-emerald-b/30 bg-emerald-b/[0.08] px-4 py-2.5 text-sm font-medium text-emerald-b"
-              >
-                <Icon name="map-pin" className="h-4 w-4" /> Montpellier
-              </Link>
-            </li>
-            {zones.map((z) => (
-              <li key={z.slug}>
-                <Link
-                  href={`/zones-intervention/${z.slug}`}
-                  className="inline-flex items-center gap-2 rounded-full border border-bord bg-white/[0.03] px-4 py-2.5 text-sm text-txt-secondary transition-colors hover:border-white/20 hover:text-white"
-                >
-                  <Icon name="map-pin" className="h-4 w-4 text-txt-muted" /> {z.name}
-                </Link>
-              </li>
+          <div className="space-y-6">
+            {departments.map((d) => (
+              <div key={d.name}>
+                <p className="mb-3 font-outfit text-[13px] font-semibold uppercase tracking-[1.5px] text-txt-primary">{d.label}</p>
+                <ul className="flex flex-wrap gap-2.5">
+                  {zonesIn(d.name).map((z) => (
+                    <li key={z.slug}>
+                      <Link
+                        href={`/zones-intervention/${z.slug}`}
+                        className={
+                          z.slug === 'montpellier'
+                            ? 'inline-flex items-center gap-2 rounded-full border border-emerald-b/30 bg-emerald-b/[0.08] px-4 py-2.5 text-sm font-medium text-emerald-b'
+                            : 'inline-flex items-center gap-2 rounded-full border border-bord bg-white/[0.03] px-4 py-2.5 text-sm text-txt-secondary transition-colors hover:border-white/20 hover:text-white'
+                        }
+                      >
+                        <Icon name="map-pin" className={z.slug === 'montpellier' ? 'h-4 w-4' : 'h-4 w-4 text-txt-muted'} /> {z.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       </section>
 

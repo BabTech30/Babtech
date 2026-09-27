@@ -78,7 +78,7 @@ Le site n'utilise plus Netlify. Tu peux supprimer l'ancien site `agence-babtech`
       Zone DNS), soumettre `https://babtech.fr/sitemap.xml`, demander l'indexation de l'accueil et des pages services.
 - [ ] **Bing Webmaster Tools** : importer le site depuis la Search Console (Bing alimente aussi Copilot et une partie de ChatGPT).
 - [ ] **IndexNow** : `npm run indexnow` pour signaler toutes les pages à Bing ; après un nouvel article : `npm run indexnow -- /blog/<slug>/`.
-- [ ] **Google Business Profile** : créer la fiche « BabTech » (zone de service : Montpellier et l'Hérault), avec le lien du
+- [ ] **Google Business Profile** : créer la fiche « BabTech » (zone de service : l'Hérault, le Gard et les villes principales), avec le lien du
       site, les services et des photos, puis demander un avis à chaque client. C'est le levier n° 1 pour le référencement local.
 - [ ] **E-mails** : créer la boîte contact@babtech.fr (hPanel → Emails), ajouter la variable `SMTP_PASSWORD` avec son mot
       de passe, redéployer, puis Réglages → E-mails → « Envoyer un e-mail de test ». Dans hPanel → Emails, vérifier que

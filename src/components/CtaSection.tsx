@@ -47,7 +47,7 @@ export function CtaSection({
             <Icon name="check" className="h-4 w-4 text-emerald-b" /> Devis gratuit
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <Icon name="map-pin" className="h-4 w-4 text-emerald-b" /> Montpellier & Hérault
+            <Icon name="map-pin" className="h-4 w-4 text-emerald-b" /> Hérault & Gard
           </span>
         </p>
       </div>

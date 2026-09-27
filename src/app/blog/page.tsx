@@ -12,7 +12,7 @@ import { fr } from '@/lib/typography'
 
 const title = 'Blog : digital, IA et référencement pour les TPE'
 const description =
-  "Guides concrets pour les TPE, artisans et commerçants de Montpellier et de l'Hérault : site internet, SEO local, GEO, applications métier, automatisation et IA."
+  "Guides concrets pour les TPE, artisans et commerçants de l'Hérault et du Gard : site internet, SEO local, GEO, applications métier, automatisation et IA."
 
 export const metadata: Metadata = pageMetadata({ title, description, path: '/blog', og: 'blog' })
 
@@ -33,7 +33,7 @@ export default function BlogPage() {
       <PageHero
         eyebrow="Le blog BabTech"
         title="Digital, IA et référencement : des guides concrets pour les TPE"
-        lead="Des articles écrits pour les dirigeants de TPE, artisans et commerçants de Montpellier et de l'Hérault. Pas de jargon : des méthodes, des exemples et des réponses claires."
+        lead="Des articles écrits pour les dirigeants de TPE, artisans et commerçants de l'Hérault et du Gard. Pas de jargon : des méthodes, des exemples et des réponses claires."
         crumbs={[{ name: 'Blog', path: '/blog' }]}
       />
 

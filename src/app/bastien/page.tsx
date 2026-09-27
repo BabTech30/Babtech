@@ -19,7 +19,7 @@ import { fr } from '@/lib/typography'
  */
 const title = 'Bastien Ferrer : sites, outils métier et réservation en ligne'
 const description =
-  "Ancien chef d'entreprise du bâtiment, Bastien Ferrer crée des sites internet, des outils métier et des sites de réservation pour les pros de l'Hérault."
+  "Ancien chef d'entreprise du bâtiment, Bastien Ferrer crée des sites internet, des outils métier et des sites de réservation pour les pros de l'Hérault et du Gard."
 
 export const metadata: Metadata = pageMetadata({ title, description, path: '/bastien', og: 'bastien', noindex: true })
 
@@ -103,7 +103,7 @@ export default function Presentation() {
                 <p className="text-sm text-txt-secondary">Fondateur de {site.name} · près de Montpellier</p>
               </div>
             </div>
-            <h1 className="h1 mb-6">Du digital concret pour les artisans, commerçants et loueurs de l&apos;Hérault</h1>
+            <h1 className="h1 mb-6">Du digital concret pour les artisans, commerçants et loueurs de l&apos;Hérault et du Gard</h1>
             <p className="lead mb-9 max-w-[620px]">
               Ancien chef d&apos;entreprise du bâtiment, je crée des sites internet, des outils métier et des sites de réservation. Sans
               jargon, avec des prix clairs, et une réponse sous 24&nbsp;heures.

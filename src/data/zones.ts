@@ -1,11 +1,14 @@
+import type { ServiceSlug } from './services'
+
 export type ZoneSector = { name: string; need: string }
 export type ZoneFaq = { q: string; a: string }
+export type Department = 'Hérault' | 'Gard'
 
 export type Zone = {
   slug: string
   name: string
   postalCode: string
-  department: string
+  department: Department
   /** French Wikipedia URL of the commune (used as schema.org sameAs) */
   wikipedia: string
   /** Short positioning relative to Montpellier, e.g. « Commune limitrophe de Montpellier, au nord-est » */
@@ -30,6 +33,8 @@ export type Zone = {
   nearby: string[]
   /** 4–6 neighbouring communes (names only, real neighbours) */
   nearbyTowns: string[]
+  /** Service le plus utile localement (ex. site de réservation dans les villes touristiques), mis en avant sur la page. */
+  featured?: ServiceSlug
 }
 
 export const zones: Zone[] = [
@@ -493,3 +498,14 @@ export const zones: Zone[] = [
 export function getZone(slug: string): Zone | undefined {
   return zones.find((z) => z.slug === slug)
 }
+
+/** Les deux départements couverts, dans l'ordre d'affichage, avec leurs villes. */
+export const departments: { name: Department; label: string; intro: string }[] = [
+  { name: 'Hérault', label: "Dans l'Hérault", intro: "Montpellier et sa métropole, le littoral, le Biterrois et le cœur d'Hérault." },
+  { name: 'Gard', label: 'Dans le Gard', intro: "Nîmes, Alès et les Cévennes, l'Uzège, la Camargue gardoise et la vallée du Rhône." },
+]
+
+export const zonesIn = (department: Department) => zones.filter((z) => z.department === department)
+
+/** Villes principales, reprises dans le pied de page (les autres restent accessibles depuis « Zones d'intervention »). */
+export const mainZones = ['montpellier', 'nimes', 'beziers', 'sete', 'ales', 'lunel', 'agde', 'uzes']

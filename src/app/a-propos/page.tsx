@@ -14,7 +14,7 @@ import { fr } from '@/lib/typography'
 
 const title = 'Bastien Ferrer, fondateur de BabTech à Montpellier'
 const description =
-  "Patron à 22 ans, 14 ans dans le BTP : Bastien Ferrer a fondé BabTech pour aider les TPE, artisans et commerçants de l'Hérault à réussir leur virage digital."
+  "Patron à 22 ans, 14 ans dans le BTP : Bastien Ferrer a fondé BabTech pour aider les TPE, artisans et commerçants de l'Hérault et du Gard à passer au digital."
 
 export const metadata: Metadata = pageMetadata({ title, description, path: '/a-propos', og: 'a-propos' })
 

@@ -24,7 +24,7 @@ export function buildVcard() {
     ...(site.phone ? [`TEL;TYPE=CELL,VOICE:${site.phone.replace(/[^+\d]/g, '')}`] : []),
     `URL:${absoluteUrl('/')}`,
     `ADR;TYPE=WORK:;;;${text(site.address.locality)};${text(site.address.department)};;France`,
-    `NOTE:${text(`Sites internet, outils métier, sites de réservation et IA pour les TPE, artisans et loueurs de l'Hérault. Premier échange gratuit : ${absoluteUrl(site.bookingPath)}`)}`,
+    `NOTE:${text(`Sites internet, outils métier, sites de réservation et IA pour les TPE, artisans et loueurs de l'Hérault et du Gard. Premier échange gratuit : ${absoluteUrl(site.bookingPath)}`)}`,
     `PHOTO;ENCODING=b;TYPE=JPEG:${photo}`,
     `REV:${new Date().toISOString().slice(0, 10)}`,
     'END:VCARD',

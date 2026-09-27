@@ -97,7 +97,7 @@ export default function Contact() {
                   </span>
                   <div>
                     <span className="text-xs tracking-wide text-txt-muted">Zone</span>
-                    <span className="block text-[15px] font-medium text-txt-primary">Montpellier et Hérault</span>
+                    <span className="block text-[15px] font-medium text-txt-primary">Hérault et Gard</span>
                     <Link href="/zones-intervention" className="text-xs text-txt-muted underline-offset-2 hover:text-white hover:underline">
                       En rendez-vous ou en visio, partout en France
                     </Link>

@@ -1,12 +1,12 @@
 # Stratégie SEO local + GEO — BabTech
 
-Objectif : faire de BabTech **la référence digitale et IA des TPE de Montpellier et de l'Hérault**, visible à la fois
+Objectif : faire de BabTech **la référence digitale et IA des TPE de l'Hérault et du Gard**, visible à la fois
 dans Google (recherche classique et Google Maps) et dans les réponses des assistants IA (ChatGPT, Perplexity, Gemini,
 Claude, Copilot).
 
 ## 1. Positionnement
 
-**« Le studio digital & IA des TPE de l'Hérault, créé par un ancien chef d'entreprise. »**
+**« Le studio digital & IA des TPE de l'Hérault et du Gard, créé par un ancien chef d'entreprise. »**
 
 Trois piliers, répétés de façon cohérente partout (site, Google Business Profile, LinkedIn, annuaires) :
 
@@ -20,18 +20,21 @@ Trois piliers, répétés de façon cohérente partout (site, Google Business Pr
 
 ```
 Accueil
-├── Services (hub)            → 5 pages services (1 page = 1 intention de recherche)
-├── Zones d'intervention (hub) → 8 pages villes au contenu local unique
+├── Services (hub)            → 6 pages services (1 page = 1 intention de recherche)
+├── Zones d'intervention (hub) → 25 pages villes au contenu local unique (17 dans l'Hérault, 8 dans le Gard)
 ├── Blog (hub)                → 4 catégories = 4 thèmes de la future communauté
 ├── Communauté                → liste d'attente, puis événements et groupes
 ├── Réalisations, À propos, FAQ, Contact
 ```
 
 Règles de maillage déjà en place :
-- chaque page service renvoie vers les 8 villes (« Création de site internet à Sète »…), ses articles liés et 2 services associés ;
-- chaque ville renvoie vers les 5 services et ses villes voisines ;
+- chaque page service renvoie vers toutes les villes, rangées par département (« Création de site internet à Nîmes »…),
+  ses articles liés et 2 services associés ;
+- chaque ville renvoie vers les 6 services (le plus utile sur place en premier, par exemple le site de réservation dans
+  les villes touristiques) et vers ses villes voisines ;
+- l'accueil et la page « Zones d'intervention » relient toutes les villes, rangées par département ;
 - chaque article renvoie vers 4 à 8 pages (services, articles, contact, communauté) ;
-- le pied de page relie toutes les pages services et toutes les villes depuis chaque page.
+- le pied de page relie toutes les pages services et les 8 villes principales depuis chaque page.
 
 ## 3. Carte des mots-clés
 
@@ -43,7 +46,8 @@ Règles de maillage déjà en place :
 | `/services/automatisation-ia` | automatisation IA TPE Montpellier | consultant n8n, intégration IA entreprise, automatiser devis relances |
 | `/services/referencement-local-geo` | référencement local Montpellier | SEO local Hérault, GEO ChatGPT, fiche Google Business Profile |
 | `/services/accompagnement-formation-ia` | formation IA Montpellier | formation ChatGPT entreprise, accompagnement digital TPE |
-| `/zones-intervention/<ville>` | création site internet <ville> | agence web <ville>, développeur web <ville> |
+| `/zones-intervention` | agence web Hérault, agence web Gard | création site internet Hérault / Gard |
+| `/zones-intervention/<ville>` | création site internet <ville> | agence web <ville>, développeur web <ville>, site de réservation gîte <ville> |
 | `/blog/prix-site-internet-tpe-montpellier` | prix site internet TPE | combien coûte un site vitrine, location site internet |
 | `/blog/seo-local-montpellier-google-business-profile` | SEO local Montpellier | Google Maps, avis Google, fiche Google Business |
 | `/blog/geo-referencement-ia-chatgpt-perplexity-gemini` | GEO référencement IA | être recommandé par ChatGPT, llms.txt |
@@ -74,16 +78,18 @@ Suivre ces requêtes dans Google Search Console (*Performances → Requêtes*) e
 Le classement Google Maps repose sur la **pertinence**, la **distance** et la **notoriété**. Le site couvre la pertinence ;
 la notoriété se construit à l'extérieur.
 
-1. **Google Business Profile** (semaine 1) : fiche complète, zone de service, services avec prix, photos réelles, un post par
-   semaine pendant 2 mois puis un par mois.
+1. **Google Business Profile** (semaine 1) : fiche complète, zone de service (Hérault, Gard et les villes principales :
+   Montpellier, Nîmes, Béziers, Sète, Alès…), services avec prix, photos réelles, un post par semaine pendant 2 mois puis
+   un par mois.
 2. **Avis** (en continu) : demander un avis à chaque client, avec un lien direct et un QR code ; répondre à tous.
    Objectif : des avis réguliers, détaillés (le métier du client, la ville, le service).
 3. **Citations NAP** (mois 1) : Bing Places, Apple Business Connect, PagesJaunes, LinkedIn (page entreprise), Malt,
-   annuaires de la CCI Hérault. Toujours le même nom, la même ville, le même téléphone, la même URL.
+   annuaires des CCI de l'Hérault et du Gard. Toujours le même nom, la même ville, le même téléphone, la même URL.
 4. **Liens et mentions locales** (mois 2-3) :
-   - clubs et réseaux d'entrepreneurs de Montpellier (réseaux d'affaires, associations de commerçants, clubs d'entreprises) ;
+   - clubs et réseaux d'entrepreneurs de Montpellier et de Nîmes (réseaux d'affaires, associations de commerçants, clubs
+     d'entreprises) ;
    - partenaires naturels : experts-comptables, photographes, imprimeurs, agences immobilières (échanges de recommandations) ;
-   - presse locale (Midi Libre, médias en ligne montpelliérains) : communiquer sur le lancement de la communauté ;
+   - presse locale (Midi Libre, médias en ligne de Montpellier et de Nîmes) : communiquer sur le lancement de la communauté ;
    - interventions dans des événements tech ou entrepreneuriaux locaux ;
    - chaque client accompagné : un lien « site réalisé par BabTech » dans le pied de page, avec son accord.
 5. **Études de cas** : transformer chaque projet en page détaillée avec chiffres réels (avec l'accord du client) et témoignage.
@@ -107,6 +113,8 @@ Les assistants s'appuient sur les index de Google et Bing, puis croisent les sou
 | Formation à l'IA pour dirigeants de TPE à Montpellier ? | Cité ? La communauté est-elle mentionnée ? |
 | Combien coûte un site vitrine pour un artisan à Montpellier ? | L'article prix est-il utilisé comme source ? |
 | Développeur d'application métier à Sète / Lunel / Béziers ? | Les pages villes sont-elles reprises ? |
+| Qui peut créer le site internet de mon commerce à Nîmes ou à Alès ? | Les pages du Gard sont-elles reprises ? |
+| Site de réservation en direct pour mon gîte à Uzès ou au Grau-du-Roi ? | Prix et synchro iCal repris correctement ? |
 
 Et dans l'outil d'audience : surveiller les visites venant de `chatgpt.com`, `perplexity.ai`, `gemini.google.com`,
 `copilot.microsoft.com`, `claude.ai`.
@@ -123,12 +131,12 @@ Chaque article : une vraie question de client, une réponse dès le premier para
 | 4 | ChatGPT, Claude, Gemini, Le Chat : lequel choisir pour une TPE ? · Compte rendu du premier atelier de la communauté |
 | 5 | Étude de cas : Le Terrier, un bar-restaurant digitalisé de A à Z · PWA ou application mobile : que choisir ? |
 | 6 | Répondre aux avis négatifs : méthode et modèles · Créer une charte d'usage de l'IA pour son équipe |
-| 7 | Site multilingue pour le tourisme (Sète, Agde, La Grande-Motte) · Automatiser la prise de rendez-vous |
+| 7 | Site multilingue pour le tourisme (Sète, Agde, La Grande-Motte, Le Grau-du-Roi) · Automatiser la prise de rendez-vous |
 | 8 | RGPD et IA : les règles simples pour une petite entreprise · Étude de cas : Hôtel Le Saint Éloi |
 | 9 | Mesurer son trafic sans cookie (Plausible, Umami) · Bilan des cercles de travail de la communauté |
 | 10 | Les métiers du BTP face à l'IA : ce qui change vraiment · Tableau de bord : les 5 chiffres qu'un artisan doit suivre |
 | 11 | GEO : bilan d'un an de tests dans les assistants IA · Refonte de site : quand et comment |
-| 12 | Le guide 2027 du digital pour les TPE de l'Hérault (article pilier, mis à jour chaque année) |
+| 12 | Le guide 2027 du digital pour les TPE de l'Hérault et du Gard (article pilier, mis à jour chaque année) |
 
 ## 8. Indicateurs à suivre chaque mois
 

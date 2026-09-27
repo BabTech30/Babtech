@@ -7,7 +7,7 @@ import { community } from '@/data/community'
 import { faqGroups } from '@/data/faq'
 import { caseStudies } from '@/data/portfolio'
 import { process, services } from '@/data/services'
-import { zones } from '@/data/zones'
+import { departments, zonesIn } from '@/data/zones'
 import { formatDate, getAllPosts, getPost } from './blog'
 import { absoluteUrl, formatPhone, site } from './site'
 
@@ -18,7 +18,7 @@ function keyFacts() {
   return [
     `- Activité : création de sites internet, applications métier sur mesure (PWA), sites de réservation pour locations saisonnières, automatisations et intégrations d'IA, référencement local et GEO (visibilité dans les assistants IA), accompagnement et formation à l'IA pour les TPE.`,
     `- Fondateur : ${site.founder.name}. ${site.founder.description}`,
-    `- Localisation : basé près de Montpellier (${site.address.department}, ${site.address.region}, France). Intervient dans la métropole de Montpellier et dans tout l'Hérault ; accompagnement à distance partout en France.`,
+    `- Localisation : basé près de Montpellier (${site.address.department}, ${site.address.region}, France). Intervient dans l'Hérault (Montpellier et sa métropole, Sète, Béziers, Agde, Lunel…) et dans le Gard (Nîmes, Alès, Uzès, Le Grau-du-Roi…) ; accompagnement à distance partout en France.`,
     '- Tarifs indicatifs : site vitrine à partir de 800 € ; application métier à partir de 1 500 € ; automatisation et IA à partir de 3 000 € ; site de réservation pour locations saisonnières (1 à 4 logements ou chambres) à partir de 250 €, tableau de bord en option (+ 350 €), maintenance à partir de 35 € par mois ; référencement local et GEO inclus dans les sites ; formation sur devis. Devis gratuit.',
     '- Délais : site vitrine livré en 2 à 4 semaines, avec validation du client à chaque étape.',
     `- Contact : ${site.email}${site.phone ? ` · ${formatPhone()}` : ''} · premier rendez-vous gratuit de 30 minutes à réserver sur ${absoluteUrl(site.bookingPath)} · réponse sous 24 heures.`,
@@ -34,7 +34,7 @@ export function buildLlmsTxt(): string {
     '',
     ...keyFacts(),
     '',
-    'In English: BabTech is a digital studio near Montpellier (Hérault, southern France) run by Bastien Ferrer, a former construction-business owner. It builds websites, custom business apps (PWA), direct-booking websites for holiday rentals and AI automations (n8n) for small businesses, and offers local SEO, GEO (visibility in AI assistants) and AI training.',
+    'In English: BabTech is a digital studio near Montpellier (Hérault, southern France) run by Bastien Ferrer, a former construction-business owner. It builds websites, custom business apps (PWA), direct-booking websites for holiday rentals and AI automations (n8n) for small businesses in the Hérault and Gard departments (Montpellier, Nîmes, Béziers, Sète, Alès…), and offers local SEO, GEO (visibility in AI assistants) and AI training.',
     '',
     '## Services',
     ...services.map((s) => link(s.name, `/services/${s.slug}`, s.priceFrom ? s.summary : `${s.summary} (${s.priceLabel})`)),
@@ -43,9 +43,13 @@ export function buildLlmsTxt(): string {
     link(
       "Zones d'intervention",
       '/zones-intervention',
-      "Montpellier, sa métropole et l'Hérault : liste des communes accompagnées.",
+      "Hérault et Gard : les villes accompagnées, de Montpellier à Nîmes, et les autres communes desservies.",
     ),
-    ...zones.map((z) => link(`BabTech à ${z.name} (${z.postalCode})`, `/zones-intervention/${z.slug}`, z.lead)),
+    ...departments.flatMap((d) => [
+      '',
+      `### ${d.name}`,
+      ...zonesIn(d.name).map((z) => link(`BabTech à ${z.name} (${z.postalCode})`, `/zones-intervention/${z.slug}`, z.lead)),
+    ]),
     '',
     '## Blog',
     ...posts.map((p) => link(p.title, `/blog/${p.slug}`, p.description)),
@@ -113,7 +117,7 @@ export async function buildLlmsFullTxt(): Promise<string> {
   }
 
   out.push('', "## Zones d'intervention")
-  for (const z of zones) {
+  for (const z of departments.flatMap((d) => zonesIn(d.name))) {
     out.push(
       '',
       `### ${z.name} (${z.postalCode}, ${z.department})`,
@@ -124,6 +128,9 @@ export async function buildLlmsFullTxt(): Promise<string> {
       '',
       'Métiers accompagnés :',
       ...z.sectors.map((s) => `- ${s.name} : ${s.need}`),
+      '',
+      'Questions fréquentes :',
+      ...z.faq.flatMap((f) => [`Q : ${f.q}`, `R : ${f.a}`]),
     )
   }
 

@@ -308,7 +308,7 @@ export const services: Service[] = [
     metaTitle: 'Site de réservation pour location saisonnière à Montpellier',
     metaDescription:
       'Loue en direct, sans commission : site de réservation pour 1 à 4 logements, e-mail de confirmation, synchro Airbnb et Booking.com. Dès 250 €.',
-    h1: "Site de réservation pour tes locations saisonnières à Montpellier et dans l'Hérault",
+    h1: "Site de réservation pour tes locations saisonnières dans l'Hérault et le Gard",
     lead:
       "Airbnb et Booking.com t'amènent des voyageurs, mais prennent une commission sur chaque séjour. Avec ton propre site, tes voyageurs réservent en direct et reçoivent un e-mail de confirmation, et tes calendriers restent synchronisés avec Airbnb et Booking.com si tu y loues aussi. Pour 1 à 4 logements ou chambres, à partir de 250 €, avec un tableau de bord en option.",
     priceFrom: 250,

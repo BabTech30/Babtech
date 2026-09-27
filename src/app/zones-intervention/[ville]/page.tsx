@@ -9,7 +9,7 @@ import { JsonLd } from '@/components/JsonLd'
 import { PageHero } from '@/components/PageHero'
 import { ProcessSteps } from '@/components/ProcessSteps'
 import { services } from '@/data/services'
-import { getZone, zones } from '@/data/zones'
+import { getZone, type Zone, zones } from '@/data/zones'
 import { faqNode, graph, ids, webPageNode } from '@/lib/schema'
 import { pageMetadata } from '@/lib/seo'
 import { absoluteUrl, site } from '@/lib/site'
@@ -39,8 +39,15 @@ export default async function ZonePage({ params }: Props) {
   if (!zone) notFound()
 
   const path = `/zones-intervention/${zone.slug}`
-  const nearby = zones.filter((z) => zone.nearby.includes(z.slug))
+  // Villes voisines qui ont leur page (liens), puis communes voisines sans page (simples étiquettes).
+  const nearby = [...zone.nearby, ...zone.nearbyTowns.map((t) => zones.find((z) => z.name === t)?.slug)]
+    .map((slug) => (slug ? getZone(slug) : undefined))
+    .filter((z, i, list): z is Zone => Boolean(z) && list.indexOf(z) === i)
+  const nearbyTowns = zone.nearbyTowns.filter((t) => !nearby.some((z) => z.name === t))
   const city = { '@type': 'City', name: zone.name, sameAs: zone.wikipedia }
+  // Le service le plus utile localement passe en premier (ex. site de réservation dans les villes touristiques).
+  const localServices = [...services].sort((a, b) => Number(b.slug === zone.featured) - Number(a.slug === zone.featured))
+  const featured = localServices.find((s) => s.slug === zone.featured)
 
   return (
     <>
@@ -64,7 +71,7 @@ export default async function ZonePage({ params }: Props) {
             hasOfferCatalog: {
               '@type': 'OfferCatalog',
               name: `Services BabTech à ${zone.name}`,
-              itemListElement: services.map((s) => ({
+              itemListElement: localServices.map((s) => ({
                 '@type': 'Offer',
                 itemOffered: { '@type': 'Service', name: `${s.name} à ${zone.name}`, url: absoluteUrl(`/services/${s.slug}`) },
                 ...(s.priceFrom
@@ -89,6 +96,9 @@ export default async function ZonePage({ params }: Props) {
           <FactsCard
             title={`En bref à ${zone.name}`}
             facts={[
+              ...(featured?.slug === 'site-reservation-location-saisonniere'
+                ? [{ label: 'Site de réservation', value: 'Dès 250 €' }]
+                : []),
               { label: 'Site vitrine', value: 'Dès 800 €' },
               { label: 'Application métier', value: 'Dès 1 500 €' },
               { label: 'Automatisation & IA', value: 'Dès 3 000 €' },
@@ -166,10 +176,20 @@ export default async function ZonePage({ params }: Props) {
             </h2>
           </div>
           <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {services.map((s) => (
+            {localServices.map((s) => (
               <li key={s.slug}>
-                <Link href={`/services/${s.slug}`} className="card card-hover flex h-full flex-col p-6">
-                  <Icon name={s.icon} className="mb-4 h-6 w-6 text-emerald-b" />
+                <Link
+                  href={`/services/${s.slug}`}
+                  className={`card card-hover flex h-full flex-col p-6 ${s.slug === zone.featured ? 'border-emerald-b/40' : ''}`}
+                >
+                  <span className="mb-4 flex items-center justify-between gap-3">
+                    <Icon name={s.icon} className="h-6 w-6 text-emerald-b" />
+                    {s.slug === zone.featured && (
+                      <span className="rounded-full border border-emerald-b/30 bg-emerald-b/[0.08] px-2.5 py-0.5 text-[12px] font-semibold text-emerald-b">
+                        À la une à {zone.name}
+                      </span>
+                    )}
+                  </span>
                   <span className="mb-2 font-outfit text-lg font-semibold text-white">
                     {s.name} à {zone.name}
                   </span>
@@ -219,7 +239,7 @@ export default async function ZonePage({ params }: Props) {
                 </Link>
               </li>
             ))}
-            {zone.nearbyTowns.map((t) => (
+            {nearbyTowns.map((t) => (
               <li key={t} className="rounded-full border border-bord bg-white/[0.02] px-4 py-2 text-sm text-txt-secondary">
                 {t}
               </li>

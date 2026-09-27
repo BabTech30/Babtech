@@ -30,9 +30,9 @@ export function graph(...nodes: (Json | false | undefined | null)[]) {
 }
 
 const WIKIPEDIA = {
-  montpellier: 'https://fr.wikipedia.org/wiki/Montpellier',
   metropole: 'https://fr.wikipedia.org/wiki/Montpellier_M%C3%A9diterran%C3%A9e_M%C3%A9tropole',
   herault: 'https://fr.wikipedia.org/wiki/H%C3%A9rault_(d%C3%A9partement)',
+  gard: 'https://fr.wikipedia.org/wiki/Gard_(d%C3%A9partement)',
   occitanie: 'https://fr.wikipedia.org/wiki/Occitanie_(r%C3%A9gion_administrative)',
 }
 
@@ -56,10 +56,10 @@ function geoCoordinates() {
 
 export function areaServed() {
   return [
-    { '@type': 'City', name: 'Montpellier', sameAs: WIKIPEDIA.montpellier },
-    { '@type': 'AdministrativeArea', name: 'Montpellier Méditerranée Métropole', sameAs: WIKIPEDIA.metropole },
     ...zones.map((z) => ({ '@type': 'City', name: z.name, sameAs: z.wikipedia })),
+    { '@type': 'AdministrativeArea', name: 'Montpellier Méditerranée Métropole', sameAs: WIKIPEDIA.metropole },
     { '@type': 'AdministrativeArea', name: 'Hérault', sameAs: WIKIPEDIA.herault },
+    { '@type': 'AdministrativeArea', name: 'Gard', sameAs: WIKIPEDIA.gard },
     { '@type': 'AdministrativeArea', name: 'Occitanie', sameAs: WIKIPEDIA.occitanie },
   ]
 }
@@ -307,7 +307,7 @@ export function blogNode(posts: PostMeta[]): Json {
     '@id': ids.blog,
     name: 'Le blog BabTech',
     url: pageUrl('/blog'),
-    description: "Digital, IA et référencement pour les TPE de Montpellier et de l'Hérault.",
+    description: "Digital, IA et référencement pour les TPE de l'Hérault et du Gard.",
     inLanguage: site.lang,
     publisher: { '@id': ids.organization },
     blogPost: posts.map((p) => ({

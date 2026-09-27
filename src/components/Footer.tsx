@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { services } from '@/data/services'
-import { zones } from '@/data/zones'
+import { getZone, mainZones, type Zone } from '@/data/zones'
 import { formatPhone, site, telLink } from '@/lib/site'
 import { Icon } from './Icon'
 import { Logo } from './Logo'
@@ -24,6 +24,8 @@ function Column({ title, children }: { title: string; children: React.ReactNode 
 }
 
 const linkClass = 'text-txt-muted transition-colors hover:text-white'
+
+const footerZones = mainZones.map((slug) => getZone(slug)).filter((z): z is Zone => Boolean(z))
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -66,19 +68,19 @@ export default function Footer() {
             ))}
           </Column>
 
-          <Column title="Zones d'intervention">
-            <li>
-              <Link href="/zones-intervention" className={linkClass}>
-                Montpellier et métropole
-              </Link>
-            </li>
-            {zones.map((z) => (
+          <Column title="Hérault et Gard">
+            {footerZones.map((z) => (
               <li key={z.slug}>
                 <Link href={`/zones-intervention/${z.slug}`} className={linkClass}>
                   {z.name}
                 </Link>
               </li>
             ))}
+            <li>
+              <Link href="/zones-intervention" className="inline-flex items-center gap-1 text-emerald-b transition-colors hover:text-white">
+                Toutes les villes <Icon name="arrow-right" className="h-3.5 w-3.5" />
+              </Link>
+            </li>
           </Column>
 
           <Column title="Ressources">

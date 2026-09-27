@@ -30,7 +30,7 @@ export function GET() {
   <channel>
     <title>Le blog BabTech</title>
     <link>${absoluteUrl('/blog')}</link>
-    <description>${escape("Digital, IA et référencement pour les TPE, artisans et commerçants de Montpellier et de l'Hérault.")}</description>
+    <description>${escape("Digital, IA et référencement pour les TPE, artisans et commerçants de l'Hérault et du Gard.")}</description>
     <language>fr-FR</language>
     ${posts[0] ? `<lastBuildDate>${rfc822(posts[0].updated)}</lastBuildDate>` : ''}
     <atom:link href="${absoluteUrl('/blog/rss.xml')}" rel="self" type="application/rss+xml"/>

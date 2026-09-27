@@ -19,7 +19,7 @@ export function AuthorBox() {
         </p>
         <p className="text-[15px] leading-relaxed text-txt-secondary">
           Fondateur de BabTech. Chef d&apos;entreprise à 22 ans, 14 ans dans le BTP, il aide aujourd&apos;hui les TPE, artisans et commerçants de
-          Montpellier et de l&apos;Hérault à passer au digital et à l&apos;IA, sans jargon.
+          l&apos;Hérault et du Gard à passer au digital et à l&apos;IA, sans jargon.
         </p>
       </div>
     </aside>

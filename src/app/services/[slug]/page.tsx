@@ -12,7 +12,7 @@ import { PostCard } from '@/components/PostCard'
 import { accentStyles, ServiceCard } from '@/components/ServiceCard'
 import { getCaseStudy } from '@/data/portfolio'
 import { getService, services, type ServiceSlug } from '@/data/services'
-import { zones } from '@/data/zones'
+import { departments, zonesIn } from '@/data/zones'
 import { getAllPosts } from '@/lib/blog'
 import { faqNode, graph, serviceNode, webPageNode } from '@/lib/schema'
 import { pageMetadata } from '@/lib/seo'
@@ -87,7 +87,7 @@ export default async function ServicePage({ params }: Props) {
             facts={[
               { label: 'Tarif', value: service.priceLabel },
               ...(service.duration ? [{ label: 'Délai', value: service.duration }] : []),
-              { label: 'Zone', value: 'Montpellier, Hérault et à distance' },
+              { label: 'Zone', value: 'Hérault, Gard et à distance' },
               { label: 'Premier échange', value: 'Gratuit, 30 minutes' },
               { label: 'Réponse', value: 'Sous 24 h' },
             ]}
@@ -239,25 +239,32 @@ export default async function ServicePage({ params }: Props) {
       <section className="border-t border-bord py-16 md:py-20" aria-labelledby="local">
         <div className="container-b">
           <h2 id="local" className="section-title mb-4">
-            Près de chez toi, dans l&apos;Hérault
+            Près de chez toi, dans l&apos;Hérault et le Gard
           </h2>
           <p className="mb-8 max-w-[680px] text-[17px] leading-relaxed text-txt-secondary">
-            Basé près de Montpellier, j&apos;accompagne les entreprises de toute la métropole et du département — en visio ou en rendez-vous
-            quand le projet s&apos;y prête.
+            Basé près de Montpellier, j&apos;accompagne les entreprises des deux départements — en visio ou en rendez-vous quand le projet
+            s&apos;y prête.
           </p>
-          <ul className="flex flex-wrap gap-2.5">
-            {zones.map((z) => (
-              <li key={z.slug}>
-                <Link
-                  href={`/zones-intervention/${z.slug}`}
-                  className="inline-flex items-center gap-2 rounded-full border border-bord bg-white/[0.03] px-4 py-2.5 text-sm text-txt-secondary transition-colors hover:border-white/20 hover:text-white"
-                >
-                  <Icon name="map-pin" className="h-4 w-4 text-txt-muted" />
-                  {localLabel[service.slug]} à {z.name}
-                </Link>
-              </li>
+          <div className="space-y-6">
+            {departments.map((d) => (
+              <div key={d.name}>
+                <p className="mb-3 font-outfit text-[13px] font-semibold uppercase tracking-[1.5px] text-txt-primary">{d.label}</p>
+                <ul className="flex flex-wrap gap-2.5">
+                  {zonesIn(d.name).map((z) => (
+                    <li key={z.slug}>
+                      <Link
+                        href={`/zones-intervention/${z.slug}`}
+                        className="inline-flex items-center gap-2 rounded-full border border-bord bg-white/[0.03] px-4 py-2.5 text-sm text-txt-secondary transition-colors hover:border-white/20 hover:text-white"
+                      >
+                        <Icon name="map-pin" className="h-4 w-4 text-txt-muted" />
+                        {localLabel[service.slug]} à {z.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       </section>
 

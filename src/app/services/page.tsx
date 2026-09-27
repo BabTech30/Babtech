@@ -14,7 +14,7 @@ import { fr } from '@/lib/typography'
 
 const title = 'Services digitaux pour TPE à Montpellier : site, application, IA'
 const description =
-  "Sites internet dès 800 €, applications métier dès 1 500 €, automatisation IA dès 3 000 €, sites de réservation dès 250 €, SEO local, GEO et formation IA dans l'Hérault."
+  "Sites dès 800 €, applications métier dès 1 500 €, automatisation IA dès 3 000 €, sites de réservation dès 250 €, SEO local, GEO et formation IA : Hérault et Gard."
 
 export const metadata: Metadata = pageMetadata({ title, description, path: '/services', og: 'services' })
 

@@ -14,7 +14,7 @@ import {
 } from '@/data/admin'
 import { qrCodes } from '@/data/qr'
 import { SOURCE_LABELS } from '@/data/requests'
-import { zones } from '@/data/zones'
+import { departments, zones, zonesIn } from '@/data/zones'
 import { requireAdmin } from '@/lib/admin/auth'
 import { currentMonth, formatDay, formatMonth, formatNumber } from '@/lib/admin/format'
 import { scanStats } from '@/lib/admin/scans'
@@ -369,27 +369,35 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
             <h2 id="zones-title" className={h2}>
               Zones visées
             </h2>
-            <p className="text-sm text-txt-muted">Montpellier et {zones.length} villes</p>
+            <p className="text-sm text-txt-muted">{zones.length} villes · Hérault et Gard</p>
           </div>
-          <ul className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-2">
-            <li>
-              <a href="/zones-intervention/" target="_blank" rel="noopener" className="flex justify-between rounded-lg bg-emerald-b/10 px-3 py-2 font-semibold text-white hover:bg-emerald-b/20">
-                Montpellier <span aria-hidden="true">↗</span>
-              </a>
-            </li>
-            {zones.map((z) => (
-              <li key={z.slug}>
-                <a
-                  href={`/zones-intervention/${z.slug}/`}
-                  target="_blank"
-                  rel="noopener"
-                  className="flex justify-between rounded-lg border border-bord px-3 py-2 text-txt-primary hover:border-emerald-b/50"
-                >
-                  {z.name} <span aria-hidden="true" className="text-txt-muted">↗</span>
-                </a>
-              </li>
-            ))}
-          </ul>
+          <a
+            href="/zones-intervention/"
+            target="_blank"
+            rel="noopener"
+            className="mt-4 flex justify-between rounded-lg bg-emerald-b/10 px-3 py-2 font-semibold text-white hover:bg-emerald-b/20"
+          >
+            Toutes les zones <span aria-hidden="true">↗</span>
+          </a>
+          {departments.map((d) => (
+            <div key={d.name} className="mt-4">
+              <h3 className="mb-2 text-[13px] font-semibold uppercase tracking-[1.5px] text-txt-muted">{d.name}</h3>
+              <ul className="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-2">
+                {zonesIn(d.name).map((z) => (
+                  <li key={z.slug}>
+                    <a
+                      href={`/zones-intervention/${z.slug}/`}
+                      target="_blank"
+                      rel="noopener"
+                      className="flex justify-between rounded-lg border border-bord px-3 py-2 text-txt-primary hover:border-emerald-b/50"
+                    >
+                      {z.name} <span aria-hidden="true" className="text-txt-muted">↗</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
           <p className="mt-4 text-sm text-txt-muted">
             {fr('France entière : plus tard. Après quelques semaines en ligne, la Search Console montrera les villes où tu apparais déjà : on renforcera celles-là.')}
           </p>

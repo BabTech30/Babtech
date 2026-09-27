@@ -65,7 +65,7 @@ export default async function Carte() {
             </h1>
             <p className="mt-1 font-medium text-emerald-b">Fondateur de {site.name}</p>
             <p className="mt-3 text-[15px] leading-relaxed text-txt-secondary">
-              Sites internet, outils métier, sites de réservation et IA pour les TPE, artisans et loueurs de l&apos;Hérault.
+              Sites internet, outils métier, sites de réservation et IA pour les TPE, artisans et loueurs de l&apos;Hérault et du Gard.
             </p>
             <p className="mt-3 inline-flex items-center gap-1.5 text-[13px] text-txt-muted">
               <Icon name="map-pin" className="h-4 w-4 text-emerald-b" /> Près de Montpellier ({site.address.department})

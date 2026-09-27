@@ -9,7 +9,7 @@ import { pageMetadata } from '@/lib/seo'
 
 const title = 'FAQ : prix, délais, SEO, IA — questions fréquentes sur BabTech'
 const description =
-  "Prix d'un site internet, délais, méthode, référencement Google et IA, applications métier, automatisation, communauté : toutes les réponses pour les TPE de l'Hérault."
+  "Prix d'un site, délais, méthode, référencement Google et IA, applications métier, automatisation, communauté : les réponses pour les TPE de l'Hérault et du Gard."
 
 export const metadata: Metadata = pageMetadata({ title, description, path: '/faq', og: 'faq' })
 
