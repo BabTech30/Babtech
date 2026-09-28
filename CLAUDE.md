@@ -25,12 +25,14 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
   de `/rendez-vous/` (page prérendue, créneaux lus et réservés par les Server Actions de `src/app/rendez-vous/actions.ts`) ;
   les formulaires de contact et de la communauté (Server Actions `src/app/contact/request-actions.ts` et
   `src/app/communaute/actions.ts`) ; l'assistant IA de `/contact/`, en sommeil (Server Actions de `src/app/contact/actions.ts`,
-  API Claude avec la variable `ANTHROPIC_API_KEY`, jamais dans le code ; sans clé, formulaire classique). Consignes et catalogue de l'assistant :
+  API Claude avec la variable `ANTHROPIC_API_KEY`, jamais dans le code ; sans clé, formulaire classique) ; le forum et les comptes
+  des membres (voir « Communauté » ci-dessous). Consignes et catalogue de l'assistant :
   `src/lib/assistant/prompt.ts`, construits depuis `src/data/services.ts` et `src/data/portfolio.ts` (rien d'inventé).
 
 ## Espace /admin (tableau de bord privé)
-- Partie dynamique du site : connexion, réglages, chiffres du mois, QR codes à partager, rendez-vous (`src/app/admin`,
-  `src/lib/admin`, `src/lib/booking`). Jamais indexée (noindex, robots.txt), jamais liée depuis le site public, absente du sitemap.
+- Partie dynamique du site : connexion, réglages, chiffres du mois, QR codes à partager, rendez-vous, modération de la
+  communauté (`src/app/admin`, `src/lib/admin`, `src/lib/booking`). Jamais indexée (noindex, robots.txt), jamais liée
+  depuis le site public, absente du sitemap.
 - Demandes : tout message du site est rangé dans `/admin/demandes/` (`src/lib/requests.ts`, types dans `src/data/requests.ts`)
   et envoyé sur contact@babtech.fr. E-mails envoyés depuis contact@babtech.fr par le SMTP d'Hostinger (`src/lib/mail.ts`,
   modèles `src/lib/emails.ts`, variable `SMTP_PASSWORD`) ; sans mot de passe, rien ne part mais rien ne se perd.
@@ -46,6 +48,24 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
 - Les coches, les chiffres, les scans, les rendez-vous, les demandes et le mot de passe changé (haché) de l'utilisateur sont dans un fichier JSON sur le serveur,
   jamais dans le dépôt. Ce que Claude tient à jour est dans `src/data/admin.ts` : cocher ses propres tâches, ajouter
   les décisions prises, mettre à jour la santé du site et `adminUpdatedAt` à chaque étape.
+
+## Communauté (comptes des membres et forum)
+- Pages rendues à la demande (`force-dynamic`) : `/communaute/forum/…` (lecture libre, écriture réservée aux membres) et
+  les pages de compte (inscription, confirmer, connexion, mot de passe, compte). Server Actions `src/app/communaute/compte-actions.ts`
+  et `src/app/communaute/forum/actions.ts`, logique dans `src/lib/community/`, thèmes et limites dans `src/data/forum.ts`.
+- Base MySQL d'Hostinger (`src/lib/db.ts`, variables `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` dans hPanel,
+  jamais dans le code). Tables `bt_…` créées par `CREATE TABLE IF NOT EXISTS`, sans migration automatique : toute
+  évolution du schéma doit marcher sur une base déjà remplie, sans perte de données.
+- Sans base (ou base injoignable), le site marche quand même : forum « Le forum ouvre très bientôt » ; sans base ou sans
+  `SMTP_PASSWORD`, l'inscription redevient la liste d'attente (onglet Demandes).
+- Publication directe, modération après coup dans `/admin/communaute/` (notification + e-mail pour chaque sujet et
+  signalement). Nom affiché « Prénom + initiale » (`publicName()`), e-mail jamais affiché. Messages rendus en texte brut
+  (`PostBody`), liens en `rel="ugc nofollow"`, 2 liens au plus pendant les 7 premiers jours d'un compte.
+- Mots de passe hachés (`src/lib/password.ts`), liens et sessions stockés sous forme d'empreinte, réponses identiques que
+  l'adresse existe ou non. Après une écriture qui reste sur la même page : `refresh()` avant `redirect()`, sinon l'ancienne
+  version peut rester affichée.
+- Pages de compte en `noindex` (liste `MEMBER_PAGES` de `check-build.mjs`) ; forum, thèmes et sujets indexables (JSON-LD
+  `CollectionPage`, `DiscussionForumPosting`), accueil du forum, thèmes et charte dans le sitemap.
 
 ## Contenus
 - Français, **tutoiement**, ton direct et concret, sans jargon (expliquer chaque terme technique en une phrase).

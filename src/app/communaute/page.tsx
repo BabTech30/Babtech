@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { FaqList } from '@/components/FaqList'
-import { CommunityForm } from '@/components/forms/CommunityForm'
 import { Icon, type IconName } from '@/components/Icon'
 import { JsonLd } from '@/components/JsonLd'
 import { PageHero } from '@/components/PageHero'
@@ -13,7 +12,7 @@ import { fr } from '@/lib/typography'
 
 const title = 'Communauté IA et digital pour entrepreneurs à Montpellier'
 const description =
-  "Groupes de travail, ateliers pratiques et rencontres pour apprendre le digital et l'IA entre dirigeants de TPE, artisans et commerçants de Montpellier et de l'Hérault."
+  "Forum d'entraide, ateliers et rencontres pour apprendre le digital et l'IA entre dirigeants de TPE, artisans et commerçants de l'Hérault et du Gard."
 
 export const metadata: Metadata = pageMetadata({ title, description, path: '/communaute', og: 'communaute' })
 
@@ -46,16 +45,19 @@ export default function CommunautePage() {
       />
 
       <PageHero
-        eyebrow="Communauté · Montpellier & Hérault"
+        eyebrow="Communauté · Hérault & Gard"
         title="La communauté BabTech : apprendre le digital et l'IA entre entrepreneurs"
         lead={community.intro}
         tone="bronze"
         crumbs={[{ name: 'Communauté', path: '/communaute' }]}
       >
-        <a href="#inscription" className="btn-bronze">
-          Rejoindre les membres fondateurs
+        <Link href="/communaute/inscription/" className="btn-bronze">
+          Créer mon compte gratuit
           <Icon name="arrow-right" className="h-[18px] w-[18px]" />
-        </a>
+        </Link>
+        <Link href="/communaute/forum/" className="btn-secondary">
+          Voir le forum
+        </Link>
         <span className="inline-flex items-center gap-2 rounded-xl border border-bord px-4 py-3 text-sm text-txt-secondary">
           <span className="h-2 w-2 animate-pulse rounded-full bg-bronze" />
           {community.status}
@@ -119,11 +121,15 @@ export default function CommunautePage() {
               ))}
             </ul>
             <p className="mt-7 text-[15px] leading-relaxed text-txt-muted">
-              En attendant le lancement, ces sujets sont déjà traités sur{' '}
+              Ces sujets se discutent sur{' '}
+              <Link href="/communaute/forum/" className="text-emerald-b underline decoration-emerald-b/50 underline-offset-2 hover:decoration-emerald-b">
+                le forum
+              </Link>{' '}
+              et sont aussi traités sur{' '}
               <Link href="/blog" className="text-emerald-b underline decoration-emerald-b/50 underline-offset-2 hover:decoration-emerald-b">
                 le blog
-              </Link>{' '}
-              : {categories.map((c) => c.name).join(', ')}.
+              </Link>
+              &nbsp;: {categories.map((c) => c.name).join(', ')}.
             </p>
           </div>
           <div>
@@ -172,29 +178,39 @@ export default function CommunautePage() {
       </section>
 
       <section id="inscription" className="border-t border-bord bg-nuit-deep py-16 md:py-20" aria-labelledby="inscription-titre">
-        <div className="container-b grid gap-12 lg:grid-cols-[1fr_1.4fr]">
+        <div className="container-b grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-center">
           <div>
-            <p className="section-tag text-bronze">Membres fondateurs</p>
+            <p className="section-tag text-bronze">Rejoindre</p>
             <h2 id="inscription-titre" className="section-title mb-5">
-              Rejoins la liste et construis le programme avec nous
+              Un compte gratuit, et tu participes
             </h2>
-            <p className="mb-6 text-[17px] leading-relaxed text-txt-secondary">
-              Tes réponses décident des premiers ateliers&nbsp;: thèmes, formats, horaires. Les membres fondateurs sont informés en priorité des dates
-              et des lieux.
+            <p className="mb-7 text-[17px] leading-relaxed text-txt-secondary">
+              Pose tes questions sur le forum, réponds aux autres et partage ce qui marche. Tes sujets orientent les prochains ateliers et
+              rencontres.
             </p>
-            <ul className="space-y-3 text-[15px] text-txt-secondary">
-              {['Gratuit et sans engagement', 'Aucune revente de tes données', 'Désinscription en un email'].map((item) => (
-                <li key={item} className="flex items-center gap-3">
-                  <Icon name="shield" className="h-5 w-5 text-bronze" />
-                  {item}
-                </li>
-              ))}
-            </ul>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/communaute/inscription/" className="btn-bronze">
+                Créer mon compte
+                <Icon name="arrow-right" className="h-[18px] w-[18px]" />
+              </Link>
+              <Link href="/communaute/connexion/" className="btn-secondary">
+                J&apos;ai déjà un compte
+              </Link>
+            </div>
           </div>
-          <div className="card relative overflow-hidden p-7 md:p-9">
-            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-bronze to-emerald-b" />
-            <CommunityForm />
-          </div>
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {[
+              { icon: 'message' as const, text: 'Forum en lecture libre, écriture avec un compte confirmé par e-mail' },
+              { icon: 'shield' as const, text: 'Ton e-mail jamais affiché : prénom et initiale du nom seulement' },
+              { icon: 'users' as const, text: 'Des entrepreneurs de l’Hérault et du Gard, tous niveaux' },
+              { icon: 'check' as const, text: 'Gratuit, sans engagement, compte supprimable à tout moment' },
+            ].map((item) => (
+              <li key={item.text} className="card flex items-start gap-3 p-5 text-[15px] leading-relaxed text-txt-secondary">
+                <Icon name={item.icon} className="mt-0.5 h-5 w-5 shrink-0 text-bronze" />
+                {fr(item.text)}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

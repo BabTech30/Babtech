@@ -1,8 +1,8 @@
 /**
  * En ligne : Hostinger (application Node.js) construit le site avec `npm run build` et le sert en mode serveur
  * (Hostinger ajoute lui-même `output: 'standalone'`). La construction utilise webpack (`next build --webpack`) :
- * Turbopack demande environ 1,5 Go de mémoire, plus que ce que le serveur de construction de Hostinger garantit. Les pages publiques sont toutes prérendues au build ;
- * seul l'espace privé /admin est rendu à la demande.
+ * Turbopack demande environ 1,5 Go de mémoire, plus que ce que le serveur de construction de Hostinger garantit. Les pages publiques sont prérendues au build ;
+ * seuls l'espace privé /admin, le forum et les pages de compte de la communauté sont rendus à la demande.
  */
 const securityHeaders = [
   { key: 'X-Frame-Options', value: 'DENY' },

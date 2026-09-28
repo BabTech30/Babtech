@@ -6,27 +6,73 @@ l'Hérault se rencontrent, apprennent ensemble et se mettent en relation.
 C'est aussi un levier stratégique pour BabTech : notoriété locale, liens et mentions (SEO), contenus réels et expérience
 démontrée (E-E-A-T, GEO), et une source naturelle de clients.
 
-## Ce qui existe déjà dans le site
+## Ce qui existe dans le site
 
-- Page [`/communaute`](../src/app/communaute/page.tsx) : concept, formats, thèmes, feuille de route, FAQ.
-- **Liste des membres fondateurs** : formulaire (prénom, email, activité, ville, thèmes, format, niveau, consentement RGPD)
-  rangé dans l'onglet Demandes du tableau de bord (source « Communauté ») et envoyé sur contact@babtech.fr ; la personne
-  reçoit un e-mail de bienvenue.
+- Page [`/communaute`](../src/app/communaute/page.tsx) : concept, formats, thèmes, feuille de route, FAQ, invitation à
+  créer un compte.
+- **Comptes des membres**, gratuits : inscription (prénom, nom, e-mail, mot de passe, activité et ville facultatives,
+  acceptation de la charte), adresse confirmée par un lien envoyé depuis contact@babtech.fr (valable 48 h), mot de passe
+  oublié (lien valable 1 h), page « Mon compte » (profil, notifications, mot de passe) et suppression du compte en
+  libre-service : ses messages restent signés « Ancien membre », ou sont effacés si le membre le choisit.
+- **Forum** [`/communaute/forum`](../src/app/communaute/forum/page.tsx) : lecture libre pour tout le monde, écriture
+  réservée aux membres, 6 thèmes. Publication directe ; le nom affiché est « Prénom + initiale » avec l'activité et la
+  ville (« Marie D. · Fleuriste à Nîmes »), jamais l'e-mail. Le membre est prévenu par e-mail quand quelqu'un répond à
+  ses sujets (il peut le couper) et chacun peut signaler un message.
+- **Charte** [`/communaute/charte`](../src/app/communaute/charte/page.tsx) : bienveillance, pas de démarchage, modération.
+- **Modération** : tableau de bord → **Communauté** (chiffres, signalements, derniers messages à masquer, réafficher ou
+  supprimer, membres à rechercher, suspendre, rétablir ou supprimer). Notification et e-mail pour chaque nouveau sujet
+  et chaque signalement, notification pour chaque nouveau membre.
+- **Sans base de données** (variables `DB_…` absentes ou base injoignable), le forum affiche « Le forum ouvre très
+  bientôt » ; sans base ou sans e-mails (`SMTP_PASSWORD`), l'inscription redevient une liste d'attente, rangée dans
+  l'onglet Demandes.
 - **Le blog comme porte d'entrée** : ses 4 catégories (IA & automatisation, Visibilité & référencement, Outils métier,
-  Entreprendre) correspondent aux thèmes des futurs groupes, et chaque article invite à rejoindre la communauté.
-- Contenus centralisés dans [`src/data/community.ts`](../src/data/community.ts).
+  Entreprendre) correspondent aux thèmes du forum et des futurs groupes, et chaque article invite à rejoindre la communauté.
+- Contenus : [`src/data/community.ts`](../src/data/community.ts) (page Communauté) et
+  [`src/data/forum.ts`](../src/data/forum.ts) (thèmes, longueurs, limites).
+
+## Architecture en place (comptes et forum)
+
+| Brique | Choix | Pourquoi |
+|---|---|---|
+| Application | Le site Next.js lui-même : pages du forum et des comptes rendues à la demande, le reste du site reste prérendu | Un seul déploiement, même design, rien à héberger en plus |
+| Base de données | MySQL de l'hébergement Hostinger (hPanel → Bases de données), variables `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | Incluse dans l'offre, sauvegardée par Hostinger |
+| E-mails | Serveur d'envoi d'Hostinger, depuis contact@babtech.fr (`SMTP_PASSWORD`) | Déjà utilisé pour les demandes et les rendez-vous |
+| Code | [`src/lib/db.ts`](../src/lib/db.ts), [`src/lib/community/`](../src/lib/community/), Server Actions [`compte-actions.ts`](../src/app/communaute/compte-actions.ts) et [`forum/actions.ts`](../src/app/communaute/forum/actions.ts), modération [`admin/community-actions.ts`](../src/app/admin/community-actions.ts) | |
+
+### Tables (créées automatiquement au premier accès, préfixe `bt_`)
+
+| Table | Contenu |
+|---|---|
+| `bt_members` | prénom, nom, e-mail, mot de passe haché, activité, ville, statut (en attente, actif, suspendu), notifications, dates |
+| `bt_tokens` | liens de confirmation et de nouveau mot de passe, sessions : seule leur empreinte est enregistrée |
+| `bt_topics`, `bt_replies` | sujets et réponses, en texte brut, visibles ou masqués |
+| `bt_reports` | signalements : message visé, motif, auteur du signalement, date de traitement |
+
+### Sécurité et anti-abus
+- Mots de passe hachés (scrypt) ; liens de confirmation et de nouveau mot de passe à usage unique ; session de 30 jours
+  dans un cookie inaccessible aux scripts de la page.
+- Même réponse que l'adresse soit déjà inscrite ou non (impossible de deviner qui est membre) ; champ piège contre les
+  robots ; limites par adresse IP et par membre (inscriptions, connexions, sujets, réponses, signalements).
+- Pendant ses 7 premiers jours, un membre met 2 liens au plus par message ; les liens des messages sont marqués
+  `rel="ugc nofollow"` (Google sait qu'ils viennent des membres).
+- Messages affichés en texte brut : aucun code HTML n'est interprété.
+- Comptes jamais confirmés effacés au bout de 7 jours.
+
+### Référencement
+- Forum, thèmes et sujets indexables, avec données structurées (`DiscussionForumPosting`, `CollectionPage`) et des
+  adresses stables `/communaute/forum/sujet/<numéro>-<titre>/` (l'ancienne adresse redirige si le titre change).
+- Pages de compte (inscription, connexion, mon compte…) en `noindex`, hors du sitemap.
 
 ## Les étapes
 
-### Étape 1 — Membres fondateurs (maintenant)
-- Faire connaître la page : LinkedIn, clients, réseaux d'entrepreneurs, fiche Google Business Profile.
-- Suivre les inscriptions dans l'onglet Demandes (l'e-mail de bienvenue part tout seul).
-- Repérer les 2 ou 3 thèmes et le format les plus demandés.
+### Étape 1 — Premiers membres et forum (maintenant)
+- Faire connaître le forum : LinkedIn, clients, réseaux d'entrepreneurs, fiche Google Business Profile.
+- Ouvrir soi-même les premiers sujets (les questions que posent les clients) pour qu'un nouveau venu trouve déjà des échanges.
+- Suivre les inscriptions et les messages dans l'onglet Communauté, repérer les thèmes les plus actifs.
 
 ### Étape 2 — Premiers ateliers et rencontres (sans développement)
 - Un atelier pratique par mois (présentiel à Montpellier + visio), sur le thème le plus demandé.
-- Billetterie et inscriptions avec un outil existant (Luma, Meetup, Eventbrite…) ; échanges entre membres sur un espace
-  de discussion simple (groupe WhatsApp, Discord ou Circle).
+- Billetterie et inscriptions avec un outil existant (Luma, Meetup, Eventbrite…) ; annonces et échanges sur le forum.
 - **Sur le site** : ajouter une section « Événements » (fichiers Markdown, comme le blog) avec des données structurées
   `Event` : chaque événement local devient une page indexable, excellente pour le référencement à Montpellier.
 - Publier un compte rendu de chaque atelier sur le blog (preuve d'expérience, contenu unique).
@@ -34,52 +80,22 @@ démontrée (E-E-A-T, GEO), et une source naturelle de clients.
 ### Étape 3 — Cercles de travail réguliers
 - Groupes de 6 à 10 personnes par thème et par niveau, rythme mensuel, objectifs concrets.
 - Définir le modèle économique (gratuit, adhésion, ateliers payants, lien avec l'offre de formation).
-- Rédiger une charte (bienveillance, confidentialité, pas de démarchage agressif).
 
-### Étape 4 — Plateforme membres
-À lancer quand la communauté est active (quelques dizaines de membres réguliers) : on construit alors l'outil à partir
-d'usages réels, pas d'hypothèses.
-
-## Architecture technique proposée pour l'étape 4
-
-### Principe
-Garder le site vitrine **statique** (rapide, sûr, excellent pour le SEO) et créer la plateforme dans une **application
-séparée**, par exemple `app.babtech.fr`, qui pourra aussi accueillir l'espace client (le bouton « Espace client » du site
-s'affiche dès que `NEXT_PUBLIC_CLIENT_SPACE_URL` est renseignée).
-
-| Brique | Choix proposé | Pourquoi |
-|---|---|---|
-| Application | Next.js (même stack que le site) en rendu serveur | Réutilise le design, les composants et les compétences |
-| Base de données + authentification | Supabase (PostgreSQL, connexion par lien magique, règles d'accès RLS, stockage) | Offre gratuite pour démarrer, hébergement en Europe possible, standard ouvert |
-| Emails | Brevo ou Resend | Notifications, rappels d'événements, lettre d'information |
-| Hébergement | Offre Node.js ou VPS d'Hostinger | Contrairement au site vitrine statique, l'application a besoin d'un serveur Node.js |
-
-### Modèle de données (première version)
+### Étape 4 — Projets et groupes (prochaine étape technique)
+À construire dans le même site et la même base, à partir des usages réels du forum. Pistes à valider :
 
 | Table | Contenu |
 |---|---|
-| `profiles` | nom, activité, ville, bio, compétences, centres d'intérêt, niveau, visibilité du profil |
-| `groups` | nom, thème, niveau, format (présentiel / visio), ville, description, capacité, statut |
-| `group_members` | groupe, membre, rôle (animateur, membre) |
-| `events` | titre, date, lieu ou lien visio, capacité, groupe éventuel |
-| `event_registrations` | événement, membre, statut (inscrit, présent, liste d'attente) |
-| `posts` / `comments` | discussions de groupe |
-| `connections` | demandes de mise en relation (demandeur, destinataire, message, statut) |
+| `bt_groups` | nom, thème, niveau, format (présentiel / visio), ville, description, capacité, statut |
+| `bt_group_members` | groupe, membre, rôle (animateur, membre) |
+| `bt_events` | titre, date, lieu ou lien visio, capacité, groupe éventuel |
+| `bt_event_registrations` | événement, membre, statut (inscrit, présent, liste d'attente) |
+| `bt_connections` | demandes de mise en relation (demandeur, destinataire, message, statut) |
 
-### Fonctionnalités du MVP
-1. Connexion par email (lien magique), création du profil.
-2. Annuaire des membres (uniquement ceux qui l'acceptent) avec filtres : métier, ville, compétences.
-3. Groupes : rejoindre, discuter, retrouver les ressources.
-4. Événements : s'inscrire, recevoir un rappel, exporter dans son agenda.
-5. Mise en relation : envoyer une demande de contact motivée, acceptée ou non par le destinataire.
-6. Administration : modération, création d'événements, export des données.
+Fonctionnalités possibles : rejoindre un groupe et y échanger, s'inscrire à un événement et recevoir un rappel,
+annuaire des membres qui l'acceptent (non indexé), mise en relation acceptée ou non par le destinataire.
 
 ### RGPD et confiance
-- Profil privé par défaut, visibilité choisie par le membre ; pages de profil non indexées par les moteurs.
-- Export et suppression du compte en libre-service ; consentements tracés.
-- Conditions d'utilisation et charte de la communauté ; politique de confidentialité mise à jour.
-
-### SEO de la plateforme
-- Pages publiques : événements (données structurées `Event`), présentation des groupes, comptes rendus.
-- Pages privées (profils, discussions) : `noindex`, derrière connexion.
-- Le site vitrine reste la vitrine : il liste les prochains événements et renvoie vers la plateforme.
+- En place : charte, politique de confidentialité à jour, suppression du compte en libre-service, e-mail jamais affiché.
+- À prévoir avec l'étape 4 : export de ses données par le membre, profil public choisi par le membre, pages de profil
+  non indexées.

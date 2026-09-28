@@ -128,8 +128,8 @@ export const adminTasks: AdminTask[] = [
     id: 'forms-test',
     phase: 'launch',
     owner: 'toi',
-    title: 'Envoyer un message test avec les deux formulaires',
-    detail: "Contact et communauté : vérifie qu'ils arrivent dans l'onglet Demandes et sur contact@babtech.fr, et que tu reçois bien l'accusé de réception.",
+    title: 'Envoyer un message test avec le formulaire de contact',
+    detail: "Vérifie qu'il arrive dans l'onglet Demandes et sur contact@babtech.fr, et que tu reçois bien l'accusé de réception.",
     link: 'https://babtech.fr/contact/',
     linkLabel: 'Contact',
   },
@@ -318,11 +318,40 @@ export const adminTasks: AdminTask[] = [
     linkLabel: 'Mentions légales',
   },
   {
+    id: 'community-forum',
+    phase: 'community',
+    owner: 'claude',
+    done: true,
+    title: 'Créer les comptes des membres et le forum',
+    detail: "Inscription confirmée par e-mail, forum lisible par tous, 6 thèmes, signalements ; modération dans l'onglet Communauté.",
+    link: 'https://babtech.fr/communaute/forum/',
+    linkLabel: 'Le forum',
+  },
+  {
+    id: 'community-db',
+    phase: 'community',
+    owner: 'toi',
+    title: 'Brancher la base de données du forum',
+    detail:
+      "Dans l'application Node.js de hPanel, ajoute les variables DB_HOST (localhost), DB_PORT (3306), DB_NAME, DB_USER et DB_PASSWORD de ta base (hPanel → Bases de données), redéploie, puis Réglages → Communauté → « Tester la connexion ». Les inscriptions ont aussi besoin des e-mails du site (SMTP_PASSWORD).",
+    link: '/admin/reglages/',
+    linkLabel: 'Réglages',
+  },
+  {
+    id: 'community-first-topics',
+    phase: 'community',
+    owner: 'toi',
+    title: 'Créer ton compte et ouvrir les premiers sujets',
+    detail: 'Deux ou trois questions que tes clients te posent souvent : un nouveau venu trouve déjà des échanges.',
+    link: 'https://babtech.fr/communaute/inscription/',
+    linkLabel: 'Créer mon compte',
+  },
+  {
     id: 'community-promo',
     phase: 'community',
     owner: 'toi',
-    title: 'Faire connaître la page Communauté',
-    detail: "LinkedIn, clients, réseaux d'entrepreneurs.",
+    title: 'Faire connaître la communauté et son forum',
+    detail: "LinkedIn, clients, réseaux d'entrepreneurs, fiche Google.",
     link: 'https://babtech.fr/communaute/',
     linkLabel: 'Communauté',
   },
@@ -331,7 +360,14 @@ export const adminTasks: AdminTask[] = [
     phase: 'community',
     owner: 'toi',
     title: 'Organiser un premier atelier',
-    detail: 'Sur le thème le plus demandé par les inscrits.',
+    detail: 'Sur le thème le plus demandé par les membres.',
+  },
+  {
+    id: 'community-groups',
+    phase: 'community',
+    owner: 'claude',
+    title: 'Projets et groupes (étape 4)',
+    detail: "Groupes par thème ou par projet, événements, mises en relation entre membres : Claude s'y met quand tu donnes ton accord.",
   },
 ]
 
@@ -396,6 +432,14 @@ export const adminDecisions = [
     date: '2026-09-28',
     text: "Échecs de construction chez Hostinger (manque de mémoire) : le site se construit avec webpack, moins gourmand. Ne jamais accepter la « correction » automatique de Hostinger, qui ramène une ancienne version de Next.js.",
   },
+  {
+    date: '2026-09-28',
+    text: "Forum : publication directe, sans validation préalable. Tu es prévenu de chaque nouveau sujet et de chaque signalement, et tu modères après coup depuis l'onglet Communauté.",
+  },
+  {
+    date: '2026-09-28',
+    text: "Sur le forum, un membre apparaît sous son prénom et l'initiale de son nom (« Marie D. · Fleuriste à Nîmes ») ; son e-mail n'est jamais affiché.",
+  },
 ]
 
 /** Dernière mesure Lighthouse (mobile), mise à jour par Claude. */
@@ -409,7 +453,7 @@ export const adminHealth = {
     { label: 'SEO', value: 100 },
   ],
   facts: [
-    { label: 'Pages', value: '54' },
+    { label: 'Pages', value: '62' },
     { label: 'Articles de blog', value: '7' },
     { label: 'Villes couvertes', value: '25' },
     { label: 'Affichage principal', value: '2,4 s' },

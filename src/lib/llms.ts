@@ -5,6 +5,7 @@
 import { categories } from '@/data/blog'
 import { community } from '@/data/community'
 import { faqGroups } from '@/data/faq'
+import { forumCategories } from '@/data/forum'
 import { caseStudies } from '@/data/portfolio'
 import { process, services } from '@/data/services'
 import { departments, inCity, zonesIn } from '@/data/zones'
@@ -60,6 +61,11 @@ export function buildLlmsTxt(): string {
     link('Réalisations', '/portfolio', caseStudies.map((c) => `${c.title} (${c.sector})`).join(', ')),
     link('FAQ', '/faq', 'Tarifs, délais, méthode, référencement, IA.'),
     link('Communauté', '/communaute', community.tagline),
+    link(
+      'Forum de la communauté',
+      '/communaute/forum',
+      `Questions et retours d'expérience entre entrepreneurs, en lecture libre : ${forumCategories.map((c) => c.name).join(', ')}.`,
+    ),
     link('Contact', '/contact', 'Formulaire, email et prise de rendez-vous.'),
     '',
     '## Optional',
@@ -153,6 +159,9 @@ export async function buildLlmsFullTxt(): Promise<string> {
     '',
     'Thèmes :',
     ...community.themes.map((t) => `- ${t}`),
+    '',
+    `Forum (${absoluteUrl('/communaute/forum')}) : lecture libre, écriture avec un compte gratuit confirmé par e-mail. Thèmes du forum :`,
+    ...forumCategories.map((c) => `- ${c.name} : ${c.description}`),
   )
 
   out.push('', '## Articles du blog', '', `Thématiques : ${categories.map((c) => c.name).join(', ')}.`)

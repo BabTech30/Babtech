@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { DatabaseTest } from '@/components/admin/DatabaseTest'
 import { InstallApp } from '@/components/admin/InstallApp'
 import { MailTest } from '@/components/admin/MailTest'
 import { PasswordForm } from '@/components/admin/PasswordForm'
@@ -6,6 +7,7 @@ import { adminUsername, MIN_PASSWORD_LENGTH, passwordChanged, requireAdmin } fro
 import { currentMonth, formatDay } from '@/lib/admin/format'
 import { type AssistantOutcome, readStore, storageInfo } from '@/lib/admin/store'
 import { frTime, utcToParis } from '@/lib/booking/time'
+import { dbConfigured } from '@/lib/db'
 import { MAIL_FROM, mailConfigured, mailProblem } from '@/lib/mail'
 import { fr } from '@/lib/typography'
 import { logout } from '../../actions'
@@ -117,6 +119,30 @@ export default async function SettingsPage() {
           </p>
         )}
         <MailTest />
+      </section>
+
+      <section className={panel} aria-labelledby="community-title">
+        <h2 id="community-title" className={h2}>
+          Communauté (base de données)
+        </h2>
+        {dbConfigured() ? (
+          <p className="mt-2 text-sm text-txt-secondary">
+            Les comptes des membres et le forum sont enregistrés dans la base MySQL d&apos;Hostinger{' '}
+            <code>{process.env.DB_NAME}</code>. Les tables se créent toutes seules à la première visite du forum.
+          </p>
+        ) : (
+          <p className="mt-2 text-sm text-bronze">
+            {fr(
+              "Pas encore branchée : le forum affiche « Le forum ouvre très bientôt ». Dans l'application Node.js de hPanel, ajoute les variables DB_HOST (localhost), DB_PORT (3306), DB_NAME, DB_USER et DB_PASSWORD de la base que tu as créée (hPanel → Bases de données), puis redéploie.",
+            )}
+          </p>
+        )}
+        {!mailOn && (
+          <p className="mt-2 text-sm text-bronze">
+            {fr("Les inscriptions ont aussi besoin des e-mails (lien de confirmation) : active-les d'abord, voir ci-dessus.")}
+          </p>
+        )}
+        <DatabaseTest />
       </section>
 
       <section className={panel} aria-labelledby="assistant-title">

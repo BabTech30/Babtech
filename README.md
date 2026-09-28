@@ -9,6 +9,7 @@ Gemini, Claude, Copilot…), grâce au GEO (*Generative Engine Optimization*).
 - Stack : **Next.js 16** (App Router, pages prérendues servies par Node.js), **React 19**, **Tailwind CSS 3**, **TypeScript**
 - Hébergement : **Hostinger**, application Node.js qui construit la branche `main` (déploiement depuis hPanel)
 - Formulaires et rendez-vous : **intégrés** (demandes et rendez-vous dans `/admin`, e-mails envoyés depuis contact@babtech.fr) · Assistant IA **Claude** sur la page Contact, facultatif et en sommeil sans clé · Mesure d'audience optionnelle et sans cookie : **Plausible** ou **Umami**
+- Communauté : **comptes des membres et forum** (base MySQL d'Hostinger, modération dans `/admin`)
 
 ## Démarrer
 
@@ -38,6 +39,7 @@ npm run dev        # http://localhost:3000
 | Les réalisations (textes, chiffres, captures, vidéo) | `src/data/portfolio.ts` et `public/realisations/` |
 | La page de présentation et la carte de visite | `src/app/bastien/page.tsx`, `src/app/carte/page.tsx`, `src/lib/vcard.ts` |
 | La communauté (formats, thèmes, étapes, FAQ) | `src/data/community.ts` |
+| Le forum (thèmes, longueurs des messages, limites des nouveaux comptes) | `src/data/forum.ts` |
 | Les catégories du blog | `src/data/blog.ts` |
 | Un article | `content/blog/<slug>.md` |
 | Le tableau de bord `/admin` (étapes, tâches, décisions, santé du site) | `src/data/admin.ts` |
@@ -96,8 +98,8 @@ personnelle, puis redirige vers la page. Pour en ajouter un : `src/data/qr.ts`.
 
 ## Demandes et e-mails
 
-Les messages du formulaire de contact et les inscriptions à la communauté arrivent dans l'onglet **Demandes** du tableau
-de bord (statut, note privée, réponse par e-mail) et sur contact@babtech.fr, avec une notification sur tes appareils. La
+Les messages du formulaire de contact (et les inscriptions à la liste d'attente de la communauté, tant que le forum n'est
+pas branché) arrivent dans l'onglet **Demandes** du tableau de bord (statut, note privée, réponse par e-mail) et sur contact@babtech.fr, avec une notification sur tes appareils. La
 personne reçoit un accusé de réception. Tous les e-mails partent de contact@babtech.fr, par le serveur d'envoi
 d'Hostinger (`src/lib/mail.ts`, modèles dans `src/lib/emails.ts`) : il suffit de la variable `SMTP_PASSWORD` dans hPanel
 (mot de passe de la boîte). **Réglages → E-mails** indique si l'envoi marche et permet d'envoyer un e-mail de test.
@@ -113,6 +115,20 @@ la synthèse, qui arrive dans l'onglet **Demandes**. Consignes et catalogue : `s
 Il ne s'active qu'avec la variable `ANTHROPIC_API_KEY` dans hPanel ; sans elle, ou en cas de souci, la page affiche le
 formulaire classique. **Réglages** indique s'il est actif et ce qu'il a coûté dans le mois.
 
+## Comptes des membres et forum
+
+`https://babtech.fr/communaute/forum/` : tout le monde peut lire, les membres écrivent. L'inscription est gratuite
+(`/communaute/inscription/`) et l'adresse est confirmée par un lien envoyé depuis contact@babtech.fr. Les messages sont
+publiés tout de suite, sous « Prénom + initiale » (« Marie D. · Fleuriste à Nîmes ») ; tu reçois une notification et un
+e-mail pour chaque nouveau sujet et chaque signalement, et tu modères dans le tableau de bord, onglet **Communauté**
+(masquer, supprimer, suspendre un membre…). Les membres gèrent leur profil, leur mot de passe et la suppression de leur
+compte dans « Mon compte ».
+
+Les comptes et les messages sont dans la base MySQL créée dans hPanel (variables `DB_HOST`, `DB_PORT`, `DB_NAME`,
+`DB_USER`, `DB_PASSWORD`) ; les tables (préfixe `bt_`) se créent toutes seules. **Réglages → Communauté** teste la
+connexion. Sans base, le forum affiche « Le forum ouvre très bientôt » et l'inscription redevient une liste d'attente.
+Code : `src/lib/db.ts`, `src/lib/community/`, `src/app/communaute/` ; détails dans [`docs/COMMUNAUTE.md`](docs/COMMUNAUTE.md).
+
 ## Prise de rendez-vous
 
 `https://babtech.fr/rendez-vous/` : le visiteur choisit téléphone ou visio, un jour, une heure, puis laisse ses coordonnées.
@@ -125,7 +141,7 @@ tableau de bord et effacés 12 mois après leur date.
 ## Tableau de bord privé
 
 `https://babtech.fr/admin/` : avancement du projet, checklist, prochains rendez-vous, santé du site, chiffres du mois (demandes de devis,
-contrats, Google…), scans des QR codes, zones visées et décisions. Connexion par identifiant et mot de passe (variables `ADMIN_USERNAME` et
+contrats, Google…), scans des QR codes, zones visées et décisions ; modération du forum dans l'onglet **Communauté**. Connexion par identifiant et mot de passe (variables `ADMIN_USERNAME` et
 `ADMIN_PASSWORD` dans hPanel), mot de passe modifiable dans **Réglages**.
 
 Il s'installe comme une application, sur ordinateur comme sur téléphone : bouton **Installer l'app** en haut du tableau
@@ -135,7 +151,7 @@ de bord (Chrome, Edge, Android), ou **Réglages → Application** pour la marche
 
 - [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md) — mise en ligne sur Hostinger (Node.js) et check-list après la mise en ligne
 - [`docs/STRATEGIE-SEO-GEO.md`](docs/STRATEGIE-SEO-GEO.md) — positionnement, mots-clés, plan local, GEO, calendrier éditorial
-- [`docs/COMMUNAUTE.md`](docs/COMMUNAUTE.md) — feuille de route et architecture de la future plateforme communautaire
+- [`docs/COMMUNAUTE.md`](docs/COMMUNAUTE.md) — la communauté : comptes et forum en place, feuille de route, étape suivante (projets et groupes)
 
 ## Structure
 
@@ -149,5 +165,5 @@ src/components/        Composants d'interface (Header, Footer, formulaires, FAQ,
 src/data/              Contenus structurés (services, villes, FAQ, communauté…)
 src/assets/            Photo intégrée à la fiche contact (.vcf) de la carte de visite
 src/fonts/             Polices auto-hébergées (Outfit, DM Sans — licence OFL)
-src/lib/               Configuration du site, SEO, Schema.org, blog, llms.txt, typographie
+src/lib/               Configuration du site, SEO, Schema.org, blog, llms.txt, typographie ; db.ts et community/ (comptes, forum)
 ```

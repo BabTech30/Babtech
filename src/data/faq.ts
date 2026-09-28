@@ -149,8 +149,8 @@ export const faqGroups: FaqGroup[] = [
     items: [
       {
         q: "Qu'est-ce que la communauté BabTech ?",
-        a: "Un réseau d'entrepreneurs de Montpellier et de l'Hérault qui apprennent ensemble le digital et l'IA : groupes de travail, ateliers pratiques, rencontres et mises en relation. La communauté est en construction et les inscriptions à la liste des membres fondateurs sont ouvertes.",
-        link: { href: '/communaute', label: 'Rejoindre la liste' },
+        a: "Un réseau d'entrepreneurs de l'Hérault et du Gard qui apprennent ensemble le digital et l'IA : forum d'entraide, groupes de travail, ateliers pratiques, rencontres et mises en relation. Le forum est ouvert : lecture libre, et compte gratuit pour écrire.",
+        link: { href: '/communaute/forum', label: 'Voir le forum' },
       },
       {
         q: 'Qui peut rejoindre les groupes de travail ?',

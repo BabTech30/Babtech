@@ -255,6 +255,121 @@ export function bookingCancelled(a: Appointment): Mail {
   }
 }
 
+/* ---------- Communauté : comptes et forum ---------- */
+
+type Person = { email: string; firstName: string }
+
+/** Message simple : bonjour, paragraphes, citation éventuelle, bouton, signature (versions HTML et texte). */
+function simpleMail(
+  person: Person,
+  subject: string,
+  { lines, excerpt, action, after = [] }: { lines: string[]; excerpt?: string; action?: { href: string; label: string }; after?: string[] },
+): Mail {
+  const hello = `Bonjour ${person.firstName},`
+  const body = lines.map(fr)
+  const end = after.map(fr)
+  return {
+    to: person.email,
+    subject: fr(subject),
+    text: [
+      hello,
+      '',
+      ...body.flatMap((l) => [l, '']),
+      ...(excerpt ? [excerpt, ''] : []),
+      ...(action ? [`${action.label} : ${action.href}`, ''] : []),
+      ...end.flatMap((l) => [l, '']),
+      'À bientôt,',
+      signature,
+    ].join('\n'),
+    html: layout(
+      subject,
+      [
+        p(esc(hello)),
+        ...body.map((l) => p(esc(l))),
+        excerpt ? quote(excerpt) : '',
+        action ? button(action.href, action.label) : '',
+        ...end.map((l) => p(esc(l))),
+        p('À bientôt,'),
+        p(multiline(signature)),
+      ].join(''),
+    ),
+  }
+}
+
+/** Confirmation de l'adresse e-mail après l'inscription. */
+export function memberVerify(m: Person, link: string): Mail {
+  return simpleMail(m, 'Confirme ton inscription à la communauté BabTech', {
+    lines: ['Bienvenue dans la communauté BabTech ! Il reste une étape : confirmer ton adresse e-mail.', 'Le lien est valable 48 heures.'],
+    action: { href: link, label: 'Confirmer mon adresse' },
+    after: ["Tu n'as pas demandé à t'inscrire ? Ignore simplement cet e-mail : sans confirmation, le compte est effacé au bout de 7 jours."],
+  })
+}
+
+/** Quelqu'un s'inscrit avec une adresse déjà utilisée : on prévient le vrai propriétaire, sans rien révéler sur le site. */
+export function memberAlreadyRegistered(m: Person): Mail {
+  return simpleMail(m, 'Ton compte BabTech existe déjà', {
+    lines: [
+      "Quelqu'un (sans doute toi) vient de demander à créer un compte sur la communauté BabTech avec cette adresse. Tu as déjà un compte : il suffit de te connecter.",
+      'Mot de passe oublié ? Tu peux en choisir un nouveau depuis la page de connexion.',
+    ],
+    action: { href: absoluteUrl('/communaute/connexion'), label: 'Me connecter' },
+    after: ["Ce n'était pas toi ? Aucune action n'est nécessaire : ton compte n'a pas changé."],
+  })
+}
+
+export function memberReset(m: Person, link: string): Mail {
+  return simpleMail(m, 'Choisis un nouveau mot de passe', {
+    lines: ['Tu as demandé à changer le mot de passe de ton compte sur la communauté BabTech. Le lien est valable une heure.'],
+    action: { href: link, label: 'Choisir un nouveau mot de passe' },
+    after: ["Tu n'as rien demandé ? Ignore cet e-mail : ton mot de passe reste le même."],
+  })
+}
+
+/** Nouvelle réponse sur un sujet ouvert par le membre (s'il a gardé les notifications). */
+export function memberReplyNotice(m: Person, topicTitle: string, replier: string, excerpt: string, link: string): Mail {
+  return simpleMail(m, `Nouvelle réponse : ${topicTitle}`, {
+    lines: [`${replier} a répondu à ton sujet « ${topicTitle} » :`],
+    excerpt,
+    action: { href: link, label: 'Lire la réponse' },
+    after: ['Pour ne plus recevoir ces e-mails, décoche « Me prévenir des réponses » dans ton compte.'],
+  })
+}
+
+/** Pour toi : nouveau sujet sur le forum (publication directe, tu modères ensuite). */
+export function forumTopicAlert(topic: { title: string; body: string; path: string }, author: string): Mail {
+  const subject = fr(`Nouveau sujet sur le forum : ${topic.title}`)
+  const text = [`${author} a publié un sujet sur le forum :`, '', topic.title, '', topic.body, '', `Voir : ${absoluteUrl(topic.path)}`, `Modérer : ${absoluteUrl('/admin/communaute/')}`].join('\n')
+  const html = layout(
+    subject,
+    [
+      `<h1 style="margin:0 0 6px;font-size:20px;color:#0f1923">${esc(topic.title)}</h1>`,
+      p(`<span style="color:#52606d">Par ${esc(author)}</span>`),
+      quote(topic.body),
+      button(absoluteUrl(topic.path), 'Voir sur le site'),
+      p(link(absoluteUrl('/admin/communaute/'), 'Modérer dans le tableau de bord')),
+    ].join(''),
+  )
+  return { to: MAIL_FROM, subject, text, html }
+}
+
+/** Pour toi : un membre signale un message. */
+export function forumReportAlert(report: { reason: string; excerpt: string; topicTitle: string; path: string }, reporter: string): Mail {
+  const subject = fr(`Message signalé sur le forum : ${report.topicTitle}`)
+  const text = [`${reporter} signale un message dans « ${report.topicTitle} ».`, '', `Motif : ${report.reason}`, '', 'Message :', report.excerpt, '', `Modérer : ${absoluteUrl('/admin/communaute/')}`].join('\n')
+  const html = layout(
+    subject,
+    [
+      `<h1 style="margin:0 0 6px;font-size:20px;color:#0f1923">Message signalé</h1>`,
+      p(`${esc(reporter)} signale un message dans « ${link(absoluteUrl(report.path), report.topicTitle)} ».`),
+      rows([['Motif', esc(report.reason)]]),
+      h('Message'),
+      quote(report.excerpt),
+      button(absoluteUrl('/admin/communaute/'), 'Modérer dans le tableau de bord'),
+    ].join(''),
+  )
+  return { to: MAIL_FROM, subject, text, html }
+}
+
 /** Test depuis Réglages. */
 export function testMail(): Mail {
   const subject = fr("Test d'envoi : BabTech")

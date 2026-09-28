@@ -38,6 +38,7 @@ export function getOgEntries(): OgEntry[] {
       eyebrow: 'Communauté · Montpellier',
       title: "Apprendre le digital et l'IA entre entrepreneurs",
     },
+    { key: 'forum', eyebrow: 'Communauté · Forum', title: "Le forum d'entraide des entrepreneurs de l'Hérault et du Gard" },
     { key: 'a-propos', eyebrow: 'À propos', title: "Derrière BabTech, il y a un parcours d'entrepreneur.", photo: true },
     { key: 'portfolio', eyebrow: 'Réalisations', title: 'Des projets concrets. Des résultats qui parlent.' },
     { key: 'contact', eyebrow: 'Contact', title: 'Parlons de ton projet.' },

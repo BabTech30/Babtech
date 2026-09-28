@@ -1,6 +1,7 @@
-import { createHash, createHmac, randomBytes, scrypt, timingSafeEqual, type ScryptOptions } from 'node:crypto'
+import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { hashPassword, verifyPassword } from '@/lib/password'
 import { readStore, updateStore } from './store'
 
 /**
@@ -18,27 +19,6 @@ export const MAX_PASSWORD_LENGTH = 256
 
 const COOKIE = 'babtech_admin'
 const SESSION_DAYS = 7
-const SCRYPT: ScryptOptions = { N: 16384, r: 8, p: 1, maxmem: 64 * 1024 * 1024 }
-
-function derive(password: string, salt: Buffer, options: ScryptOptions): Promise<Buffer> {
-  return new Promise((resolve, reject) =>
-    scrypt(password.normalize('NFKC'), salt, 64, options, (error, key) => (error ? reject(error) : resolve(key))),
-  )
-}
-
-async function hashPassword(password: string) {
-  const salt = randomBytes(16)
-  const key = await derive(password, salt, SCRYPT)
-  return ['scrypt', SCRYPT.N, SCRYPT.r, SCRYPT.p, salt.toString('base64'), key.toString('base64')].join('$')
-}
-
-async function verifyHash(password: string, stored: string) {
-  const [algo, N, r, p, salt, hash] = stored.split('$')
-  if (algo !== 'scrypt' || !salt || !hash) return false
-  const expected = Buffer.from(hash, 'base64')
-  const key = await derive(password, Buffer.from(salt, 'base64'), { N: Number(N), r: Number(r), p: Number(p), maxmem: SCRYPT.maxmem })
-  return key.length === expected.length && timingSafeEqual(key, expected)
-}
 
 /** Comparaison à durée constante de deux textes. */
 function sameText(a: string, b: string) {
@@ -66,7 +46,7 @@ export async function passwordChanged() {
 
 export async function checkPassword(password: string) {
   const { passwordHash } = await readStore()
-  if (passwordHash) return verifyHash(password, passwordHash)
+  if (passwordHash) return verifyPassword(password, passwordHash)
   const initial = initialPassword()
   return initial ? sameText(password, initial) : false
 }

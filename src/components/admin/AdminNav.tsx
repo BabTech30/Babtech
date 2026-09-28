@@ -7,6 +7,7 @@ const items = [
   { href: '/admin/', label: 'Tableau de bord' },
   { href: '/admin/demandes/', label: 'Demandes' },
   { href: '/admin/rendez-vous/', label: 'Rendez-vous' },
+  { href: '/admin/communaute/', label: 'Communauté' },
   { href: '/admin/partager/', label: 'Partager' },
   { href: '/admin/reglages/', label: 'Réglages' },
 ]
@@ -33,7 +34,7 @@ export function AdminNav({ counts = {} }: { counts?: Record<string, number> }) {
             {Boolean(counts[item.href]) && (
               <span className="ml-1.5 rounded-full bg-emerald-b px-1.5 py-px text-xs font-semibold tabular-nums text-[#0a1a10]">
                 {counts[item.href]}
-                <span className="sr-only"> nouvelle{counts[item.href] > 1 ? 's' : ''}</span>
+                <span className="sr-only"> à traiter</span>
               </span>
             )}
           </Link>

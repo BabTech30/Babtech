@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { categories } from '@/data/blog'
+import { forumCategories } from '@/data/forum'
 import { services } from '@/data/services'
 import { zones } from '@/data/zones'
 import { getAllPosts } from '@/lib/blog'
@@ -31,6 +32,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...usedCategories.map((c) => entry(`/blog/categorie/${c.slug}`, 0.5, 'weekly', latestPost)),
     ...posts.map((p) => entry(`/blog/${p.slug}`, 0.7, 'monthly', p.updated)),
     entry('/communaute', 0.8, 'monthly'),
+    // Forum : pages lues dans la base à chaque visite (les sujets y sont reliés).
+    entry('/communaute/forum', 0.7, 'daily'),
+    ...forumCategories.map((c) => entry(`/communaute/forum/${c.slug}`, 0.6, 'daily')),
+    entry('/communaute/charte', 0.3, 'yearly'),
     entry('/portfolio', 0.7, 'monthly'),
     entry('/a-propos', 0.7, 'monthly'),
     entry('/contact', 0.8, 'yearly'),

@@ -90,6 +90,17 @@ for (let i = 0; ; i++) {
 
 /** Pages partagées par lien ou QR code : en ligne, mais hors de Google (noindex) et du sitemap. */
 const NOINDEX_PAGES = ['/bastien/', '/carte/']
+/** Pages du compte membre (inscription, connexion, mot de passe…) : hors de Google et du sitemap. */
+const MEMBER_PAGES = [
+  '/communaute/inscription/',
+  '/communaute/connexion/',
+  '/communaute/confirmer/',
+  '/communaute/mot-de-passe-oublie/',
+  '/communaute/nouveau-mot-de-passe/',
+  '/communaute/compte/',
+  '/communaute/forum/nouveau/',
+  '/communaute/forum/modifier/',
+]
 
 /* ---------- Fichiers SEO / GEO ---------- */
 const REQUIRED = [
@@ -145,7 +156,7 @@ for (const loc of locs) {
   const { pathname } = new URL(loc)
   if (badSlash(pathname)) errors.push(`Sitemap → ${loc} ${slashRule}`)
   if (pathname.startsWith('/admin')) errors.push(`Sitemap → l'espace privé ${loc} ne doit pas y figurer`)
-  if (NOINDEX_PAGES.includes(pathname)) errors.push(`Sitemap → ${loc} est hors Google (noindex) et ne doit pas y figurer`)
+  if (NOINDEX_PAGES.includes(pathname) || MEMBER_PAGES.includes(pathname)) errors.push(`Sitemap → ${loc} est hors Google (noindex) et ne doit pas y figurer`)
 }
 
 /* ---------- Pages ---------- */
@@ -202,8 +213,8 @@ while (queue.length) {
 
   if (!/<html lang="fr"/.test(html)) errors.push(`${where} attribut lang="fr" manquant`)
   const noindex = /<meta name="robots" content="[^"]*noindex/.test(html)
-  if (NOINDEX_PAGES.includes(urlPath)) {
-    if (!noindex) errors.push(`${where} page partagée par QR code : balise robots noindex attendue`)
+  if (NOINDEX_PAGES.includes(urlPath) || MEMBER_PAGES.includes(urlPath)) {
+    if (!noindex) errors.push(`${where} page hors Google (QR code ou compte membre) : balise robots noindex attendue`)
   } else if (noindex) errors.push(`${where} page publique marquée noindex`)
 
   const ogImage = html.match(/<meta property="og:image" content="([^"]*)"/)?.[1]
@@ -309,7 +320,7 @@ const admin = await get('/admin/')
 if (![302, 303, 307].includes(admin.status) || !admin.location.includes('/admin/connexion/')) {
   errors.push(`/admin/ sans connexion : redirection vers /admin/connexion/ attendue (reçu ${admin.status} ${admin.location})`)
 }
-for (const privatePath of ['/admin/reglages/', '/admin/partager/', '/admin/rendez-vous/', '/admin/demandes/', '/admin/export/', '/admin/qr/site.png']) {
+for (const privatePath of ['/admin/reglages/', '/admin/partager/', '/admin/rendez-vous/', '/admin/demandes/', '/admin/communaute/', '/admin/export/', '/admin/qr/site.png']) {
   const res = await get(privatePath)
   if (res.status === 200) errors.push(`${privatePath} accessible sans connexion`)
 }
@@ -318,6 +329,18 @@ for (const agendaPath of ['/admin/agenda/mauvais.ics', '/admin/agenda/AAAAAAAAAA
   const res = await get(agendaPath)
   if (res.status !== 404) errors.push(`${agendaPath} : réponse 404 attendue (reçu ${res.status})`)
 }
+/* ---------- Communauté : pages réservées aux membres, adresses inconnues ---------- */
+for (const memberPath of ['/communaute/compte/', '/communaute/forum/nouveau/']) {
+  const res = await get(memberPath)
+  if (![302, 303, 307].includes(res.status) || !res.location.includes('/communaute/connexion/')) {
+    errors.push(`${memberPath} sans connexion : redirection vers /communaute/connexion/ attendue (reçu ${res.status} ${res.location})`)
+  }
+}
+for (const unknown of ['/communaute/forum/theme-inexistant/', '/communaute/forum/sujet/pas-un-sujet/']) {
+  const res = await get(unknown)
+  if (res.status !== 404) errors.push(`${unknown} : réponse 404 attendue (reçu ${res.status})`)
+}
+
 const login = await get('/admin/connexion/')
 if (login.status !== 200) errors.push(`/admin/connexion/ : réponse ${login.status}`)
 if (!/<meta name="robots" content="noindex, nofollow/.test(login.body)) errors.push('/admin/connexion/ : balise robots noindex absente')

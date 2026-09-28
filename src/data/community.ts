@@ -3,7 +3,7 @@ import type { IconName } from '@/components/Icon'
 export const community = {
   name: 'La communauté BabTech',
   tagline: "Apprendre le digital et l'IA entre entrepreneurs, à Montpellier et dans l'Hérault.",
-  status: 'En construction · inscriptions ouvertes aux membres fondateurs',
+  status: 'Forum ouvert · inscription gratuite',
   intro:
     "L'IA et le digital évoluent chaque semaine. Seul, on décroche vite. À plusieurs, on avance : la communauté BabTech réunit des dirigeants de TPE, artisans, commerçants et indépendants qui veulent apprendre en pratiquant, partager ce qui marche et se rencontrer.",
   formats: [
@@ -44,8 +44,8 @@ export const community = {
   ],
   roadmap: [
     {
-      title: 'Liste des membres fondateurs',
-      desc: "Les inscriptions sont ouvertes. Tu indiques tes thèmes et formats préférés : ce sont eux qui construisent le programme.",
+      title: 'Comptes membres et forum',
+      desc: "Crée ton compte gratuit, pose tes questions sur le forum et partage ce qui marche : ce sont tes sujets qui construisent le programme.",
       current: true,
     },
     {
@@ -59,8 +59,8 @@ export const community = {
       current: false,
     },
     {
-      title: 'Plateforme membres',
-      desc: "Un espace en ligne pour retrouver les membres, rejoindre des groupes, s'inscrire aux événements et se mettre en relation.",
+      title: 'Groupes et mises en relation',
+      desc: "Rejoindre des groupes par projet ou par thème, s'inscrire aux événements et se mettre en relation entre membres.",
       current: false,
     },
   ],
@@ -79,11 +79,15 @@ export const community = {
     },
     {
       q: "Combien coûte l'inscription ?",
-      a: "L'inscription à la liste des membres fondateurs est gratuite et sans engagement. Les modalités des ateliers et des cercles seront annoncées en priorité aux inscrits.",
+      a: "Le compte membre et le forum sont gratuits et sans engagement. Les modalités des ateliers et des cercles seront annoncées en priorité aux membres.",
+    },
+    {
+      q: 'Qui peut lire le forum ?',
+      a: "Tout le monde : le forum est en lecture libre, y compris pour Google et les assistants IA. Pour écrire, il suffit d'un compte gratuit, confirmé par e-mail.",
     },
     {
       q: 'Que deviennent mes informations ?',
-      a: "Elles servent uniquement à te prévenir du lancement et à construire un programme adapté aux besoins exprimés. Tu peux te désinscrire à tout moment sur simple demande.",
+      a: "Ton e-mail sert à te connecter et, si tu le souhaites, à te prévenir des réponses : il n'est jamais affiché. Sur le forum, seuls ton prénom, l'initiale de ton nom, ton activité et ta ville apparaissent. Tu peux supprimer ton compte à tout moment.",
     },
   ],
 }

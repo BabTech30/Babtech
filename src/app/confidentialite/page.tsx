@@ -36,8 +36,16 @@ export default function Confidentialite() {
             site et ne m&apos;est transmis que si tu envoies ensuite ta demande. Anthropic ne l&apos;utilise pas pour entraîner ses modèles.
           </li>
           <li>
-            <strong>Inscription à la communauté&nbsp;:</strong> prénom, email, activité, ville, thèmes et formats souhaités, niveau, message
-            (facultatif) et consentement, enregistrés sur le serveur du site et transmis par email&nbsp;; tu reçois un email de bienvenue.
+            <strong>Compte membre et forum de la communauté&nbsp;:</strong> prénom, nom, email, mot de passe (enregistré seulement sous forme
+            chiffrée irréversible), activité et ville (facultatives), date d&apos;inscription et de dernière connexion, préférence de
+            notification, ainsi que tes sujets, tes réponses et tes signalements. Sur le forum, seuls ton prénom, l&apos;initiale de ton nom,
+            ton activité et ta ville s&apos;affichent avec tes messages, qui sont publics&nbsp;; ton email n&apos;est jamais affiché. Un cookie
+            de session garde ta connexion pendant 30 jours au plus.
+          </li>
+          <li>
+            <strong>Liste de la communauté (avant l&apos;ouverture du forum)&nbsp;:</strong> prénom, email, activité, ville, thèmes et formats
+            souhaités, niveau, message (facultatif) et consentement, enregistrés sur le serveur du site et transmis par email&nbsp;; tu reçois
+            un email de bienvenue.
           </li>
           <li>
             <strong>Prise de rendez-vous&nbsp;:</strong> nom, email, téléphone (obligatoire pour un rendez-vous par téléphone), entreprise
@@ -66,6 +74,11 @@ export default function Confidentialite() {
           <li>Répondre à tes demandes, organiser les rendez-vous que tu réserves et établir un devis&nbsp;: mesures précontractuelles et intérêt légitime.</li>
           <li>Te proposer une première piste avec l&apos;assistant IA, quand tu le lances&nbsp;: mesures précontractuelles prises à ta demande.</li>
           <li>Te tenir informé(e) du lancement de la communauté et organiser les ateliers&nbsp;: consentement, retirable à tout moment.</li>
+          <li>
+            Gérer ton compte membre, publier tes messages sur le forum et te prévenir des réponses&nbsp;: exécution des conditions
+            d&apos;utilisation (la <a href="/communaute/charte/">charte de la communauté</a>) que tu acceptes en créant ton compte.
+          </li>
+          <li>Modérer le forum et prévenir les abus (limites d&apos;envoi, signalements)&nbsp;: intérêt légitime.</li>
           <li>Mesurer la fréquentation de façon anonyme et sécuriser le site&nbsp;: intérêt légitime.</li>
         </ul>
         <p>
@@ -75,7 +88,10 @@ export default function Confidentialite() {
         <h2>4. Destinataires et sous-traitants</h2>
         <p>Les données sont destinées uniquement à {site.name}. Elles transitent par des prestataires techniques&nbsp;:</p>
         <ul>
-          <li>{site.legal.host.name} (hébergement du site, des demandes et des rendez-vous, et messagerie {site.email})&nbsp;;</li>
+          <li>
+            {site.legal.host.name} (hébergement du site, des demandes, des rendez-vous, des comptes et du forum de la communauté, et messagerie{' '}
+            {site.email})&nbsp;;
+          </li>
           <li>Anthropic (IA Claude de l&apos;assistant de la page Contact), seulement si tu lances l&apos;assistant&nbsp;;</li>
           <li>
             les services de notification d&apos;Apple, de Google ou de Mozilla, qui acheminent jusqu&apos;à mes appareils les alertes de
@@ -100,12 +116,18 @@ export default function Confidentialite() {
             sauf obligation légale ou utilisation abusive de son service.
           </li>
           <li>Liste de la communauté&nbsp;: jusqu&apos;à ta désinscription, et au plus 3 ans après ton dernier échange.</li>
+          <li>
+            Compte membre&nbsp;: jusqu&apos;à sa suppression, que tu peux faire à tout moment depuis la page «&nbsp;Mon compte&nbsp;». Un compte
+            jamais confirmé est effacé au bout de 7 jours. À la suppression, tes messages restent signés «&nbsp;Ancien membre&nbsp;», ou sont
+            effacés si tu le choisis.
+          </li>
           <li>Statistiques de fréquentation&nbsp;: données anonymes et agrégées.</li>
         </ul>
 
         <h2>6. Cookies</h2>
         <p>
-          Le site fonctionne sans cookie de mesure ni cookie publicitaire&nbsp;: aucun bandeau de consentement n&apos;est donc nécessaire. Les
+          Le site fonctionne sans cookie de mesure ni cookie publicitaire&nbsp;: aucun bandeau de consentement n&apos;est donc nécessaire. Seul
+          un cookie de session, indispensable, est déposé quand tu te connectes à ton compte membre. Les
           services tiers vers lesquels le site renvoie appliquent leur propre politique lorsque tu les utilises. Les vidéos
           YouTube restent inactives tant que tu ne cliques pas dessus&nbsp;: lancer une vidéo vaut accord pour les cookies de YouTube.
         </p>
