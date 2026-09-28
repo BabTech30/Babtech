@@ -21,8 +21,8 @@ export default function MentionsLegales() {
       <LegalPage title={title} path="/mentions-legales" updatedAt={legal.updatedAt}>
         <h2>1. Éditeur du site</h2>
         <p>
-          Le site {site.url.replace(/^https?:\/\//, '')} est édité par <strong>{site.founder.name}</strong>, exerçant sous le nom commercial{' '}
-          <strong>{site.name}</strong>.
+          Le site {site.url.replace(/^https?:\/\//, '')} est édité par <strong>{site.founder.name}</strong>, entrepreneur individuel (EI), exerçant
+          sous le nom commercial <strong>{site.name}</strong>.
         </p>
         <ul>
           <li>Statut&nbsp;: {legal.status}</li>

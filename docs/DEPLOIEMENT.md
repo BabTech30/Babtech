@@ -95,10 +95,9 @@ Le site n'utilise plus Netlify. Tu peux supprimer l'ancien site `agence-babtech`
 
 | Élément | Pourquoi |
 |---|---|
-| SIRET et adresse (`legal`) | Obligatoires dans les mentions légales |
 | Profils LinkedIn, Malt, Google Business Profile (`social`, `founder.sameAs`) | Relient ton entreprise pour Google et les IA |
 
-Déjà renseignés : le téléphone (`phone`, 07 63 51 93 63), l'e-mail `contact@babtech.fr` (boîte à créer dans hPanel →
-Emails) et la photo de Bastien. Utilise exactement le même nom, la même adresse e-mail et le même numéro sur la fiche
-Google Business Profile. Le plan de référencement complet est dans
+Déjà renseignés : le SIRET et l'adresse du siège (`legal`, `address`), le téléphone (`phone`, 07 63 51 93 63),
+l'e-mail `contact@babtech.fr` (boîte à créer dans hPanel → Emails) et la photo de Bastien. Utilise exactement le même
+nom, la même adresse et le même numéro sur la fiche Google Business Profile. Le plan de référencement complet est dans
 [`STRATEGIE-SEO-GEO.md`](STRATEGIE-SEO-GEO.md).

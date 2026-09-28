@@ -19,7 +19,7 @@ export default function Confidentialite() {
       <LegalPage title={title} path="/confidentialite" updatedAt={site.legal.updatedAt}>
         <h2>1. Responsable du traitement</h2>
         <p>
-          <strong>{site.founder.name}</strong> ({site.name}, {site.legal.status.toLowerCase()}) — {mail}
+          <strong>{site.founder.name}</strong> ({site.name}, {site.legal.status.toLowerCase()}), {site.legal.postalAddress} — {mail}
         </p>
 
         <h2>2. Données collectées</h2>

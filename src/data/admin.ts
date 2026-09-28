@@ -22,7 +22,7 @@ export type AdminTask = {
   auto?: 'password-changed'
 }
 
-export const adminUpdatedAt = '2026-09-27'
+export const adminUpdatedAt = '2026-09-28'
 
 export const adminPhases: AdminPhase[] = [
   { id: 'site', title: 'Site prêt' },
@@ -288,8 +288,9 @@ export const adminTasks: AdminTask[] = [
     id: 'legal-info',
     phase: 'legal',
     owner: 'toi',
+    done: true,
     title: 'Envoyer SIRET et adresse',
-    detail: "Obligatoires dans les mentions légales (le téléphone est reçu et affiché). Une domiciliation convient pour l'adresse.",
+    detail: "C'est fait : SIRET 801 478 306 00054 et adresse du siège, vérifiés dans l'annuaire des entreprises.",
   },
   {
     id: 'photo',
@@ -310,8 +311,11 @@ export const adminTasks: AdminTask[] = [
     id: 'legal-update',
     phase: 'legal',
     owner: 'claude',
+    done: true,
     title: 'Mettre à jour mentions légales et coordonnées',
-    detail: 'Dès réception de tes informations.',
+    detail: 'SIRET et adresse dans les mentions légales, la confidentialité, la carte de visite et les données lues par Google et les IA.',
+    link: '/mentions-legales/',
+    linkLabel: 'Mentions légales',
   },
   {
     id: 'community-promo',
@@ -383,6 +387,10 @@ export const adminDecisions = [
   {
     date: '2026-09-27',
     text: "Référencement local étendu au Gard : 25 pages villes (17 dans l'Hérault, 8 dans le Gard), chacune avec son contenu. Dans les villes touristiques, le site de réservation passe en premier.",
+  },
+  {
+    date: '2026-09-28',
+    text: 'Adresse publiée : siège au 27 avenue du Professeur Grasset, 34090 Montpellier (SIRET 801 478 306 00054, entrepreneur individuel).',
   },
 ]
 

@@ -18,7 +18,8 @@ function keyFacts() {
   return [
     `- Activité : création de sites internet, applications métier sur mesure (PWA), sites de réservation pour locations saisonnières, automatisations et intégrations d'IA, référencement local et GEO (visibilité dans les assistants IA), accompagnement et formation à l'IA pour les TPE.`,
     `- Fondateur : ${site.founder.name}. ${site.founder.description}`,
-    `- Localisation : basé près de Montpellier (${site.address.department}, ${site.address.region}, France). Intervient dans l'Hérault (Montpellier et sa métropole, Sète, Béziers, Agde, Lunel…) et dans le Gard (Nîmes, Alès, Uzès, Le Grau-du-Roi…) ; accompagnement à distance partout en France.`,
+    `- Entreprise : ${site.founder.name}, entrepreneur individuel, nom commercial ${site.name}, SIRET ${site.legal.siret}.`,
+    `- Localisation : basé près de Montpellier (${site.address.department}, ${site.address.region}, France), siège au ${site.legal.postalAddress}. Intervient dans l'Hérault (Montpellier et sa métropole, Sète, Béziers, Agde, Lunel…) et dans le Gard (Nîmes, Alès, Uzès, Le Grau-du-Roi…) ; accompagnement à distance partout en France.`,
     '- Tarifs indicatifs : site vitrine à partir de 800 € ; application métier à partir de 1 500 € ; automatisation et IA à partir de 3 000 € ; site de réservation pour locations saisonnières (1 à 4 logements ou chambres) à partir de 250 €, tableau de bord en option (+ 350 €), maintenance à partir de 35 € par mois ; référencement local et GEO inclus dans les sites ; formation sur devis. Devis gratuit.',
     '- Délais : site vitrine livré en 2 à 4 semaines, avec validation du client à chaque étape.',
     `- Contact : ${site.email}${site.phone ? ` · ${formatPhone()}` : ''} · premier rendez-vous gratuit de 30 minutes à réserver sur ${absoluteUrl(site.bookingPath)} · réponse sous 24 heures.`,

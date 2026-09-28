@@ -67,15 +67,15 @@ export const site = {
   address: {
     /** Ville de rattachement affichée publiquement (entreprise en zone de service). */
     locality: 'Montpellier',
-    /** À COMPLÉTER si l'adresse est publique (sinon laisser vide). */
-    streetAddress: '',
-    postalCode: '',
+    /** Siège de l'entreprise individuelle (adresse publique : mentions légales, données structurées, fiche contact). */
+    streetAddress: '27 avenue du Professeur Grasset',
+    postalCode: '34090',
     department: 'Hérault',
     region: 'Occitanie',
     country: 'FR',
   },
-  /** Centre de Montpellier : point de départ de la zone d'intervention (Hérault et Gard, jusqu'à Bagnols-sur-Cèze). */
-  geo: { latitude: 43.6108, longitude: 3.8767 },
+  /** Siège, à Montpellier : point de départ de la zone d'intervention (Hérault et Gard, jusqu'à Bagnols-sur-Cèze). */
+  geo: { latitude: 43.624, longitude: 3.8673 },
   serviceRadiusKm: 100,
   priceRange: '€€',
 
@@ -89,15 +89,15 @@ export const site = {
     malt: '',
   },
 
-  /** Mentions légales (obligatoires, loi LCEN) — À COMPLÉTER. */
+  /** Mentions légales (obligatoires, loi LCEN). Vérifiées dans l'annuaire des entreprises (SIREN 801 478 306). */
   legal: {
     status: 'Entreprise individuelle',
-    siret: '',
+    siret: '801 478 306 00054',
     /** Uniquement si assujetti à la TVA (sinon laisser vide). */
     vatNumber: '',
     /** Adresse de l'établissement ou de domiciliation. */
-    postalAddress: '',
-    updatedAt: '27 septembre 2026',
+    postalAddress: '27 avenue du Professeur Grasset, 34090 Montpellier',
+    updatedAt: '28 septembre 2026',
     host: {
       name: 'Hostinger International Ltd',
       address: '61 Lordou Vironos Street, 6023 Larnaca, Chypre',
