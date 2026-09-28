@@ -31,6 +31,11 @@ function transport() {
     port: PORT,
     // 465 : connexion chiffrée d'emblée ; 587 : chiffrement négocié (STARTTLS).
     secure: PORT === 465,
+    // Deux connexions au plus, réutilisées : un envoi groupé (membres d'un groupe) part à la file, sans ouvrir une
+    // connexion par e-mail, ce que le serveur d'envoi pourrait refuser.
+    pool: true,
+    maxConnections: 2,
+    maxMessages: 50,
     auth: { user: MAIL_FROM, pass: process.env.SMTP_PASSWORD },
     connectionTimeout: 15_000,
     greetingTimeout: 15_000,

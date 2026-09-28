@@ -1,7 +1,26 @@
 import { forumCategories, LIMITS } from '@/data/forum'
+import { fr } from '@/lib/typography'
 
-/** Champs d'un sujet (nouveau ou modifié) : thème, titre, message. */
-export function TopicFields({ category = '', title = '', body = '' }: { category?: string; title?: string; body?: string }) {
+/** Champs d'un sujet (nouveau ou modifié) : thème, titre, message. Les libellés s'adaptent pour un projet. */
+export function TopicFields({
+  category = '',
+  title = '',
+  body = '',
+  titleLabel = 'Titre',
+  titlePlaceholder = 'Ex. Quel outil pour relancer automatiquement mes devis ?',
+  titleHint = "Une vraie question, précise : c'est ce qui apporte les meilleures réponses.",
+  bodyLabel = 'Ton message',
+  bodyPlaceholder = 'Ton métier, ce que tu as déjà essayé, ce qui bloque… Pas de données personnelles de clients.',
+}: {
+  category?: string
+  title?: string
+  body?: string
+  titleLabel?: string
+  titlePlaceholder?: string
+  titleHint?: string
+  bodyLabel?: string
+  bodyPlaceholder?: string
+}) {
   return (
     <>
       <div>
@@ -21,7 +40,7 @@ export function TopicFields({ category = '', title = '', body = '' }: { category
       </div>
       <div>
         <label htmlFor="titre" className="label">
-          Titre <span className="text-bronze">*</span>
+          {titleLabel} <span className="text-bronze">*</span>
         </label>
         <input
           id="titre"
@@ -32,13 +51,13 @@ export function TopicFields({ category = '', title = '', body = '' }: { category
           maxLength={LIMITS.title.max}
           defaultValue={title}
           className="input"
-          placeholder="Ex. Quel outil pour relancer automatiquement mes devis ?"
+          placeholder={titlePlaceholder}
         />
-        <p className="mt-1.5 text-[13px] text-txt-muted">Une vraie question, précise&nbsp;: c&apos;est ce qui apporte les meilleures réponses.</p>
+        <p className="mt-1.5 text-[13px] text-txt-muted">{fr(titleHint)}</p>
       </div>
       <div>
         <label htmlFor="message" className="label">
-          Ton message <span className="text-bronze">*</span>
+          {bodyLabel} <span className="text-bronze">*</span>
         </label>
         <textarea
           id="message"
@@ -49,7 +68,7 @@ export function TopicFields({ category = '', title = '', body = '' }: { category
           maxLength={LIMITS.topic.max}
           defaultValue={body}
           className="input resize-y"
-          placeholder="Ton métier, ce que tu as déjà essayé, ce qui bloque… Pas de données personnelles de clients."
+          placeholder={bodyPlaceholder}
         />
       </div>
     </>

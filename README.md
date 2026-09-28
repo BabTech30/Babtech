@@ -9,7 +9,7 @@ Gemini, Claude, Copilot…), grâce au GEO (*Generative Engine Optimization*).
 - Stack : **Next.js 16** (App Router, pages prérendues servies par Node.js), **React 19**, **Tailwind CSS 3**, **TypeScript**
 - Hébergement : **Hostinger**, application Node.js qui construit la branche `main` (déploiement depuis hPanel)
 - Formulaires et rendez-vous : **intégrés** (demandes et rendez-vous dans `/admin`, e-mails envoyés depuis contact@babtech.fr) · Assistant IA **Claude** sur la page Contact, facultatif et en sommeil sans clé · Mesure d'audience optionnelle et sans cookie : **Plausible** ou **Umami**
-- Communauté : **comptes des membres et forum** (base MySQL d'Hostinger, modération dans `/admin`)
+- Communauté : **comptes des membres, forum, projets et groupes** (base MySQL d'Hostinger, modération dans `/admin`)
 
 ## Démarrer
 
@@ -39,7 +39,7 @@ npm run dev        # http://localhost:3000
 | Les réalisations (textes, chiffres, captures, vidéo) | `src/data/portfolio.ts` et `public/realisations/` |
 | La page de présentation et la carte de visite | `src/app/bastien/page.tsx`, `src/app/carte/page.tsx`, `src/lib/vcard.ts` |
 | La communauté (formats, thèmes, étapes, FAQ) | `src/data/community.ts` |
-| Le forum (thèmes, longueurs des messages, limites des nouveaux comptes) | `src/data/forum.ts` |
+| Le forum, les projets et les groupes (thèmes, longueurs, étapes d'un projet, niveaux, limites) | `src/data/forum.ts` |
 | Les catégories du blog | `src/data/blog.ts` |
 | Un article | `content/blog/<slug>.md` |
 | Le tableau de bord `/admin` (étapes, tâches, décisions, santé du site) | `src/data/admin.ts` |
@@ -115,7 +115,7 @@ la synthèse, qui arrive dans l'onglet **Demandes**. Consignes et catalogue : `s
 Il ne s'active qu'avec la variable `ANTHROPIC_API_KEY` dans hPanel ; sans elle, ou en cas de souci, la page affiche le
 formulaire classique. **Réglages** indique s'il est actif et ce qu'il a coûté dans le mois.
 
-## Comptes des membres et forum
+## Comptes des membres, forum, projets et groupes
 
 `https://babtech.fr/communaute/forum/` : tout le monde peut lire, les membres écrivent. L'inscription est gratuite
 (`/communaute/inscription/`) et l'adresse est confirmée par un lien envoyé depuis contact@babtech.fr. Les messages sont
@@ -123,6 +123,14 @@ publiés tout de suite, sous « Prénom + initiale » (« Marie D. · Fleuriste 
 e-mail pour chaque nouveau sujet et chaque signalement, et tu modères dans le tableau de bord, onglet **Communauté**
 (masquer, supprimer, suspendre un membre…). Les membres gèrent leur profil, leur mot de passe et la suppression de leur
 compte dans « Mon compte ».
+
+- **Projets** (`/communaute/projets/`) : un membre présente son projet et ce qu'il cherche (des conseils, un ou une
+  partenaire, une compétence). Les autres répondent sur sa page ou cliquent sur « Proposer mon aide » : un e-mail part à
+  l'auteur, qui répond directement à la personne. L'auteur indique « J'ai trouvé » quand c'est fait.
+- **Groupes** (`/communaute/groupes/`) : un membre propose un groupe (thème, ville, niveau, nombre de places) ; il
+  n'apparaît qu'une fois validé dans l'onglet **Communauté**, et son auteur l'anime. On le rejoint en un clic ; ses échanges
+  sont des sujets du forum, lisibles par tous, écrits par ses membres, qui reçoivent un e-mail à chaque nouveau sujet (ils
+  peuvent le couper).
 
 Les comptes et les messages sont dans la base MySQL créée dans hPanel (variables `DB_HOST`, `DB_PORT`, `DB_NAME`,
 `DB_USER`, `DB_PASSWORD`) ; les tables (préfixe `bt_`) se créent toutes seules. **Réglages → Communauté** teste la
@@ -151,7 +159,7 @@ de bord (Chrome, Edge, Android), ou **Réglages → Application** pour la marche
 
 - [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md) — mise en ligne sur Hostinger (Node.js) et check-list après la mise en ligne
 - [`docs/STRATEGIE-SEO-GEO.md`](docs/STRATEGIE-SEO-GEO.md) — positionnement, mots-clés, plan local, GEO, calendrier éditorial
-- [`docs/COMMUNAUTE.md`](docs/COMMUNAUTE.md) — la communauté : comptes et forum en place, feuille de route, étape suivante (projets et groupes)
+- [`docs/COMMUNAUTE.md`](docs/COMMUNAUTE.md) — la communauté : comptes, forum, projets et groupes en place, feuille de route, étape suivante (événements)
 
 ## Structure
 

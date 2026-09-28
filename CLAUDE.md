@@ -49,23 +49,34 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
   jamais dans le dépôt. Ce que Claude tient à jour est dans `src/data/admin.ts` : cocher ses propres tâches, ajouter
   les décisions prises, mettre à jour la santé du site et `adminUpdatedAt` à chaque étape.
 
-## Communauté (comptes des membres et forum)
-- Pages rendues à la demande (`force-dynamic`) : `/communaute/forum/…` (lecture libre, écriture réservée aux membres) et
-  les pages de compte (inscription, confirmer, connexion, mot de passe, compte). Server Actions `src/app/communaute/compte-actions.ts`
-  et `src/app/communaute/forum/actions.ts`, logique dans `src/lib/community/`, thèmes et limites dans `src/data/forum.ts`.
+## Communauté (comptes des membres, forum, projets et groupes)
+- Pages rendues à la demande (`force-dynamic`) : `/communaute/forum/…`, `/communaute/projets/…`, `/communaute/groupes/…`
+  (lecture libre, écriture réservée aux membres) et les pages de compte (inscription, confirmer, connexion, mot de passe,
+  compte). Server Actions `src/app/communaute/compte-actions.ts`, `forum/actions.ts`, `projets/actions.ts` et
+  `groupes/actions.ts`, logique dans `src/lib/community/` (vérification des formulaires commune : `validate.ts`), thèmes,
+  limites, étapes et niveaux dans `src/data/forum.ts`.
+- Projets = sujets du forum + `bt_projects` (ce que le membre cherche, étape, « trouvé »). « Proposer mon aide » envoie un
+  e-mail à l'auteur avec l'adresse du membre en « répondre à » ; le message n'est pas gardé, seule la date
+  (`bt_project_offers`, anti-abus). Groupes = `bt_groups` (proposés `pending`, publiés `active` une fois validés dans
+  `/admin/communaute/`, masqués `hidden`), membres `bt_group_members` (l'auteur de la proposition anime), sujets rattachés
+  `bt_group_topics` : lisibles par tous, écrits par les membres du groupe ; un groupe masqué cache aussi ses sujets
+  (`PUBLIC_TOPIC`). Adhésion en un clic dans la limite des places ; e-mail aux membres pour chaque nouveau sujet (chacun peut
+  les couper).
 - Base MySQL d'Hostinger (`src/lib/db.ts`, variables `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` dans hPanel,
   jamais dans le code). Tables `bt_…` créées par `CREATE TABLE IF NOT EXISTS`, sans migration automatique : toute
   évolution du schéma doit marcher sur une base déjà remplie, sans perte de données.
 - Sans base (ou base injoignable), le site marche quand même : forum « Le forum ouvre très bientôt » ; sans base ou sans
   `SMTP_PASSWORD`, l'inscription redevient la liste d'attente (onglet Demandes).
-- Publication directe, modération après coup dans `/admin/communaute/` (notification + e-mail pour chaque sujet et
-  signalement). Nom affiché « Prénom + initiale » (`publicName()`), e-mail jamais affiché. Messages rendus en texte brut
-  (`PostBody`), liens en `rel="ugc nofollow"`, 2 liens au plus pendant les 7 premiers jours d'un compte.
+- Publication directe (sujets, réponses, projets), modération après coup dans `/admin/communaute/` (notification + e-mail
+  pour chaque sujet, projet, groupe proposé et signalement ; les groupes attendent la validation). Nom affiché « Prénom +
+  initiale » (`publicName()`), e-mail jamais affiché. Messages rendus en texte brut (`PostBody`), liens en `rel="ugc nofollow"`,
+  2 liens au plus pendant les 7 premiers jours d'un compte.
 - Mots de passe hachés (`src/lib/password.ts`), liens et sessions stockés sous forme d'empreinte, réponses identiques que
-  l'adresse existe ou non. Après une écriture qui reste sur la même page : `refresh()` avant `redirect()`, sinon l'ancienne
-  version peut rester affichée.
-- Pages de compte en `noindex` (liste `MEMBER_PAGES` de `check-build.mjs`) ; forum, thèmes et sujets indexables (JSON-LD
-  `CollectionPage`, `DiscussionForumPosting`), accueil du forum, thèmes et charte dans le sitemap.
+  l'adresse existe ou non. Fin d'une Server Action qui écrit : `goTo()` (`src/lib/community/redirect.ts`, `refresh()` puis
+  `redirect()`), sinon l'ancienne version de la page peut rester affichée ; adresse de retour d'un formulaire : `safeReturn()`.
+- Pages de compte et formulaires (nouveau projet, proposer ou modifier un groupe) en `noindex` (liste `MEMBER_PAGES` de
+  `check-build.mjs`) ; forum, thèmes, sujets, projets et groupes indexables (JSON-LD `CollectionPage`,
+  `DiscussionForumPosting`), listes filtrées en `noindex` ; accueil du forum, thèmes, projets, groupes et charte dans le sitemap.
 
 ## Contenus
 - Français, **tutoiement**, ton direct et concret, sans jargon (expliquer chaque terme technique en une phrase).

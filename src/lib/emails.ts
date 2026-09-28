@@ -335,10 +335,17 @@ export function memberReplyNotice(m: Person, topicTitle: string, replier: string
   })
 }
 
-/** Pour toi : nouveau sujet sur le forum (publication directe, tu modères ensuite). */
-export function forumTopicAlert(topic: { title: string; body: string; path: string }, author: string): Mail {
-  const subject = fr(`Nouveau sujet sur le forum : ${topic.title}`)
-  const text = [`${author} a publié un sujet sur le forum :`, '', topic.title, '', topic.body, '', `Voir : ${absoluteUrl(topic.path)}`, `Modérer : ${absoluteUrl('/admin/communaute/')}`].join('\n')
+/** Pour toi : nouveau sujet sur le forum, nouveau projet ou sujet ouvert dans un groupe (publication directe, tu modères ensuite). */
+export function forumTopicAlert(topic: { title: string; body: string; path: string; project?: boolean; groupName?: string }, author: string): Mail {
+  const where = topic.project ? 'un projet sur la communauté' : topic.groupName ? `un sujet dans le groupe « ${topic.groupName} »` : 'un sujet sur le forum'
+  const subject = fr(
+    topic.project
+      ? `Nouveau projet sur la communauté : ${topic.title}`
+      : topic.groupName
+        ? `Nouveau sujet dans le groupe « ${topic.groupName} » : ${topic.title}`
+        : `Nouveau sujet sur le forum : ${topic.title}`,
+  )
+  const text = [`${author} a publié ${where} :`, '', topic.title, '', topic.body, '', `Voir : ${absoluteUrl(topic.path)}`, `Modérer : ${absoluteUrl('/admin/communaute/')}`].join('\n')
   const html = layout(
     subject,
     [
@@ -368,6 +375,79 @@ export function forumReportAlert(report: { reason: string; excerpt: string; topi
     ].join(''),
   )
   return { to: MAIL_FROM, subject, text, html }
+}
+
+/** Pour toi : un membre propose un groupe, à valider dans le tableau de bord. */
+export function groupProposalAlert(g: { name: string; description: string; details: string }, proposer: string): Mail {
+  const subject = fr(`Groupe proposé : ${g.name}`)
+  const admin = absoluteUrl('/admin/communaute/')
+  const text = [`${proposer} propose un nouveau groupe. Il n'apparaîtra sur le site qu'une fois validé.`, '', g.name, g.details, '', g.description, '', `Valider ou refuser : ${admin}`].join('\n')
+  const html = layout(
+    subject,
+    [
+      `<h1 style="margin:0 0 6px;font-size:20px;color:#0f1923">${esc(g.name)}</h1>`,
+      p(`<span style="color:#52606d">Proposé par ${esc(proposer)} · ${esc(g.details)}</span>`),
+      quote(g.description),
+      p("Il n'apparaîtra sur le site qu'une fois validé."),
+      button(admin, 'Valider ou refuser'),
+    ].join(''),
+  )
+  return { to: MAIL_FROM, subject, text, html }
+}
+
+/** Au membre : son groupe est validé et publié. */
+export function groupApproved(m: Person, groupName: string, link: string): Mail {
+  return simpleMail(m, `Ton groupe « ${groupName} » est en ligne`, {
+    lines: [
+      `Bonne nouvelle : le groupe « ${groupName} » que tu as proposé est validé. Il est visible sur la communauté BabTech et les membres peuvent le rejoindre.`,
+      "Tu en es l'animateur ou l'animatrice : ouvre un premier sujet pour lancer les échanges, puis partage le lien du groupe autour de toi.",
+    ],
+    action: { href: link, label: 'Voir le groupe' },
+  })
+}
+
+/** Au membre : sa proposition de groupe n'est pas retenue. */
+export function groupRefused(m: Person, groupName: string, reason: string): Mail {
+  return simpleMail(m, `Ta proposition de groupe « ${groupName} »`, {
+    lines: [
+      `Merci d'avoir proposé le groupe « ${groupName} ». Il n'est pas retenu pour le moment.`,
+      ...(reason ? [`La raison : ${reason}`] : []),
+      "Tu peux en proposer un autre, ou lancer la discussion sur le forum : c'est souvent là que naissent les meilleurs groupes.",
+    ],
+    action: { href: absoluteUrl('/communaute/forum'), label: 'Aller sur le forum' },
+    after: ['Une question ? Réponds simplement à cet e-mail.'],
+  })
+}
+
+/** Aux membres d'un groupe (e-mails du groupe activés) : nouveau sujet. */
+export function groupTopicNotice(m: Person, t: { groupName: string; title: string; author: string; excerpt: string; link: string }): Mail {
+  return simpleMail(m, `${t.groupName} : ${t.title}`, {
+    lines: [`${t.author} a ouvert un sujet dans le groupe « ${t.groupName} » :`],
+    excerpt: `${t.title}\n\n${t.excerpt}`,
+    action: { href: t.link, label: 'Lire et répondre' },
+    after: ['Pour ne plus recevoir ces e-mails, coupe les e-mails du groupe sur sa page.'],
+  })
+}
+
+/**
+ * À l'auteur d'un projet : un membre propose son aide. Le message part avec l'adresse du membre en « répondre à » :
+ * l'auteur lui répond directement, sans passer par le site. L'adresse de l'auteur n'est révélée que s'il répond.
+ */
+export function helpOffer(author: Person, o: { projectTitle: string; helper: string; helperDetail: string; helperEmail: string; message: string; link: string }): Mail {
+  const who = o.helperDetail ? `${o.helper} (${o.helperDetail})` : o.helper
+  return {
+    ...simpleMail(author, `Proposition d'aide pour ton projet « ${o.projectTitle} »`, {
+      lines: [`${who}, membre de la communauté BabTech, te propose son aide pour ton projet « ${o.projectTitle} » :`],
+      excerpt: o.message,
+      action: { href: o.link, label: 'Voir mon projet' },
+      after: [
+        `Pour lui répondre, réponds simplement à cet e-mail : ta réponse part à ${o.helperEmail}.`,
+        "Tu as trouvé ce qu'il te fallait ? Indique-le sur la page du projet (« J'ai trouvé ») : tu ne recevras plus de propositions.",
+        'Un message déplacé ? Écris à contact@babtech.fr.',
+      ],
+    }),
+    replyTo: o.helperEmail,
+  }
 }
 
 /** Test depuis Réglages. */

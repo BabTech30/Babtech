@@ -137,8 +137,10 @@ export const adminTasks: AdminTask[] = [
     id: 'live-check',
     phase: 'launch',
     owner: 'claude',
+    done: true,
     title: 'Contrôler le site en ligne',
-    detail: 'Vitesse, redirections, page 404, en-têtes, données structurées.',
+    detail:
+      "C'est fait le 28 septembre 2026 : les 62 pages du plan du site, les redirections, la page 404, les en-têtes de sécurité, les données structurées, le SIRET et l'adresse partout où Google et les IA les lisent.",
   },
   {
     id: 'qr-codes',
@@ -367,8 +369,27 @@ export const adminTasks: AdminTask[] = [
     id: 'community-groups',
     phase: 'community',
     owner: 'claude',
+    done: true,
     title: 'Projets et groupes (étape 4)',
-    detail: "Groupes par thème ou par projet, événements, mises en relation entre membres : Claude s'y met quand tu donnes ton accord.",
+    detail: "Projets des membres (ce qu'ils cherchent, « Proposer mon aide » par e-mail) et groupes proposés par les membres, que tu valides dans l'onglet Communauté.",
+    link: 'https://babtech.fr/communaute/groupes/',
+    linkLabel: 'Les groupes',
+  },
+  {
+    id: 'community-first-group',
+    phase: 'community',
+    owner: 'toi',
+    title: 'Proposer un premier groupe',
+    detail: "Par thème ou par ville (ex. « L'IA pour les artisans à Nîmes ») : tu le valides toi-même dans l'onglet Communauté, puis tu partages son lien.",
+    link: 'https://babtech.fr/communaute/groupes/proposer/',
+    linkLabel: 'Proposer un groupe',
+  },
+  {
+    id: 'community-events',
+    phase: 'community',
+    owner: 'claude',
+    title: 'Événements : inscriptions aux ateliers sur le site',
+    detail: "Plus tard, quand tu le décides : pages d'événements visibles sur Google, inscriptions et rappel par e-mail.",
   },
 ]
 
@@ -445,6 +466,14 @@ export const adminDecisions = [
     date: '2026-09-28',
     text: 'Bas de page plus court sur téléphone : villes et liens utiles côte à côte (1,1 écran au lieu de 1,6). Ordinateur et tablette inchangés.',
   },
+  {
+    date: '2026-09-28',
+    text: "Projets : un membre présente son projet et ce qu'il cherche (conseils, partenaire, compétence). « Proposer mon aide » lui envoie un e-mail avec l'adresse de la personne qui propose, pour qu'ils échangent directement.",
+  },
+  {
+    date: '2026-09-28',
+    text: "Groupes : proposés par les membres et publiés une fois validés par toi. Échanges lisibles par tous, écrits par les membres du groupe ; on le rejoint en un clic, dans la limite des places. Les événements viendront plus tard.",
+  },
 ]
 
 /** Dernière mesure Lighthouse (mobile), mise à jour par Claude. */
@@ -458,7 +487,7 @@ export const adminHealth = {
     { label: 'SEO', value: 100 },
   ],
   facts: [
-    { label: 'Pages', value: '62' },
+    { label: 'Pages', value: '64' },
     { label: 'Articles de blog', value: '7' },
     { label: 'Villes couvertes', value: '25' },
     { label: 'Affichage principal', value: '2,4 s' },

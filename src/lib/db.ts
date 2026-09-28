@@ -1,7 +1,7 @@
 import mysql, { type Pool, type ResultSetHeader, type RowDataPacket } from 'mysql2/promise'
 
 /**
- * Base MySQL d'Hostinger : comptes des membres et forum de la communauté. Identifiants dans les variables
+ * Base MySQL d'Hostinger : comptes des membres, forum, projets et groupes de la communauté. Identifiants dans les variables
  * d'environnement de hPanel (DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD), jamais dans le code.
  * Les tables (préfixe bt_) sont créées au premier accès : rien à préparer dans phpMyAdmin.
  * Sans configuration ou si la base ne répond pas, le forum affiche « bientôt disponible » et le reste du site
@@ -97,6 +97,65 @@ const TABLES = [
     KEY idx_reports_open (resolved_at, created_at),
     KEY idx_reports_target (target, target_id),
     CONSTRAINT fk_reports_member FOREIGN KEY (member_id) REFERENCES bt_members (id) ON DELETE SET NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+  // Projets : un sujet du forum avec ce que le membre cherche.
+  `CREATE TABLE IF NOT EXISTS bt_projects (
+    topic_id INT UNSIGNED NOT NULL PRIMARY KEY,
+    wants_advice TINYINT(1) NOT NULL DEFAULT 0,
+    wants_partner TINYINT(1) NOT NULL DEFAULT 0,
+    wants_skill TINYINT(1) NOT NULL DEFAULT 0,
+    skill VARCHAR(120) NOT NULL DEFAULT '',
+    stage ENUM('idee', 'lancement', 'activite') NOT NULL DEFAULT 'idee',
+    status ENUM('open', 'found') NOT NULL DEFAULT 'open',
+    KEY idx_projects_status (status),
+    CONSTRAINT fk_projects_topic FOREIGN KEY (topic_id) REFERENCES bt_topics (id) ON DELETE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+  // « Proposer mon aide » : le message part par e-mail à l'auteur du projet ; seule la date est gardée (anti-abus).
+  `CREATE TABLE IF NOT EXISTS bt_project_offers (
+    topic_id INT UNSIGNED NOT NULL,
+    member_id INT UNSIGNED NOT NULL,
+    created_at DATETIME NOT NULL,
+    PRIMARY KEY (topic_id, member_id),
+    KEY idx_offers_member (member_id, created_at),
+    CONSTRAINT fk_offers_project FOREIGN KEY (topic_id) REFERENCES bt_projects (topic_id) ON DELETE CASCADE,
+    CONSTRAINT fk_offers_member FOREIGN KEY (member_id) REFERENCES bt_members (id) ON DELETE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+  // Groupes proposés par les membres (« pending »), publiés une fois validés (« active ») ou masqués (« hidden »).
+  `CREATE TABLE IF NOT EXISTS bt_groups (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(80) NOT NULL,
+    description TEXT NOT NULL,
+    category VARCHAR(40) NOT NULL,
+    city VARCHAR(80) NOT NULL DEFAULT '',
+    level ENUM('tous', 'debutants', 'confirmes') NOT NULL DEFAULT 'tous',
+    capacity SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    status ENUM('pending', 'active', 'hidden') NOT NULL DEFAULT 'pending',
+    created_by INT UNSIGNED NULL,
+    created_at DATETIME NOT NULL,
+    reviewed_at DATETIME NULL,
+    last_activity_at DATETIME NOT NULL,
+    KEY idx_groups_status (status, last_activity_at),
+    KEY idx_groups_creator (created_by),
+    CONSTRAINT fk_groups_member FOREIGN KEY (created_by) REFERENCES bt_members (id) ON DELETE SET NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+  `CREATE TABLE IF NOT EXISTS bt_group_members (
+    group_id INT UNSIGNED NOT NULL,
+    member_id INT UNSIGNED NOT NULL,
+    role ENUM('organizer', 'member') NOT NULL DEFAULT 'member',
+    notify TINYINT(1) NOT NULL DEFAULT 1,
+    joined_at DATETIME NOT NULL,
+    PRIMARY KEY (group_id, member_id),
+    KEY idx_group_members_member (member_id),
+    CONSTRAINT fk_group_members_group FOREIGN KEY (group_id) REFERENCES bt_groups (id) ON DELETE CASCADE,
+    CONSTRAINT fk_group_members_member FOREIGN KEY (member_id) REFERENCES bt_members (id) ON DELETE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+  // Sujets du forum ouverts dans un groupe.
+  `CREATE TABLE IF NOT EXISTS bt_group_topics (
+    topic_id INT UNSIGNED NOT NULL PRIMARY KEY,
+    group_id INT UNSIGNED NOT NULL,
+    KEY idx_group_topics_group (group_id),
+    CONSTRAINT fk_group_topics_topic FOREIGN KEY (topic_id) REFERENCES bt_topics (id) ON DELETE CASCADE,
+    CONSTRAINT fk_group_topics_group FOREIGN KEY (group_id) REFERENCES bt_groups (id) ON DELETE CASCADE
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 ]
 

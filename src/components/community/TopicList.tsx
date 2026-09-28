@@ -4,8 +4,8 @@ import { getForumCategory, topicPath } from '@/data/forum'
 import type { Topic } from '@/lib/community/forum'
 import { postDate } from '@/lib/community/text'
 
-/** Liste de sujets : titre, catégorie, auteur, dernière activité, nombre de réponses. */
-export function TopicList({ topics, showCategory = true }: { topics: Topic[]; showCategory?: boolean }) {
+/** Liste de sujets : titre, catégorie, auteur, dernière activité, nombre de réponses ; « Projet » et groupe éventuel. */
+export function TopicList({ topics, showCategory = true, showGroup = true }: { topics: Topic[]; showCategory?: boolean; showGroup?: boolean }) {
   return (
     <ul className="divide-y divide-white/[0.06] overflow-hidden rounded-2xl border border-bord bg-white/[0.02]">
       {topics.map((t) => {
@@ -19,6 +19,12 @@ export function TopicList({ topics, showCategory = true }: { topics: Topic[]; sh
                 </Link>
               </h3>
               <p className="text-[13px] text-txt-muted">
+                {t.project && (
+                  <span className="mr-2 inline-flex rounded-full bg-bronze/15 px-2 py-0.5 text-xs font-semibold text-bronze">
+                    {t.project.status === 'found' ? 'Projet · trouvé' : 'Projet'}
+                  </span>
+                )}
+                {showGroup && t.group && <span className="mr-2 inline-flex rounded-full bg-white/[0.06] px-2 py-0.5 text-xs text-txt-secondary">Groupe · {t.group.name}</span>}
                 {showCategory && category && <span className="text-bronze">{category.name} · </span>}
                 {t.author.name}
                 {t.author.detail && ` · ${t.author.detail}`}

@@ -66,6 +66,8 @@ export function buildLlmsTxt(): string {
       '/communaute/forum',
       `Questions et retours d'expérience entre entrepreneurs, en lecture libre : ${forumCategories.map((c) => c.name).join(', ')}.`,
     ),
+    link('Projets des membres', '/communaute/projets', "Des entrepreneurs présentent leur projet et ce qu'ils cherchent : conseils, partenaire ou compétence."),
+    link('Groupes de la communauté', '/communaute/groupes', "Groupes d'entrepreneurs par thème, ville ou niveau, proposés par les membres ; échanges en lecture libre."),
     link('Contact', '/contact', 'Formulaire, email et prise de rendez-vous.'),
     '',
     '## Optional',
@@ -162,6 +164,10 @@ export async function buildLlmsFullTxt(): Promise<string> {
     '',
     `Forum (${absoluteUrl('/communaute/forum')}) : lecture libre, écriture avec un compte gratuit confirmé par e-mail. Thèmes du forum :`,
     ...forumCategories.map((c) => `- ${c.name} : ${c.description}`),
+    '',
+    `Projets (${absoluteUrl('/communaute/projets')}) : un membre présente son projet et ce qu'il cherche (des conseils, un ou une partenaire, une compétence précise). Les autres membres répondent sur la page du projet ou proposent leur aide par un message transmis par e-mail à son auteur.`,
+    '',
+    `Groupes (${absoluteUrl('/communaute/groupes')}) : groupes d'entrepreneurs autour d'un thème, d'une ville ou d'un niveau, proposés par les membres et publiés après validation. Les échanges sont lisibles par tous ; on rejoint un groupe en un clic pour y écrire.`,
   )
 
   out.push('', '## Articles du blog', '', `Thématiques : ${categories.map((c) => c.name).join(', ')}.`)

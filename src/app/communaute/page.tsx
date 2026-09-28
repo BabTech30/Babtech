@@ -58,6 +58,12 @@ export default function CommunautePage() {
         <Link href="/communaute/forum/" className="btn-secondary">
           Voir le forum
         </Link>
+        <Link href="/communaute/projets/" className="btn-secondary">
+          Les projets
+        </Link>
+        <Link href="/communaute/groupes/" className="btn-secondary">
+          Les groupes
+        </Link>
         <span className="inline-flex items-center gap-2 rounded-xl border border-bord px-4 py-3 text-sm text-txt-secondary">
           <span className="h-2 w-2 animate-pulse rounded-full bg-bronze" />
           {community.status}
@@ -185,8 +191,8 @@ export default function CommunautePage() {
               Un compte gratuit, et tu participes
             </h2>
             <p className="mb-7 text-[17px] leading-relaxed text-txt-secondary">
-              Pose tes questions sur le forum, réponds aux autres et partage ce qui marche. Tes sujets orientent les prochains ateliers et
-              rencontres.
+              Pose tes questions sur le forum, présente ton projet, rejoins un groupe et partage ce qui marche. Tes sujets orientent les
+              prochains ateliers et rencontres.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link href="/communaute/inscription/" className="btn-bronze">
@@ -200,7 +206,7 @@ export default function CommunautePage() {
           </div>
           <ul className="grid gap-3 sm:grid-cols-2">
             {[
-              { icon: 'message' as const, text: 'Forum en lecture libre, écriture avec un compte confirmé par e-mail' },
+              { icon: 'message' as const, text: 'Forum, projets et groupes en lecture libre, écriture avec un compte confirmé par e-mail' },
               { icon: 'shield' as const, text: 'Ton e-mail jamais affiché : prénom et initiale du nom seulement' },
               { icon: 'users' as const, text: 'Des entrepreneurs de l’Hérault et du Gard, tous niveaux' },
               { icon: 'check' as const, text: 'Gratuit, sans engagement, compte supprimable à tout moment' },

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { CommunityNav } from '@/components/community/CommunityNav'
 import { ForumUnavailable } from '@/components/community/ForumUnavailable'
 import { MemberBar } from '@/components/community/MemberBar'
 import { TopicList } from '@/components/community/TopicList'
@@ -112,6 +113,7 @@ export default async function ForumCategoryPage({ params, searchParams }: Props)
 
       <section className="py-14 md:py-16" aria-labelledby="sujets">
         <div className="container-b">
+          <CommunityNav current="forum" />
           <h2 id="sujets" className="section-title mb-6">
             Les sujets{page > 1 ? ` (page ${page})` : ''}
           </h2>

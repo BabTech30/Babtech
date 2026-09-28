@@ -100,6 +100,9 @@ const MEMBER_PAGES = [
   '/communaute/compte/',
   '/communaute/forum/nouveau/',
   '/communaute/forum/modifier/',
+  '/communaute/projets/nouveau/',
+  '/communaute/groupes/proposer/',
+  '/communaute/groupes/modifier/',
 ]
 
 /* ---------- Fichiers SEO / GEO ---------- */
@@ -330,13 +333,13 @@ for (const agendaPath of ['/admin/agenda/mauvais.ics', '/admin/agenda/AAAAAAAAAA
   if (res.status !== 404) errors.push(`${agendaPath} : réponse 404 attendue (reçu ${res.status})`)
 }
 /* ---------- Communauté : pages réservées aux membres, adresses inconnues ---------- */
-for (const memberPath of ['/communaute/compte/', '/communaute/forum/nouveau/']) {
+for (const memberPath of ['/communaute/compte/', '/communaute/forum/nouveau/', '/communaute/projets/nouveau/', '/communaute/groupes/proposer/']) {
   const res = await get(memberPath)
   if (![302, 303, 307].includes(res.status) || !res.location.includes('/communaute/connexion/')) {
     errors.push(`${memberPath} sans connexion : redirection vers /communaute/connexion/ attendue (reçu ${res.status} ${res.location})`)
   }
 }
-for (const unknown of ['/communaute/forum/theme-inexistant/', '/communaute/forum/sujet/pas-un-sujet/']) {
+for (const unknown of ['/communaute/forum/theme-inexistant/', '/communaute/forum/sujet/pas-un-sujet/', '/communaute/groupes/pas-un-groupe/']) {
   const res = await get(unknown)
   if (res.status !== 404) errors.push(`${unknown} : réponse 404 attendue (reçu ${res.status})`)
 }

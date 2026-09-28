@@ -149,12 +149,13 @@ export const faqGroups: FaqGroup[] = [
     items: [
       {
         q: "Qu'est-ce que la communauté BabTech ?",
-        a: "Un réseau d'entrepreneurs de l'Hérault et du Gard qui apprennent ensemble le digital et l'IA : forum d'entraide, groupes de travail, ateliers pratiques, rencontres et mises en relation. Le forum est ouvert : lecture libre, et compte gratuit pour écrire.",
+        a: "Un réseau d'entrepreneurs de l'Hérault et du Gard qui apprennent ensemble le digital et l'IA : forum d'entraide, projets des membres, groupes, ateliers pratiques et rencontres. Tout est en lecture libre, et un compte gratuit suffit pour écrire, présenter son projet ou rejoindre un groupe.",
         link: { href: '/communaute/forum', label: 'Voir le forum' },
       },
       {
         q: 'Qui peut rejoindre les groupes de travail ?',
-        a: "Les dirigeants de TPE, artisans, commerçants, indépendants et porteurs de projet qui veulent progresser sur le digital et l'IA, quel que soit leur niveau. L'objectif : apprendre en pratiquant, entre pairs.",
+        a: "Les dirigeants de TPE, artisans, commerçants, indépendants et porteurs de projet qui veulent progresser sur le digital et l'IA, quel que soit leur niveau. L'objectif : apprendre en pratiquant, entre pairs. Avec un compte gratuit, on rejoint un groupe en un clic, ou on propose le sien.",
+        link: { href: '/communaute/groupes', label: 'Voir les groupes' },
       },
       {
         q: "BabTech propose-t-il des formations à l'IA pour les entreprises ?",

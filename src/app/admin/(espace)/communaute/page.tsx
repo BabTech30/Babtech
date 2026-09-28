@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { moderateMember, moderatePost } from '@/app/admin/community-actions'
+import { moderateGroup, moderateMember, moderatePost } from '@/app/admin/community-actions'
 import { ConfirmForm } from '@/components/admin/ConfirmForm'
-import { topicPath } from '@/data/forum'
+import { getForumCategory, groupLevelLabel, groupPath, topicPath } from '@/data/forum'
 import { requireAdmin } from '@/lib/admin/auth'
 import {
   communityStats,
@@ -13,6 +13,7 @@ import {
   type RecentPost,
   recentPosts,
 } from '@/lib/community/forum'
+import { type GroupAdminRow, groupsForAdmin } from '@/lib/community/groups'
 import { purgeStale } from '@/lib/community/members'
 import { excerpt, postDate } from '@/lib/community/text'
 import { dbConfigured, dbErrorCode, dbProblem } from '@/lib/db'
@@ -47,7 +48,7 @@ function Header() {
       <h1 className="font-outfit text-3xl font-bold tracking-tight text-white md:text-4xl">Communauté</h1>
       <p className="mt-3 max-w-2xl text-txt-secondary">
         {fr(
-          "Le forum publie les messages tout de suite : tu es prévenu de chaque nouveau sujet et de chaque signalement, et tu modères ici. Un message masqué disparaît du site, il reste visible ici.",
+          "Le forum et les projets publient les messages tout de suite : tu es prévenu de chaque nouveau sujet, projet et signalement, et tu modères ici. Un message masqué disparaît du site, il reste visible ici. Les groupes proposés par les membres n'apparaissent qu'une fois validés.",
         )}
       </p>
     </div>
@@ -118,7 +119,7 @@ function PostCard({ p }: { p: RecentPost }) {
   return (
     <li className={`rounded-xl border p-4 ${p.status === 'hidden' ? 'border-white/[0.06] opacity-70' : 'border-bord'}`}>
       <p className="text-sm text-txt-muted">
-        {p.target === 'topic' ? 'Nouveau sujet' : 'Réponse'} ·{' '}
+        {p.target === 'reply' ? 'Réponse' : p.project ? 'Nouveau projet' : p.groupName ? `Sujet du groupe « ${p.groupName} »` : 'Nouveau sujet'} ·{' '}
         <a href={href} target="_blank" rel="noopener" className={link}>
           {p.topicTitle} ↗
         </a>{' '}
@@ -130,6 +131,118 @@ function PostCard({ p }: { p: RecentPost }) {
       <div className="mt-3">
         <PostActions target={p.target} id={p.id} status={p.status} />
       </div>
+    </li>
+  )
+}
+
+const GROUP_STATUS: Record<GroupAdminRow['status'], [string, string]> = {
+  pending: ['À valider', 'bg-bronze/15 text-bronze'],
+  active: ['Publié', 'bg-emerald-b/15 text-emerald-300'],
+  hidden: ['Masqué', 'bg-white/[0.08] text-txt-secondary'],
+}
+
+function GroupCard({ g }: { g: GroupAdminRow }) {
+  const [label, style] = GROUP_STATUS[g.status]
+  const facts = [getForumCategory(g.category)?.name, g.city, groupLevelLabel(g.level), g.capacity ? `${g.capacity} places` : 'places illimitées']
+  const op = (value: string) => (
+    <>
+      <input type="hidden" name="id" value={g.id} />
+      <input type="hidden" name="op" value={value} />
+    </>
+  )
+  return (
+    <li className={`rounded-xl border p-4 ${g.status === 'pending' ? 'border-bronze/30 bg-bronze/[0.05]' : 'border-bord'}`}>
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <p className="font-medium text-white">
+          {g.status === 'active' ? (
+            <a href={`${groupPath(g.id, g.name)}/`} target="_blank" rel="noopener" className={link}>
+              {g.name} ↗
+            </a>
+          ) : (
+            g.name
+          )}
+        </p>
+        <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${style}`}>{label}</span>
+      </div>
+      <p className="mt-1 text-sm text-txt-muted">{facts.filter(Boolean).join(' · ')}</p>
+      <p className="mt-1 text-sm text-txt-secondary">
+        {g.status === 'pending' ? 'Proposé' : 'Animé'} par {g.organizerFullName || 'un ancien membre'}
+        {g.organizerEmail && (
+          <>
+            {' '}
+            (
+            <a href={`mailto:${g.organizerEmail}`} className={link}>
+              {g.organizerEmail}
+            </a>
+            )
+          </>
+        )}{' '}
+        · {postDate(g.createdAt)}
+        {g.status !== 'pending' && ` · ${g.memberCount} membre${g.memberCount > 1 ? 's' : ''}, ${g.topicCount} sujet${g.topicCount > 1 ? 's' : ''}`}
+      </p>
+      <p className="mt-2 whitespace-pre-line text-sm text-txt-primary">{excerpt(g.description, 600)}</p>
+      {g.status === 'pending' ? (
+        <div className="mt-3 flex flex-wrap items-end gap-2">
+          <form action={moderateGroup}>
+            {op('approve')}
+            <button type="submit" className="rounded-lg bg-emerald-b px-3 py-1.5 text-sm font-semibold text-[#0a1a10] hover:bg-emerald-400">
+              Valider et publier
+            </button>
+          </form>
+          <form action={moderateGroup} className="flex flex-wrap items-end gap-2">
+            {op('refuse')}
+            <div>
+              <label htmlFor={`motif-${g.id}`} className="text-xs text-txt-muted">
+                Motif du refus (facultatif, envoyé au membre)
+              </label>
+              <input id={`motif-${g.id}`} name="motif" type="text" maxLength={500} className="input !py-1.5 text-sm" />
+            </div>
+            <button type="submit" className={danger}>
+              Refuser
+            </button>
+          </form>
+        </div>
+      ) : (
+        <>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <form action={moderateGroup}>
+              {op(g.status === 'active' ? 'hide' : 'show')}
+              <button type="submit" className={small}>
+                {g.status === 'active' ? 'Masquer' : 'Réafficher'}
+              </button>
+            </form>
+            <ConfirmForm
+              action={moderateGroup}
+              fields={{ id: String(g.id), op: 'delete' }}
+              message={`Supprimer le groupe « ${g.name} » ? Ses sujets restent sur le forum, sans groupe.`}
+              label="Supprimer le groupe"
+              className={danger}
+            />
+          </div>
+          {g.members.length > 0 && (
+            <details className="mt-3">
+              <summary className="cursor-pointer text-sm text-txt-secondary hover:text-white">Membres ({g.members.length})</summary>
+              <ul className="mt-2 grid gap-1.5">
+                {g.members.map((m) => (
+                  <li key={m.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-white/[0.06] px-3 py-2 text-sm">
+                    <span className="text-txt-primary">
+                      {m.name}
+                      {m.role === 'organizer' && ' (animation)'} · <span className="text-txt-muted">{m.email}</span>
+                    </span>
+                    <ConfirmForm
+                      action={moderateGroup}
+                      fields={{ id: String(g.id), op: 'remove-member', membre: String(m.id) }}
+                      message={`Retirer ${m.name} du groupe « ${g.name} » ?`}
+                      label="Retirer"
+                      className={small}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
+        </>
+      )}
     </li>
   )
 }
@@ -223,12 +336,20 @@ export default async function CommunityAdminPage({ searchParams }: { searchParam
     )
   }
 
-  let data: { stats: Awaited<ReturnType<typeof communityStats>>; reports: OpenReport[]; posts: RecentPost[]; members: MemberAdminRow[] } | undefined
+  let data:
+    | { stats: Awaited<ReturnType<typeof communityStats>>; reports: OpenReport[]; posts: RecentPost[]; members: MemberAdminRow[]; groups: GroupAdminRow[] }
+    | undefined
   let problem = ''
   try {
     await purgeStale().catch((error) => console.error('communauté : nettoyage impossible', error))
-    const [stats, reports, posts, members] = await Promise.all([communityStats(), openReports(), recentPosts(20), listMembers({ q, status: statut })])
-    data = { stats, reports, posts, members }
+    const [stats, reports, posts, members, groups] = await Promise.all([
+      communityStats(),
+      openReports(),
+      recentPosts(20),
+      listMembers({ q, status: statut }),
+      groupsForAdmin(),
+    ])
+    data = { stats, reports, posts, members, groups }
   } catch (error) {
     console.error('communauté : lecture impossible', error)
     problem = dbProblem(dbErrorCode(error))
@@ -245,12 +366,17 @@ export default async function CommunityAdminPage({ searchParams }: { searchParam
     )
   }
 
-  const { stats, reports, posts, members } = data
+  const { stats, reports, posts, members, groups } = data
+  const pendingGroups = groups.filter((g) => g.status === 'pending')
+  const otherGroups = groups.filter((g) => g.status !== 'pending')
   const figures = [
     { label: 'Membres actifs', value: stats.activeMembers },
     { label: 'En attente de confirmation', value: stats.pendingMembers },
-    { label: 'Sujets', value: stats.topics },
+    { label: 'Sujets (projets compris)', value: stats.topics },
     { label: 'Réponses', value: stats.replies },
+    { label: 'Projets en recherche', value: stats.openProjects },
+    { label: 'Groupes publiés', value: stats.activeGroups },
+    { label: 'Groupes à valider', value: stats.pendingGroups },
     { label: 'Signalements à traiter', value: stats.openReports },
   ]
 
@@ -258,7 +384,7 @@ export default async function CommunityAdminPage({ searchParams }: { searchParam
     <div className="grid grid-cols-1 gap-6">
       <Header />
 
-      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {figures.map((f) => (
           <li key={f.label} className="rounded-xl border border-bord bg-nuit p-4">
             <p className="font-outfit text-2xl font-bold tabular-nums text-white">{f.value}</p>
@@ -282,6 +408,22 @@ export default async function CommunityAdminPage({ searchParams }: { searchParam
         )}
       </section>
 
+      {pendingGroups.length > 0 && (
+        <section className={panel} aria-labelledby="pending-groups-title">
+          <h2 id="pending-groups-title" className={h2}>
+            Groupes à valider
+          </h2>
+          <p className="mt-1 text-sm text-txt-secondary">
+            {fr("Validé : le groupe est publié et son auteur en devient l'animateur ou l'animatrice (un e-mail le prévient). Refusé : la proposition est effacée et son auteur reçoit ton motif.")}
+          </p>
+          <ul className="mt-4 grid gap-3">
+            {pendingGroups.map((g) => (
+              <GroupCard key={g.id} g={g} />
+            ))}
+          </ul>
+        </section>
+      )}
+
       <section className={panel} aria-labelledby="posts-title">
         <h2 id="posts-title" className={h2}>
           Derniers messages
@@ -294,6 +436,21 @@ export default async function CommunityAdminPage({ searchParams }: { searchParam
           </ul>
         ) : (
           <p className="mt-2 text-sm text-txt-secondary">Aucun message pour l&apos;instant.</p>
+        )}
+      </section>
+
+      <section className={panel} aria-labelledby="groups-title">
+        <h2 id="groups-title" className={h2}>
+          Groupes
+        </h2>
+        {otherGroups.length ? (
+          <ul className="mt-4 grid gap-3">
+            {otherGroups.map((g) => (
+              <GroupCard key={g.id} g={g} />
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-2 text-sm text-txt-secondary">Aucun groupe publié pour l&apos;instant.</p>
         )}
       </section>
 

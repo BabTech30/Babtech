@@ -3,7 +3,7 @@ import type { IconName } from '@/components/Icon'
 export const community = {
   name: 'La communauté BabTech',
   tagline: "Apprendre le digital et l'IA entre entrepreneurs, à Montpellier et dans l'Hérault.",
-  status: 'Forum ouvert · inscription gratuite',
+  status: 'Forum, projets et groupes · inscription gratuite',
   intro:
     "L'IA et le digital évoluent chaque semaine. Seul, on décroche vite. À plusieurs, on avance : la communauté BabTech réunit des dirigeants de TPE, artisans, commerçants et indépendants qui veulent apprendre en pratiquant, partager ce qui marche et se rencontrer.",
   formats: [
@@ -44,8 +44,8 @@ export const community = {
   ],
   roadmap: [
     {
-      title: 'Comptes membres et forum',
-      desc: "Crée ton compte gratuit, pose tes questions sur le forum et partage ce qui marche : ce sont tes sujets qui construisent le programme.",
+      title: 'Forum, projets et groupes',
+      desc: "Crée ton compte gratuit, pose tes questions, présente ton projet ou rejoins un groupe : ce sont vos échanges qui construisent le programme.",
       current: true,
     },
     {
@@ -59,8 +59,8 @@ export const community = {
       current: false,
     },
     {
-      title: 'Groupes et mises en relation',
-      desc: "Rejoindre des groupes par projet ou par thème, s'inscrire aux événements et se mettre en relation entre membres.",
+      title: 'Événements en ligne',
+      desc: "S'inscrire aux ateliers et aux rencontres directement sur le site, avec un rappel par e-mail.",
       current: false,
     },
   ],
@@ -86,8 +86,12 @@ export const community = {
       a: "Tout le monde : le forum est en lecture libre, y compris pour Google et les assistants IA. Pour écrire, il suffit d'un compte gratuit, confirmé par e-mail.",
     },
     {
+      q: 'Comment présenter mon projet ou rejoindre un groupe ?',
+      a: "Avec ton compte gratuit. Dans l'espace Projets, présente ton projet et ce que tu cherches (des conseils, un partenaire, une compétence) : les membres te répondent sur sa page ou te proposent leur aide par e-mail. Dans l'espace Groupes, rejoins un groupe en un clic, ou propose le tien : il est publié une fois validé.",
+    },
+    {
       q: 'Que deviennent mes informations ?',
-      a: "Ton e-mail sert à te connecter et, si tu le souhaites, à te prévenir des réponses : il n'est jamais affiché. Sur le forum, seuls ton prénom, l'initiale de ton nom, ton activité et ta ville apparaissent. Tu peux supprimer ton compte à tout moment.",
+      a: "Ton e-mail sert à te connecter et, si tu le souhaites, à te prévenir des réponses : il n'est jamais affiché. Sur le forum, les projets et les groupes, seuls ton prénom, l'initiale de ton nom, ton activité et ta ville apparaissent. Si tu proposes ton aide pour un projet, ton message et ton e-mail sont transmis à son auteur, pour qu'il puisse te répondre. Tu peux supprimer ton compte à tout moment.",
     },
   ],
 }

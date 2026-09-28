@@ -3,18 +3,23 @@ import Link from 'next/link'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { cache } from 'react'
 import { publishReply, removeOwnPost } from '@/app/communaute/forum/actions'
+import { joinGroupAction } from '@/app/communaute/groupes/actions'
+import { changeProjectStatus, offerHelp } from '@/app/communaute/projets/actions'
 import { ConfirmForm } from '@/components/admin/ConfirmForm'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { ActionForm } from '@/components/community/ActionForm'
 import { ForumUnavailable } from '@/components/community/ForumUnavailable'
 import { MemberBar } from '@/components/community/MemberBar'
 import { PostBody } from '@/components/community/PostBody'
+import { ProjectBadges } from '@/components/community/ProjectBadges'
 import { ReportForm } from '@/components/community/ReportForm'
 import { Icon } from '@/components/Icon'
 import { JsonLd } from '@/components/JsonLd'
-import { FORUM_PATH, getForumCategory, LIMITS, topicPath, topicSlug } from '@/data/forum'
+import { FORUM_PATH, getForumCategory, groupPath, GROUPS_PATH, LIMITS, PROJECT_LIMITS, PROJECTS_PATH, topicPath, topicSlug } from '@/data/forum'
 import { type Author, getTopic } from '@/lib/community/forum'
+import { getGroup, membership, placesLeft } from '@/lib/community/groups'
 import { currentMember } from '@/lib/community/members'
+import { getProjectDetails, hasOffered } from '@/lib/community/projects'
 import { excerpt, postDate } from '@/lib/community/text'
 import { dbConfigured } from '@/lib/db'
 import { graph, webPageNode } from '@/lib/schema'
@@ -45,9 +50,10 @@ const load = cache(async (value: string) => {
   }
 })
 
-function description(body: string) {
+function description(body: string, project = false) {
   const text = excerpt(body, 155)
-  return text.length >= 70 ? text : `${text} Question posée sur le forum de la communauté BabTech.`
+  if (text.length >= 70) return text
+  return `${text} ${project ? 'Projet présenté sur la communauté BabTech.' : 'Question posée sur le forum de la communauté BabTech.'}`
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -55,7 +61,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (result === 'unavailable') return { title: 'Forum', robots: { index: false, follow: true } }
   if (!result) return {}
   const { topic } = result
-  return pageMetadata({ title: excerpt(topic.title, 60), description: description(topic.body), path: topicPath(topic.id, topic.title), og: 'forum' })
+  return pageMetadata({ title: excerpt(topic.title, 60), description: description(topic.body, Boolean(topic.project)), path: topicPath(topic.id, topic.title), og: 'forum' })
 }
 
 function Byline({ author, date, edited }: { author: Author; date: Date; edited: Date | null }) {
@@ -101,12 +107,36 @@ export default async function TopicPage({ params, searchParams }: Props) {
   const { erreur } = await searchParams
   const url = absoluteUrl(path)
   const isAuthor = (a: Author) => Boolean(member && a.id === member.id)
+  // Projet : ce qu'il cherche ; groupe : on répond seulement si on en fait partie.
+  const [project, offered, group, inGroup] = await Promise.all([
+    topic.project ? getProjectDetails(topic.id) : Promise.resolve(undefined),
+    topic.project && member ? hasOffered(topic.id, member.id) : Promise.resolve(false),
+    topic.group ? getGroup(topic.group.id) : Promise.resolve(undefined),
+    topic.group && member ? membership(topic.group.id, member.id) : Promise.resolve(undefined),
+  ])
+  const canReply = Boolean(member && (!group || inGroup))
+  const crumbs = project
+    ? [
+        { name: 'Communauté', path: '/communaute' },
+        { name: 'Projets', path: PROJECTS_PATH },
+      ]
+    : group
+      ? [
+          { name: 'Communauté', path: '/communaute' },
+          { name: 'Groupes', path: GROUPS_PATH },
+          { name: excerpt(group.name, 30), path: groupPath(group.id, group.name) },
+        ]
+      : [
+          { name: 'Communauté', path: '/communaute' },
+          { name: 'Forum', path: FORUM_PATH },
+          ...(category ? [{ name: category.name, path: `${FORUM_PATH}/${category.slug}` }] : []),
+        ]
 
   return (
     <>
       <JsonLd
         data={graph(
-          webPageNode({ path, name: topic.title, description: description(topic.body), og: 'forum', about: { '@id': `${url}#sujet` } }),
+          webPageNode({ path, name: topic.title, description: description(topic.body, Boolean(project)), og: 'forum', about: { '@id': `${url}#sujet` } }),
           {
             '@type': 'DiscussionForumPosting',
             '@id': `${url}#sujet`,
@@ -132,23 +162,27 @@ export default async function TopicPage({ params, searchParams }: Props) {
 
       <article className="pb-6 pt-8 md:pt-12" aria-labelledby="titre-sujet">
         <div className="container-b max-w-[860px]">
-          <Breadcrumbs
-            items={[
-              { name: 'Communauté', path: '/communaute' },
-              { name: 'Forum', path: FORUM_PATH },
-              ...(category ? [{ name: category.name, path: `${FORUM_PATH}/${category.slug}` }] : []),
-              { name: excerpt(topic.title, 40), path },
-            ]}
-          />
-          {category && (
-            <Link href={`${FORUM_PATH}/${category.slug}/`} className="section-tag text-bronze hover:underline">
-              {category.name}
+          <Breadcrumbs items={[...crumbs, { name: excerpt(topic.title, 40), path }]} />
+          {group ? (
+            <Link href={`${groupPath(group.id, group.name)}/`} className="section-tag text-bronze hover:underline">
+              Groupe · {group.name}
             </Link>
+          ) : (
+            category && (
+              <Link href={`${FORUM_PATH}/${category.slug}/`} className="section-tag text-bronze hover:underline">
+                {project ? `Projet · ${category.name}` : category.name}
+              </Link>
+            )
           )}
           <h1 id="titre-sujet" className="mb-4 font-outfit text-3xl font-bold tracking-tight text-white md:text-4xl">
             {topic.title}
           </h1>
           <Byline author={topic.author} date={topic.createdAt} edited={topic.editedAt} />
+          {project && (
+            <div className="mt-4">
+              <ProjectBadges needs={project.needs} skill={project.skill} stage={project.stage} status={project.status} />
+            </div>
+          )}
           {erreur === 'reponses' && (
             <p role="alert" className="mt-5 rounded-xl border border-bronze/30 bg-bronze/10 px-4 py-3 text-sm text-txt-primary">
               {fr("D'autres membres ont déjà répondu : ce sujet ne peut plus être supprimé. Tu peux le modifier, ou écrire à contact@babtech.fr.")}
@@ -175,8 +209,67 @@ export default async function TopicPage({ params, searchParams }: Props) {
               ) : (
                 member && <ReportForm type="sujet" id={topic.id} />
               )}
+              {project && isAuthor(topic.author) && (
+                <form action={changeProjectStatus}>
+                  <input type="hidden" name="id" value={topic.id} />
+                  <input type="hidden" name="statut" value={project.status === 'found' ? 'open' : 'found'} />
+                  <button type="submit" className={small}>
+                    <Icon name="check" className="h-3.5 w-3.5" />
+                    {project.status === 'found' ? 'Je cherche encore' : "J'ai trouvé"}
+                  </button>
+                </form>
+              )}
             </div>
           </div>
+
+          {project && !isAuthor(topic.author) && project.status === 'open' && topic.author.id !== null && (
+            <div className="card mt-6 p-6 md:p-7" id="proposer">
+              <h2 className="mb-2 font-outfit text-xl font-semibold text-white">Proposer mon aide</h2>
+              {!member ? (
+                <>
+                  <p className="mb-5 text-sm leading-relaxed text-txt-secondary">
+                    {fr(`Tu peux aider ${topic.author.name} (un conseil, une compétence, l'envie de t'associer) ? Il suffit d'un compte gratuit.`)}
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    <Link href="/communaute/inscription/" className="btn-bronze">
+                      Créer mon compte
+                    </Link>
+                    <Link href={`/communaute/connexion/?suite=${encodeURIComponent(`${path}/#proposer`)}`} className="btn-secondary">
+                      Me connecter
+                    </Link>
+                  </div>
+                </>
+              ) : offered ? (
+                <p className="text-sm text-txt-secondary">
+                  {fr(`Tu as déjà proposé ton aide pour ce projet : la réponse de ${topic.author.name} arrivera directement dans ta boîte e-mail.`)}
+                </p>
+              ) : (
+                <>
+                  <p className="mb-5 text-sm leading-relaxed text-txt-secondary">
+                    {fr(
+                      `Ton message part par e-mail à ${topic.author.name}, avec ton adresse e-mail pour pouvoir te répondre directement. Pour un conseil utile à tous, réponds plutôt plus bas.`,
+                    )}
+                  </p>
+                  <ActionForm action={offerHelp} submit="Envoyer ma proposition" pending="Envoi…">
+                    <input type="hidden" name="id" value={topic.id} />
+                    <label htmlFor="proposition" className="sr-only">
+                      Ton message
+                    </label>
+                    <textarea
+                      id="proposition"
+                      name="message"
+                      rows={5}
+                      required
+                      minLength={PROJECT_LIMITS.offer.min}
+                      maxLength={PROJECT_LIMITS.offer.max}
+                      className="input resize-y"
+                      placeholder="Qui tu es, ce que tu proposes, pourquoi ça peut l'aider…"
+                    />
+                  </ActionForm>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </article>
 
@@ -217,7 +310,25 @@ export default async function TopicPage({ params, searchParams }: Props) {
           </ol>
 
           <div className="mt-10" id="repondre">
-            {member ? (
+            {member && group && !inGroup ? (
+              <div className="card p-6 text-center md:p-8">
+                <p className="mb-5 text-txt-secondary">
+                  {fr(`Ce sujet fait partie du groupe « ${group.name} » : rejoins le groupe pour répondre.`)}
+                </p>
+                {placesLeft(group) === 0 ? (
+                  <p className="text-sm text-txt-muted">Le groupe est complet pour le moment.</p>
+                ) : (
+                  <form action={joinGroupAction} className="flex justify-center">
+                    <input type="hidden" name="groupe" value={group.id} />
+                    <input type="hidden" name="retour" value={`${path}/#repondre`} />
+                    <button type="submit" className="btn-bronze">
+                      <Icon name="user-plus" className="h-[18px] w-[18px]" />
+                      Rejoindre le groupe
+                    </button>
+                  </form>
+                )}
+              </div>
+            ) : canReply ? (
               <div className="card p-6 md:p-7">
                 <h2 className="mb-4 font-outfit text-xl font-semibold text-white">Répondre</h2>
                 <ActionForm action={publishReply} submit="Publier ma réponse" pending="Publication…">

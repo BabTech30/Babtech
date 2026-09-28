@@ -2,10 +2,13 @@
 
 import { revalidatePath } from 'next/cache'
 import { requireAdmin } from '@/lib/admin/auth'
+import { GROUP_LIMITS, groupPath } from '@/data/forum'
 import { deletePost, resolveReports, setMemberStatus, setPostStatus } from '@/lib/community/forum'
+import { approveGroup, deleteGroup, getGroup, groupProposer, refuseGroup, removeGroupMember, setGroupVisibility } from '@/lib/community/groups'
 import { createToken, deleteMember, findMemberById, recentTokens } from '@/lib/community/members'
+import { singleLine } from '@/lib/community/text'
 import { dbProblem, dbStatus } from '@/lib/db'
-import { memberVerify } from '@/lib/emails'
+import { groupApproved, groupRefused, memberVerify } from '@/lib/emails'
 import { sendMails } from '@/lib/mail'
 import { absoluteUrl } from '@/lib/site'
 import type { FormState } from './actions'
@@ -62,6 +65,37 @@ export async function moderateMember(formData: FormData) {
     }
   } catch (error) {
     console.error('modération : action sur le membre impossible', error)
+  }
+  done()
+}
+
+/**
+ * Groupes : valider (publié, son auteur prévenu et nommé animateur ou animatrice), refuser (proposition effacée,
+ * son auteur prévenu avec le motif éventuel), masquer, réafficher, supprimer, retirer un membre.
+ */
+export async function moderateGroup(formData: FormData) {
+  await requireAdmin()
+  const id = toId(formData.get('id'))
+  const op = String(formData.get('op') ?? '')
+  if (!id) return
+  try {
+    if (op === 'approve') {
+      await approveGroup(id)
+      const [group, proposer] = await Promise.all([getGroup(id), groupProposer(id)])
+      if (group && proposer) await sendMails([groupApproved(proposer, group.name, absoluteUrl(`${groupPath(group.id, group.name)}/`))])
+    } else if (op === 'refuse') {
+      const proposer = await groupProposer(id)
+      const reason = singleLine(formData.get('motif')).slice(0, GROUP_LIMITS.refusal.max)
+      if ((await refuseGroup(id)) && proposer) await sendMails([groupRefused(proposer, proposer.groupName, reason)])
+    } else if (op === 'hide') await setGroupVisibility(id, false)
+    else if (op === 'show') await setGroupVisibility(id, true)
+    else if (op === 'delete') await deleteGroup(id)
+    else if (op === 'remove-member') {
+      const memberId = toId(formData.get('membre'))
+      if (memberId) await removeGroupMember(id, memberId)
+    }
+  } catch (error) {
+    console.error('modération : action sur le groupe impossible', error)
   }
   done()
 }

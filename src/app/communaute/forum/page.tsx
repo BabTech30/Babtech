@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { CommunityNav } from '@/components/community/CommunityNav'
 import { ForumUnavailable } from '@/components/community/ForumUnavailable'
 import { MemberBar } from '@/components/community/MemberBar'
 import { TopicList } from '@/components/community/TopicList'
@@ -98,6 +99,7 @@ export default async function ForumPage({ searchParams }: { searchParams: Promis
 
       <section className="py-14 md:py-16" aria-labelledby="categories">
         <div className="container-b">
+          <CommunityNav current="forum" />
           {notice && (
             <p role="status" className="mb-8 rounded-xl border border-emerald-b/30 bg-emerald-b/[0.08] px-4 py-3 text-sm text-emerald-200">
               {fr(notice)}

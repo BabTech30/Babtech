@@ -88,3 +88,53 @@ export function topicSlug(title: string) {
 }
 
 export const topicPath = (id: number, title: string) => `${FORUM_PATH}/sujet/${id}-${topicSlug(title)}`
+
+/* ---------- Projets et groupes ---------- */
+
+/**
+ * Projets : un membre présente son projet et dit ce qu'il cherche ; c'est un sujet du forum avec des informations
+ * en plus (table bt_projects). Groupes : proposés par les membres, visibles une fois validés dans le tableau de bord ;
+ * leurs échanges sont des sujets du forum rattachés au groupe, lisibles par tous, écrits par ses membres.
+ */
+export const PROJECTS_PATH = '/communaute/projets'
+export const GROUPS_PATH = '/communaute/groupes'
+
+export type ProjectNeed = 'conseils' | 'partenaire' | 'competence'
+export const PROJECT_NEEDS: { value: ProjectNeed; label: string; short: string }[] = [
+  { value: 'conseils', label: 'Des conseils, des retours', short: 'Conseils' },
+  { value: 'partenaire', label: 'Un ou une partenaire', short: 'Partenaire' },
+  { value: 'competence', label: 'Une compétence précise', short: 'Compétence' },
+]
+
+export type ProjectStage = 'idee' | 'lancement' | 'activite'
+export const PROJECT_STAGES: { value: ProjectStage; label: string }[] = [
+  { value: 'idee', label: "C'est une idée" },
+  { value: 'lancement', label: 'En cours de lancement' },
+  { value: 'activite', label: 'Déjà en activité' },
+]
+export const projectStageLabel = (stage: string) => PROJECT_STAGES.find((s) => s.value === stage)?.label ?? ''
+
+export type GroupLevel = 'tous' | 'debutants' | 'confirmes'
+export const GROUP_LEVELS: { value: GroupLevel; label: string }[] = [
+  { value: 'tous', label: 'Tous niveaux' },
+  { value: 'debutants', label: 'Débutants' },
+  { value: 'confirmes', label: 'Confirmés' },
+]
+export const groupLevelLabel = (level: string) => GROUP_LEVELS.find((l) => l.value === level)?.label ?? ''
+
+export const GROUP_LIMITS = {
+  name: { min: 5, max: 80 },
+  description: { min: 20, max: 2000 },
+  city: { max: 80 },
+  /** Nombre de places : vide ou 0 = sans limite. */
+  capacity: { min: 3, max: 200 },
+  refusal: { max: 500 },
+}
+export const PROJECT_LIMITS = { skill: { max: 120 }, offer: { min: 20, max: 2000 } }
+
+/** Groupes et projets par page. */
+export const GROUPS_PER_PAGE = 24
+export const PROJECTS_PER_PAGE = 20
+
+/** Adresse d'un groupe : identifiant + nom lisible (« /communaute/groupes/3-ia-pour-artisans-nimes »). */
+export const groupPath = (id: number, name: string) => `${GROUPS_PATH}/${id}-${topicSlug(name)}`

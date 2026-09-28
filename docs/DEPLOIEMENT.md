@@ -49,10 +49,12 @@ Ces valeurs ne s'écrivent que dans hPanel, jamais dans le code : le dépôt Git
   sur tes appareils et un lien d'agenda privé pour ton téléphone. Chaque réservation t'envoie aussi un e-mail, et la personne
   reçoit sa confirmation.
   Sur iPhone et iPad, les notifications ne marchent que dans le tableau de bord installé sur l'écran d'accueil.
-- **Communauté** : les chiffres du forum, les signalements à traiter, les derniers messages (masquer, réafficher,
-  supprimer) et les membres (rechercher, suspendre, rétablir, supprimer un compte avec ou sans ses messages, renvoyer
-  l'e-mail de confirmation). Les messages sont publiés tout de suite : tu reçois une notification et un e-mail pour
-  chaque nouveau sujet et chaque signalement, une notification pour chaque nouveau membre.
+- **Communauté** : les chiffres du forum, des projets et des groupes, les signalements à traiter, les groupes à valider
+  (valider et publier, ou refuser avec un motif envoyé au membre), les derniers messages (masquer, réafficher,
+  supprimer), les groupes (masquer, supprimer, retirer un membre) et les membres (rechercher, suspendre, rétablir,
+  supprimer un compte avec ou sans ses messages, renvoyer l'e-mail de confirmation). Les messages et les projets sont
+  publiés tout de suite : tu reçois une notification et un e-mail pour chaque nouveau sujet, projet, groupe proposé et
+  signalement, une notification pour chaque nouveau membre. La pastille du menu compte les signalements et les groupes à valider.
 - **Partager** : les QR codes de ta présentation, du site et de ta carte de visite (fichiers pour l'impression,
   affichage en grand, lien à copier) et le nombre de scans de chaque mois.
 - **Réglages** : changer le mot de passe (il remplace alors celui de hPanel et déconnecte les autres appareils),

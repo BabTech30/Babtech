@@ -5,9 +5,13 @@ import { dbConfigured, execute, type Row, select, sqlDate, transaction } from '@
 /**
  * Forum de la communauté (tables bt_topics, bt_replies, bt_reports) : lecture publique, écriture par les
  * membres, modération depuis le tableau de bord. Un message masqué par la modération disparaît du site public.
+ * Un sujet peut être un projet (bt_projects) ou appartenir à un groupe (bt_group_topics) : il disparaît aussi
+ * du site si son groupe est masqué.
  */
 export type PostStatus = 'visible' | 'hidden'
 export type Author = { id: number | null; name: string; detail: string }
+export type ProjectStatus = 'open' | 'found'
+export type GroupStatus = 'pending' | 'active' | 'hidden'
 
 export type Topic = {
   id: number
@@ -20,6 +24,10 @@ export type Topic = {
   editedAt: Date | null
   lastActivityAt: Date
   author: Author
+  /** Projet d'un membre : recherche en cours ou trouvée. */
+  project?: { status: ProjectStatus }
+  /** Groupe dans lequel le sujet a été ouvert. */
+  group?: { id: number; name: string; status: GroupStatus }
 }
 
 export type Reply = { id: number; topicId: number; body: string; status: PostStatus; createdAt: Date; editedAt: Date | null; author: Author }
@@ -47,6 +55,8 @@ function toTopic(r: Row): Topic {
     editedAt: r.edited_at ? new Date(r.edited_at) : null,
     lastActivityAt: new Date(r.last_activity_at),
     author: toAuthor(r),
+    ...(r.project_status ? { project: { status: r.project_status as ProjectStatus } } : {}),
+    ...(r.group_id != null ? { group: { id: Number(r.group_id), name: String(r.group_name), status: r.group_status as GroupStatus } } : {}),
   }
 }
 
@@ -63,40 +73,47 @@ function toReply(r: Row): Reply {
 }
 
 const TOPIC_COLUMNS = `t.id, t.category, t.title, t.body, t.status, t.reply_count, t.created_at, t.edited_at, t.last_activity_at,
-  t.member_id, m.first_name, m.last_name, m.activity, m.city`
+  t.member_id, m.first_name, m.last_name, m.activity, m.city, p.status AS project_status, g.id AS group_id, g.name AS group_name,
+  g.status AS group_status`
+export const TOPIC_FROM = `bt_topics t LEFT JOIN bt_members m ON m.id = t.member_id
+  LEFT JOIN bt_projects p ON p.topic_id = t.id
+  LEFT JOIN bt_group_topics gt ON gt.topic_id = t.id
+  LEFT JOIN bt_groups g ON g.id = gt.group_id`
+/** Sujet visible sur le site : pas masqué, et son groupe (s'il en a un) est publié. */
+export const PUBLIC_TOPIC = "t.status = 'visible' AND (g.id IS NULL OR g.status = 'active')"
+export { TOPIC_COLUMNS, toTopic }
 const REPLY_COLUMNS = `r.id, r.topic_id, r.body, r.status, r.created_at, r.edited_at, r.member_id, m.first_name, m.last_name, m.activity, m.city`
 
 /* ---------- Lecture publique ---------- */
 
 /** Accueil du forum : nombre de sujets par catégorie et derniers sujets actifs. */
 export async function forumOverview(latest = 8) {
-  const counts = await select("SELECT category, COUNT(*) AS n FROM bt_topics WHERE status = 'visible' GROUP BY category")
-  const topics = await select(
-    `SELECT ${TOPIC_COLUMNS} FROM bt_topics t LEFT JOIN bt_members m ON m.id = t.member_id
-     WHERE t.status = 'visible' ORDER BY t.last_activity_at DESC LIMIT ?`,
-    [latest],
-  )
+  const counts = await select(`SELECT t.category, COUNT(*) AS n FROM ${TOPIC_FROM} WHERE ${PUBLIC_TOPIC} GROUP BY t.category`)
+  const topics = await select(`SELECT ${TOPIC_COLUMNS} FROM ${TOPIC_FROM} WHERE ${PUBLIC_TOPIC} ORDER BY t.last_activity_at DESC LIMIT ?`, [latest])
   const byCategory = Object.fromEntries(forumCategories.map((c) => [c.slug, 0])) as Record<string, number>
   for (const row of counts) if (row.category in byCategory) byCategory[String(row.category)] = Number(row.n)
   return { counts: byCategory, latest: topics.map(toTopic) }
 }
 
 export async function topicsInCategory(category: string, page: number) {
-  const [count] = await select("SELECT COUNT(*) AS n FROM bt_topics WHERE category = ? AND status = 'visible'", [category])
+  const [count] = await select(`SELECT COUNT(*) AS n FROM ${TOPIC_FROM} WHERE t.category = ? AND ${PUBLIC_TOPIC}`, [category])
   const rows = await select(
-    `SELECT ${TOPIC_COLUMNS} FROM bt_topics t LEFT JOIN bt_members m ON m.id = t.member_id
-     WHERE t.category = ? AND t.status = 'visible' ORDER BY t.last_activity_at DESC LIMIT ? OFFSET ?`,
+    `SELECT ${TOPIC_COLUMNS} FROM ${TOPIC_FROM}
+     WHERE t.category = ? AND ${PUBLIC_TOPIC} ORDER BY t.last_activity_at DESC LIMIT ? OFFSET ?`,
     [category, TOPICS_PER_PAGE, (page - 1) * TOPICS_PER_PAGE],
   )
   return { total: Number(count?.n ?? 0), topics: rows.map(toTopic) }
 }
 
-/** Un sujet et ses réponses. Par défaut, seulement s'il est visible, et seulement ses réponses visibles. */
+/**
+ * Un sujet et ses réponses. Par défaut, seulement s'il est visible sur le site (pas masqué, groupe publié),
+ * et seulement ses réponses visibles.
+ */
 export async function getTopic(id: number, { withHidden = false } = {}) {
-  const [row] = await select(`SELECT ${TOPIC_COLUMNS} FROM bt_topics t LEFT JOIN bt_members m ON m.id = t.member_id WHERE t.id = ? LIMIT 1`, [id])
+  const [row] = await select(`SELECT ${TOPIC_COLUMNS} FROM ${TOPIC_FROM} WHERE t.id = ? LIMIT 1`, [id])
   if (!row) return undefined
   const topic = toTopic(row)
-  if (topic.status !== 'visible' && !withHidden) return undefined
+  if (!withHidden && (topic.status !== 'visible' || (topic.group && topic.group.status !== 'active'))) return undefined
   const replies = await select(
     `SELECT ${REPLY_COLUMNS} FROM bt_replies r LEFT JOIN bt_members m ON m.id = r.member_id
      WHERE r.topic_id = ? ${withHidden ? '' : "AND r.status = 'visible'"} ORDER BY r.created_at ASC, r.id ASC`,
@@ -277,14 +294,23 @@ export async function openReports(): Promise<OpenReport[]> {
   return reports
 }
 
-export type RecentPost = { target: 'topic' | 'reply'; id: number; topicId: number; topicTitle: string; body: string; status: PostStatus; createdAt: Date; author: Author }
+export type RecentPost = {
+  target: 'topic' | 'reply'
+  id: number
+  topicId: number
+  topicTitle: string
+  body: string
+  status: PostStatus
+  createdAt: Date
+  author: Author
+  /** Pour un sujet : projet, ou groupe dans lequel il a été ouvert. */
+  project?: boolean
+  groupName?: string
+}
 
 /** Derniers messages publiés (sujets et réponses mêlés), pour la modération. */
 export async function recentPosts(limit = 30): Promise<RecentPost[]> {
-  const topics = await select(
-    `SELECT ${TOPIC_COLUMNS} FROM bt_topics t LEFT JOIN bt_members m ON m.id = t.member_id ORDER BY t.created_at DESC LIMIT ?`,
-    [limit],
-  )
+  const topics = await select(`SELECT ${TOPIC_COLUMNS} FROM ${TOPIC_FROM} ORDER BY t.created_at DESC LIMIT ?`, [limit])
   const replies = await select(
     `SELECT ${REPLY_COLUMNS}, t.title AS topic_title FROM bt_replies r JOIN bt_topics t ON t.id = r.topic_id
      LEFT JOIN bt_members m ON m.id = r.member_id ORDER BY r.created_at DESC LIMIT ?`,
@@ -293,7 +319,18 @@ export async function recentPosts(limit = 30): Promise<RecentPost[]> {
   const posts: RecentPost[] = [
     ...topics.map((r) => {
       const t = toTopic(r)
-      return { target: 'topic' as const, id: t.id, topicId: t.id, topicTitle: t.title, body: t.body, status: t.status, createdAt: t.createdAt, author: t.author }
+      return {
+        target: 'topic' as const,
+        id: t.id,
+        topicId: t.id,
+        topicTitle: t.title,
+        body: t.body,
+        status: t.status,
+        createdAt: t.createdAt,
+        author: t.author,
+        project: Boolean(t.project),
+        ...(t.group ? { groupName: t.group.name } : {}),
+      }
     }),
     ...replies.map((r) => {
       const reply = toReply(r)
@@ -303,10 +340,16 @@ export async function recentPosts(limit = 30): Promise<RecentPost[]> {
   return posts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).slice(0, limit)
 }
 
-/** Nombre de messages signalés en attente, pour la pastille du menu (jamais bloquant : 0 si la base tarde). */
-export async function openReportCount() {
+/**
+ * Ce qui attend une action dans l'onglet Communauté (messages signalés, groupes à valider), pour la pastille du menu.
+ * Jamais bloquant : 0 si la base tarde.
+ */
+export async function communityTodoCount() {
   if (!dbConfigured()) return 0
-  const count = select('SELECT COUNT(DISTINCT target, target_id) AS n FROM bt_reports WHERE resolved_at IS NULL').then(([r]) => Number(r?.n ?? 0))
+  const count = select(
+    `SELECT (SELECT COUNT(DISTINCT target, target_id) FROM bt_reports WHERE resolved_at IS NULL)
+       + (SELECT COUNT(*) FROM bt_groups WHERE status = 'pending') AS n`,
+  ).then(([r]) => Number(r?.n ?? 0))
   const timeout = new Promise<number>((resolve) => setTimeout(() => resolve(0), 1500))
   return Promise.race([count, timeout]).catch(() => 0)
 }
@@ -318,6 +361,8 @@ export async function communityStats() {
   const [topics] = await select("SELECT COUNT(*) AS n, SUM(status = 'hidden') AS hidden FROM bt_topics")
   const [replies] = await select('SELECT COUNT(*) AS n FROM bt_replies')
   const [reports] = await select('SELECT COUNT(DISTINCT target, target_id) AS n FROM bt_reports WHERE resolved_at IS NULL')
+  const [projects] = await select("SELECT COUNT(*) AS n, SUM(status = 'open') AS open FROM bt_projects")
+  const [groups] = await select("SELECT SUM(status = 'active') AS active, SUM(status = 'pending') AS pending FROM bt_groups")
   return {
     activeMembers: Number(members?.active ?? 0),
     pendingMembers: Number(members?.pending ?? 0),
@@ -326,6 +371,10 @@ export async function communityStats() {
     hiddenTopics: Number(topics?.hidden ?? 0),
     replies: Number(replies?.n ?? 0),
     openReports: Number(reports?.n ?? 0),
+    projects: Number(projects?.n ?? 0),
+    openProjects: Number(projects?.open ?? 0),
+    activeGroups: Number(groups?.active ?? 0),
+    pendingGroups: Number(groups?.pending ?? 0),
   }
 }
 

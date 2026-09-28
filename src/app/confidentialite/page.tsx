@@ -43,6 +43,13 @@ export default function Confidentialite() {
             de session garde ta connexion pendant 30 jours au plus.
           </li>
           <li>
+            <strong>Projets et groupes de la communauté&nbsp;:</strong> ton projet (ce que tu cherches, son étape) est public, comme les
+            messages du forum. Les groupes que tu proposes ou rejoins, et ta préférence d&apos;e-mails pour chacun, sont enregistrés&nbsp;; la
+            page d&apos;un groupe affiche la liste de ses membres (prénom, initiale du nom, activité, ville). Si tu cliques sur «&nbsp;Proposer
+            mon aide&nbsp;», ton message et ton email sont envoyés par email à l&apos;auteur du projet pour qu&apos;il ou elle puisse te
+            répondre&nbsp;; le site ne garde pas ce message, seulement la date de ta proposition (pour limiter les abus).
+          </li>
+          <li>
             <strong>Liste de la communauté (avant l&apos;ouverture du forum)&nbsp;:</strong> prénom, email, activité, ville, thèmes et formats
             souhaités, niveau, message (facultatif) et consentement, enregistrés sur le serveur du site et transmis par email&nbsp;; tu reçois
             un email de bienvenue.
@@ -119,7 +126,7 @@ export default function Confidentialite() {
           <li>
             Compte membre&nbsp;: jusqu&apos;à sa suppression, que tu peux faire à tout moment depuis la page «&nbsp;Mon compte&nbsp;». Un compte
             jamais confirmé est effacé au bout de 7 jours. À la suppression, tes messages restent signés «&nbsp;Ancien membre&nbsp;», ou sont
-            effacés si tu le choisis.
+            effacés si tu le choisis&nbsp;; tu quittes aussi tes groupes, et les dates de tes propositions d&apos;aide sont effacées.
           </li>
           <li>Statistiques de fréquentation&nbsp;: données anonymes et agrégées.</li>
         </ul>

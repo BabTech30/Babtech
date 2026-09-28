@@ -35,6 +35,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Forum : pages lues dans la base à chaque visite (les sujets y sont reliés).
     entry('/communaute/forum', 0.7, 'daily'),
     ...forumCategories.map((c) => entry(`/communaute/forum/${c.slug}`, 0.6, 'daily')),
+    entry('/communaute/projets', 0.6, 'daily'),
+    entry('/communaute/groupes', 0.6, 'daily'),
     entry('/communaute/charte', 0.3, 'yearly'),
     entry('/portfolio', 0.7, 'monthly'),
     entry('/a-propos', 0.7, 'monthly'),

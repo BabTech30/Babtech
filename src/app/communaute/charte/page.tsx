@@ -58,10 +58,25 @@ export default function ChartePage() {
           Pour limiter les abus, un compte de moins de {NEW_ACCOUNT_DAYS} jours peut mettre {NEW_ACCOUNT_MAX_LINKS} liens au plus par message, et le
           nombre de sujets et de réponses par jour est limité.
         </p>
+        <p>
+          <strong>Projets.</strong> Présente un vrai projet et ce que tu cherches (des conseils, un ou une partenaire, une compétence)&nbsp;: pas
+          d&apos;offre commerciale déguisée. «&nbsp;Proposer mon aide&nbsp;» envoie ton message et ton adresse e-mail à l&apos;auteur du projet,
+          pour qu&apos;il ou elle puisse te répondre directement&nbsp;: une proposition sincère, pas de démarchage. Quand tu as trouvé, indique-le
+          sur la page du projet.
+        </p>
+        <p>
+          <strong>Groupes.</strong> Un groupe est proposé par un membre et publié après validation&nbsp;; son auteur en devient l&apos;animateur
+          ou l&apos;animatrice. Les échanges du groupe sont lisibles par tous, et seuls ses membres y écrivent. La liste des membres d&apos;un
+          groupe (prénom, initiale du nom, activité et ville) s&apos;affiche sur sa page. Un groupe peut être masqué ou supprimé s&apos;il ne
+          respecte pas cette charte.
+        </p>
 
         <h2>4. Ton compte et ce qui s&apos;affiche</h2>
         <ul>
-          <li>Avec tes messages s&apos;affichent ton prénom, l&apos;initiale de ton nom, et ton activité et ta ville si tu les indiques.</li>
+          <li>
+            Avec tes messages, tes projets et dans la liste des membres de tes groupes s&apos;affichent ton prénom, l&apos;initiale de ton nom, et
+            ton activité et ta ville si tu les indiques.
+          </li>
           <li>Ton adresse e-mail n&apos;est jamais affichée.</li>
           <li>
             Tu peux modifier tes messages et supprimer tes réponses à tout moment. Un sujet ne peut plus être supprimé une fois que d&apos;autres

@@ -1,14 +1,17 @@
 'use server'
 
-import { refresh } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { after } from 'next/server'
-import { FORUM_PATH, getForumCategory, LIMITS, NEW_ACCOUNT_DAYS, NEW_ACCOUNT_MAX_LINKS, topicPath } from '@/data/forum'
+import { FORUM_PATH, groupPath, LIMITS, topicPath } from '@/data/forum'
 import { notifyDevices } from '@/lib/admin/push'
 import { createReply, createTopic, deleteOwnReply, deleteOwnTopic, editReply, editTopic, getReply, getTopic, reportPost } from '@/lib/community/forum'
-import { currentMember, displayName, findMemberById, type Member } from '@/lib/community/members'
-import { cleanText, countLinks, excerpt, singleLine } from '@/lib/community/text'
-import { forumReportAlert, forumTopicAlert, memberReplyNotice } from '@/lib/emails'
+import { createGroupTopic, getGroup, type Group, groupRecipients, membership, touchGroupOfTopic } from '@/lib/community/groups'
+import { currentMember, displayName, findMemberById } from '@/lib/community/members'
+import { getProjectDetails, updateProjectDetails } from '@/lib/community/projects'
+import { goTo } from '@/lib/community/redirect'
+import { cleanText, excerpt, singleLine } from '@/lib/community/text'
+import { formId, linksError, readProject, readTopic, replyError } from '@/lib/community/validate'
+import { forumReportAlert, forumTopicAlert, groupTopicNotice, memberReplyNotice } from '@/lib/emails'
 import { limiter } from '@/lib/limits'
 import { sendMails } from '@/lib/mail'
 import { absoluteUrl } from '@/lib/site'
@@ -26,46 +29,7 @@ const reportsPerMember = limiter({ perVisitor: 10, windowMs: 86_400_000, perDay:
 const LOGIN = 'Connecte-toi pour participer au forum.'
 const BROKEN = 'Publication impossible pour le moment : réessaie dans quelques minutes.'
 
-/**
- * Après une écriture, la page affichée est rechargée depuis le serveur : sans cela, une redirection vers la même page
- * (seule l'ancre #reponse-… change) peut laisser l'ancienne version à l'écran, sans la nouvelle réponse.
- */
-function goTo(path: string): never {
-  refresh()
-  redirect(path)
-}
-
-const id = (value: FormDataEntryValue | null) => {
-  const n = Number(value)
-  return Number.isInteger(n) && n > 0 ? n : 0
-}
-
-function linksError(member: Member, text: string) {
-  const recent = Date.now() - member.createdAt.getTime() < NEW_ACCOUNT_DAYS * 86_400_000
-  if (recent && countLinks(text) > NEW_ACCOUNT_MAX_LINKS) {
-    return `Pendant tes ${NEW_ACCOUNT_DAYS} premiers jours, tu peux mettre ${NEW_ACCOUNT_MAX_LINKS} liens au plus par message.`
-  }
-  return undefined
-}
-
-function readTopic(formData: FormData) {
-  const category = String(formData.get('categorie') ?? '')
-  const title = singleLine(formData.get('titre'))
-  const body = cleanText(formData.get('message'))
-  let error: string | undefined
-  if (!getForumCategory(category)) error = 'Choisis une catégorie.'
-  else if (title.length < LIMITS.title.min || title.length > LIMITS.title.max) {
-    error = `Le titre doit faire entre ${LIMITS.title.min} et ${LIMITS.title.max} caractères : une vraie question, précise.`
-  } else if (body.length < LIMITS.topic.min) error = `Donne un peu plus de détails (${LIMITS.topic.min} caractères au moins).`
-  else if (body.length > LIMITS.topic.max) error = `Message trop long : ${LIMITS.topic.max} caractères au plus.`
-  return { category, title, body, error }
-}
-
-function replyError(body: string) {
-  if (body.length < LIMITS.reply.min) return 'Ta réponse est vide.'
-  if (body.length > LIMITS.reply.max) return `Réponse trop longue : ${LIMITS.reply.max} caractères au plus.`
-  return undefined
-}
+const id = formId
 
 /* ---------- Publier ---------- */
 
@@ -76,10 +40,24 @@ export async function publishTopic(_prev: PostState, formData: FormData): Promis
   if (error) return { error }
   const links = linksError(member, body)
   if (links) return { error: links }
+  // Sujet ouvert dans un groupe : réservé à ses membres.
+  const groupId = id(formData.get('groupe'))
+  let group: Group | undefined
+  if (groupId) {
+    try {
+      group = await getGroup(groupId)
+      if (!group) return { error: "Ce groupe n'existe plus." }
+      if (!(await membership(group.id, member.id))) return { error: `Rejoins le groupe « ${group.name} » pour y ouvrir un sujet.` }
+    } catch (error) {
+      console.error('forum : groupe illisible', error)
+      return { error: BROKEN }
+    }
+  }
   if (!topicsPerMember.take(`m${member.id}`)) return { error: "Tu as déjà ouvert 5 sujets aujourd'hui : réessaie demain." }
   let path: string
   try {
-    path = topicPath(await createTopic(member.id, category, title, body), title)
+    const topicId = group ? await createGroupTopic(member.id, group.id, { category, title, body }) : await createTopic(member.id, category, title, body)
+    path = topicPath(topicId, title)
   } catch (error) {
     console.error('forum : sujet non publié', error)
     return { error: BROKEN }
@@ -87,8 +65,19 @@ export async function publishTopic(_prev: PostState, formData: FormData): Promis
   const author = displayName(member)
   after(async () => {
     const results = await Promise.allSettled([
-      notifyDevices({ title: 'Nouveau sujet sur le forum', body: `${author} : ${title}`, url: '/admin/communaute/', tag: `sujet-${path}` }),
-      sendMails([forumTopicAlert({ title, body, path: `${path}/` }, author)]),
+      notifyDevices({
+        title: group ? `Nouveau sujet · ${group.name}` : 'Nouveau sujet sur le forum',
+        body: `${author} : ${title}`,
+        url: '/admin/communaute/',
+        tag: `sujet-${path}`,
+      }),
+      sendMails([forumTopicAlert({ title, body, path: `${path}/`, groupName: group?.name }, author)]),
+      // Membres du groupe qui ont gardé les e-mails du groupe.
+      group
+        ? groupRecipients(group.id, member.id).then((people) =>
+            sendMails(people.map((m) => groupTopicNotice(m, { groupName: group.name, title, author, excerpt: excerpt(body, 400), link: absoluteUrl(`${path}/`) }))),
+          )
+        : Promise.resolve(),
     ])
     for (const r of results) if (r.status === 'rejected') console.error('forum : alerte non envoyée', r.reason)
   })
@@ -105,8 +94,11 @@ export async function publishReply(_prev: PostState, formData: FormData): Promis
   try {
     const data = await getTopic(id(formData.get('sujet')))
     if (!data) return { error: "Ce sujet n'existe plus." }
+    const group = data.topic.group
+    if (group && !(await membership(group.id, member.id))) return { error: `Rejoins le groupe « ${group.name} » pour répondre.` }
     if (!repliesPerMember.take(`m${member.id}`)) return { error: "Tu as beaucoup répondu aujourd'hui : réessaie demain." }
     const replyId = await createReply(member.id, data.topic.id, body)
+    if (group) await touchGroupOfTopic(data.topic.id)
     const path = topicPath(data.topic.id, data.topic.title)
     target = `${path}/#reponse-${replyId}`
     const authorId = data.topic.author.id
@@ -148,7 +140,11 @@ export async function updatePost(_prev: PostState, formData: FormData): Promise<
       if (error) return { error }
       const links = linksError(member, body)
       if (links) return { error: links }
+      // Projet : ce que le membre cherche est modifié avec le sujet.
+      const project = formData.get('projet') === '1' ? readProject(formData) : undefined
+      if (project?.error) return { error: project.error }
       if (!(await editTopic(topicId, member.id, { category, title, body }))) return { error: 'Tu ne peux modifier que tes propres sujets.' }
+      if (project && (await getProjectDetails(topicId))) await updateProjectDetails(topicId, project.project)
       back = `${topicPath(topicId, title)}/`
     }
   } catch (error) {
@@ -173,7 +169,7 @@ export async function removeOwnPost(formData: FormData) {
       const data = await getTopic(postId)
       const result = await deleteOwnTopic(postId, member.id)
       if (result === 'replies' && data) back = `${topicPath(data.topic.id, data.topic.title)}/?erreur=reponses`
-      else if (result === 'deleted') back = `${FORUM_PATH}/?sujet=supprime`
+      else if (result === 'deleted') back = data?.topic.group ? `${groupPath(data.topic.group.id, data.topic.group.name)}/` : `${FORUM_PATH}/?sujet=supprime`
     }
   } catch (error) {
     console.error('forum : suppression impossible', error)
