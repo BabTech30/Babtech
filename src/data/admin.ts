@@ -257,8 +257,9 @@ export const adminTasks: AdminTask[] = [
     id: 'indexnow',
     phase: 'local',
     owner: 'claude',
+    done: true,
     title: 'Signaler toutes les pages à Bing (IndexNow)',
-    detail: 'Dès que la version avec les villes du Gard est en ligne : dis-le à Claude, il envoie la liste des pages.',
+    detail: "C'est fait le 28 septembre 2026 : les 62 pages du plan du site (villes, forum compris). Après un nouvel article, Claude signale sa page.",
   },
   {
     id: 'gbp',
