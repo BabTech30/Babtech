@@ -35,6 +35,7 @@ const verification = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  manifest: '/manifest.webmanifest',
   title: {
     default: 'BabTech — Sites web, applications métier et IA à Montpellier',
     template: '%s | BabTech',

@@ -60,7 +60,10 @@ Ces valeurs ne s'écrivent que dans hPanel, jamais dans le code : le dépôt Git
 ## Si une mise à jour n'apparaît pas
 
 1. hPanel → application Node.js → **déploiements** : le dernier doit être réussi. S'il a échoué, son journal indique
-   l'erreur : copie-le dans la conversation avec Claude.
+   l'erreur : copie-le dans la conversation avec Claude. **Ne clique pas sur « Corriger et redéployer »** : l'assistant
+   de Hostinger propose de revenir à une ancienne version de Next.js (failles de sécurité connues).
+   Un échec pendant « Creating an optimized production build » vient en général d'un manque de mémoire : le site est
+   construit avec webpack (`next build --webpack`) justement pour rester sous la limite de Hostinger.
 2. Relance le déploiement depuis hPanel.
 3. Vide le cache (hPanel → Performances → CDN, s'il est actif), puis recharge la page (Ctrl + F5).
 

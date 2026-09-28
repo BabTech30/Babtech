@@ -392,6 +392,10 @@ export const adminDecisions = [
     date: '2026-09-28',
     text: 'Adresse publiée : siège au 27 avenue du Professeur Grasset, 34090 Montpellier (SIRET 801 478 306 00054, entrepreneur individuel).',
   },
+  {
+    date: '2026-09-28',
+    text: "Échecs de construction chez Hostinger (manque de mémoire) : le site se construit avec webpack, moins gourmand. Ne jamais accepter la « correction » automatique de Hostinger, qui ramène une ancienne version de Next.js.",
+  },
 ]
 
 /** Dernière mesure Lighthouse (mobile), mise à jour par Claude. */
