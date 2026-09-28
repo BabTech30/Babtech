@@ -440,6 +440,10 @@ export const adminDecisions = [
     date: '2026-09-28',
     text: "Sur le forum, un membre apparaît sous son prénom et l'initiale de son nom (« Marie D. · Fleuriste à Nîmes ») ; son e-mail n'est jamais affiché.",
   },
+  {
+    date: '2026-09-28',
+    text: 'Bas de page plus court sur téléphone : villes et liens utiles côte à côte (1,1 écran au lieu de 1,6). Ordinateur et tablette inchangés.',
+  },
 ]
 
 /** Dernière mesure Lighthouse (mobile), mise à jour par Claude. */

@@ -14,11 +14,11 @@ const resources = [
   { href: '/contact', label: 'Contact' },
 ]
 
-function Column({ title, children }: { title: string; children: React.ReactNode }) {
+function Column({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
   return (
-    <div>
-      <p className="mb-4 font-outfit text-[13px] font-semibold uppercase tracking-[1.5px] text-txt-primary">{title}</p>
-      <ul className="space-y-2.5 text-sm">{children}</ul>
+    <div className={className}>
+      <p className="mb-3 font-outfit text-[13px] font-semibold uppercase tracking-[1.5px] text-txt-primary sm:mb-4">{title}</p>
+      <ul className="space-y-2 text-sm sm:space-y-2.5">{children}</ul>
     </div>
   )
 }
@@ -31,11 +31,12 @@ export default function Footer() {
   const year = new Date().getFullYear()
   return (
     <footer className="border-t border-bord bg-nuit-light">
-      <div className="container-b py-14">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_0.8fr]">
-          <div>
+      <div className="container-b pb-7 pt-10 sm:py-14">
+        {/* Sur téléphone : villes et liens utiles côte à côte, pour un bas de page moins long. */}
+        <div className="grid grid-cols-2 gap-x-5 gap-y-8 sm:gap-10 lg:grid-cols-[1.4fr_1fr_1fr_0.8fr]">
+          <div className="col-span-2 sm:col-span-1">
             <Logo className="mb-4" />
-            <p className="mb-5 max-w-[300px] text-sm leading-relaxed text-txt-muted">{site.shortDescription}</p>
+            <p className="mb-4 max-w-[300px] text-sm leading-relaxed text-txt-muted sm:mb-5">{site.shortDescription}</p>
             <address className="space-y-2 text-sm not-italic text-txt-secondary">
               <p className="flex items-center gap-2">
                 <Icon name="map-pin" className="h-4 w-4 shrink-0 text-emerald-b" />
@@ -58,7 +59,7 @@ export default function Footer() {
             </address>
           </div>
 
-          <Column title="Services">
+          <Column title="Services" className="col-span-2 sm:col-span-1">
             {services.map((s) => (
               <li key={s.slug}>
                 <Link href={`/services/${s.slug}`} className={linkClass}>
@@ -94,7 +95,7 @@ export default function Footer() {
           </Column>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-bord pt-6 text-[13px] text-txt-muted md:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-bord pt-5 text-[13px] text-txt-muted sm:mt-12 sm:pt-6 md:flex-row">
           <p>
             © {year} {site.name} — {site.founder.name}, entrepreneur individuel (EI).
           </p>
