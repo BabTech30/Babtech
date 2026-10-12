@@ -24,6 +24,8 @@ export type Mail = {
 
 export const mailConfigured = () => Boolean(process.env.SMTP_PASSWORD)
 
+const MAX_PARALLEL = 2
+
 let transporter: ReturnType<typeof createTransport> | undefined
 function transport() {
   transporter ??= createTransport({
@@ -31,11 +33,8 @@ function transport() {
     port: PORT,
     // 465 : connexion chiffrée d'emblée ; 587 : chiffrement négocié (STARTTLS).
     secure: PORT === 465,
-    // Deux connexions au plus, réutilisées : un envoi groupé (membres d'un groupe) part à la file, sans ouvrir une
-    // connexion par e-mail, ce que le serveur d'envoi pourrait refuser.
-    pool: true,
-    maxConnections: 2,
-    maxMessages: 50,
+    // Une connexion par e-mail, pas de connexions réutilisées : avec elles, une connexion coupée par le serveur juste
+    // après l'envoi faisait repartir le même e-mail (doublons chez les clients).
     auth: { user: MAIL_FROM, pass: process.env.SMTP_PASSWORD },
     connectionTimeout: 15_000,
     greetingTimeout: 15_000,
@@ -50,7 +49,12 @@ function transport() {
  */
 export async function sendMails(mails: Mail[]): Promise<boolean[]> {
   if (!mailConfigured() || !mails.length) return mails.map(() => false)
-  const results = await Promise.allSettled(mails.map((mail) => transport().sendMail({ from: { name: SENDER_NAME, address: MAIL_FROM }, ...mail })))
+  // Deux envois à la fois au plus : un envoi groupé (membres d'un groupe) part par petites vagues.
+  const results: PromiseSettledResult<unknown>[] = []
+  for (let i = 0; i < mails.length; i += MAX_PARALLEL) {
+    const batch = mails.slice(i, i + MAX_PARALLEL)
+    results.push(...(await Promise.allSettled(batch.map((mail) => transport().sendMail({ from: { name: SENDER_NAME, address: MAIL_FROM }, ...mail })))))
+  }
   const failure = results.find((r): r is PromiseRejectedResult => r.status === 'rejected')
   if (failure) console.error('e-mail non envoyé', failure.reason)
   const code = failure ? String((failure.reason as { code?: unknown })?.code ?? 'ERREUR') : undefined
