@@ -10,7 +10,8 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
 - Mise en ligne : Hostinger (application Node.js, Node 22) construit la branche `main` (`npm run build`, puis serveur
   Next.js « standalone » imposé par Hostinger). Les modifications validées vont dans `main` ; l'utilisateur déploie
   ensuite lui-même, à la main, depuis hPanel. Ne jamais accepter la « correction » automatique de Hostinger : elle ne
-  modifie que `package.json`, pas `package-lock.json` (la version installée ne change pas). Pour une alerte de sécurité :
+  modifie que `package.json`, pas `package-lock.json` (les deux fichiers ne sont plus alignés et la version réellement
+  installée n'est plus garantie). Pour une alerte de sécurité :
   `npm install paquet@version` puis `npm audit`, `npm run verify`, et fermer la demande de Hostinger.
 - Construction avec webpack (`next build --webpack`), pas Turbopack : Turbopack demande environ 1,5 Go de mémoire et
   échoue chez Hostinger ; webpack passe avec environ 1,2 Go. Surveiller ce qui alourdit la construction (images générées).
