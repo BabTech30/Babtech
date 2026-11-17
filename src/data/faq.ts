@@ -59,12 +59,26 @@ export const faqGroups: FaqGroup[] = [
         link: { href: '/services/site-reservation-location-saisonniere', label: "Voir l'offre" },
       },
       {
+        q: 'Dois-je quitter Airbnb ou Booking.com si je prends un site de réservation ?',
+        a: "Non. Ton site s'ajoute aux plateformes, il ne les remplace pas : elles t'amènent de nouveaux voyageurs, ton site te permet de recevoir en direct ceux qui reviennent ou qui te trouvent autrement. Les calendriers se synchronisent avec Airbnb et Booking.com pour éviter les doubles réservations.",
+        link: { href: '/services/site-reservation-location-saisonniere', label: 'Comment ça marche' },
+      },
+      {
         q: 'Combien de temps faut-il pour créer un site vitrine ?',
         a: "Entre 2 et 4 semaines selon la complexité. Tu valides chaque étape : tu ne découvres pas le résultat à la fin. Le site est livré prêt à l'emploi, avec le référencement déjà en place.",
       },
       {
+        q: 'Le référencement est-il compris dans le prix du site ?',
+        a: "Oui. Le référencement local (Google et Google Maps) et le GEO, c'est-à-dire la visibilité dans les assistants IA comme ChatGPT, Perplexity ou Gemini, sont inclus dans chaque site créé par BabTech. Aucun classement n'est garanti : personne ne peut le promettre honnêtement. Ce qui est fait, c'est tout ce qui dépend du site.",
+        link: { href: '/services/referencement-local-geo', label: 'Le référencement local et le GEO' },
+      },
+      {
         q: 'Comment se passe un projet avec BabTech ?',
         a: "En 4 étapes : Écoute (on parle de ton business), Proposition (une solution claire, sans jargon), Réalisation (tu valides à chaque étape) et Suivi (Bastien reste disponible après la livraison).",
+      },
+      {
+        q: 'Que se passe-t-il après la mise en ligne de mon site ?',
+        a: "Tu repars avec une prise en main courte, pour être autonome sur l'essentiel, et Bastien reste disponible après la livraison : le projet ne s'arrête pas à la mise en ligne. Pour les sites de réservation, une maintenance est proposée à partir de 35 € par mois ; les améliorations et les fonctions sur mesure se font sur devis.",
       },
       {
         q: 'À qui faire appel pour digitaliser une TPE sans budget de grande entreprise ?',
@@ -97,6 +111,11 @@ export const faqGroups: FaqGroup[] = [
       {
         q: 'Comment être recommandé par ChatGPT, Perplexity ou Gemini quand on est une TPE ?',
         a: "Il faut un site au contenu clair et factuel (services, prix indicatifs, zone, FAQ), des données structurées Schema.org, un fichier llms.txt, des robots IA autorisés, et une identité cohérente sur le web (Google Business Profile, annuaires, avis). C'est ce qu'on appelle le GEO, intégré dans chaque projet BabTech.",
+        link: { href: '/blog/geo-referencement-ia-chatgpt-perplexity-gemini', label: 'Lire le guide du GEO' },
+      },
+      {
+        q: "C'est quoi le GEO, et quelle différence avec le SEO ?",
+        a: "Le SEO te rend visible dans les résultats de Google et de Google Maps. Le GEO (Generative Engine Optimization) regroupe les techniques pour qu'un assistant IA comme ChatGPT, Perplexity ou Gemini cite ton entreprise dans ses réponses. Le GEO s'appuie sur un bon SEO, des informations factuelles et structurées, et une identité cohérente partout sur le web.",
         link: { href: '/blog/geo-referencement-ia-chatgpt-perplexity-gemini', label: 'Lire le guide du GEO' },
       },
       {
@@ -134,6 +153,10 @@ export const faqGroups: FaqGroup[] = [
         link: { href: '/blog/automatisations-ia-tpe-artisans', label: '7 exemples concrets' },
       },
       {
+        q: 'Mes données et celles de mes clients sont-elles en sécurité ?',
+        a: "C'est une priorité : accès protégés par identifiant, droits par utilisateur, hébergement sécurisé et sauvegardes. On choisit ensemble où sont hébergées tes données, et elles restent les tiennes. Pour les automatisations, les accès sont limités au strict nécessaire et le RGPD est pris en compte dès la conception.",
+      },
+      {
         q: 'Comment digitaliser mon commerce sans compétences techniques ?',
         a: "C'est le principe de BabTech : tu n'as pas besoin de savoir coder. Les outils sont livrés clés en main, avec une interface simple pour gérer ton contenu, et Bastien reste disponible après la livraison.",
       },
@@ -151,6 +174,11 @@ export const faqGroups: FaqGroup[] = [
         q: "Qu'est-ce que la communauté BabTech ?",
         a: "Un réseau d'entrepreneurs de l'Hérault et du Gard qui apprennent ensemble le digital et l'IA : forum d'entraide, projets des membres, groupes, ateliers pratiques et rencontres. Tout est en lecture libre, et un compte gratuit suffit pour écrire, présenter son projet ou rejoindre un groupe.",
         link: { href: '/communaute/forum', label: 'Voir le forum' },
+      },
+      {
+        q: 'Le forum est-il gratuit, et qui peut y écrire ?',
+        a: "Oui, il est gratuit. Tout le monde peut lire les échanges ; un compte gratuit suffit pour poser une question, répondre, présenter son projet ou rejoindre un groupe. Ton nom s'affiche sous la forme « prénom + initiale » et ton e-mail n'est jamais affiché.",
+        link: { href: '/communaute/charte', label: 'Lire la charte du forum' },
       },
       {
         q: 'Qui peut rejoindre les groupes de travail ?',

@@ -482,6 +482,14 @@ export const adminDecisions = [
     date: '2026-11-17',
     text: "Sécurité : Next.js, nodemailer, zod et sharp mis à jour (alertes de Hostinger corrigées, avec le fichier de verrouillage). Le navigateur refuse désormais tout contenu venu d'ailleurs que du site (politique CSP), sauf la vidéo YouTube. La « correction automatique » de Hostinger ne suffit pas : elle ne met à jour qu'un des deux fichiers de dépendances.",
   },
+  {
+    date: '2026-11-17',
+    text: "Contenus et parcours : 2 nouveaux articles (site vitrine ou page Facebook ; 10 erreurs qui rendent un site invisible sur Google), 6 questions ajoutées à la FAQ avec une recherche, idées de questions et guides à lire sur chaque thème du forum. Sur téléphone, accueil plus court et barre « Appeler / Réserver un appel » toujours à portée de pouce.",
+  },
+  {
+    date: '2026-11-17',
+    text: 'Guide « Dupliquer cette structure pour un autre projet » ajouté au dépôt (docs/DUPLIQUER.md) : ce qui se réutilise tel quel, ce qui se réécrit, les étapes.',
+  },
 ]
 
 /** Dernière mesure Lighthouse (mobile), mise à jour par Claude. */
@@ -495,8 +503,8 @@ export const adminHealth = {
     { label: 'SEO', value: 100 },
   ],
   facts: [
-    { label: 'Pages', value: '64' },
-    { label: 'Articles de blog', value: '7' },
+    { label: 'Pages', value: '66' },
+    { label: 'Articles de blog', value: '9' },
     { label: 'Villes couvertes', value: '25' },
     { label: 'Affichage principal', value: '2,4 s' },
   ],

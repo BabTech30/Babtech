@@ -24,13 +24,17 @@ export const accentStyles: Record<Accent, { bar: string; iconBg: string; text: s
   },
 }
 
-export function ServiceCard({ service, headingLevel = 'h3' }: { service: Service; headingLevel?: 'h2' | 'h3' }) {
+/**
+ * `compact` (accueil) : sur téléphone, la carte garde le nom, la promesse et le prix ; le résumé complet
+ * est sur la page du service. À partir de la tablette, la carte est identique partout.
+ */
+export function ServiceCard({ service, headingLevel = 'h3', compact = false }: { service: Service; headingLevel?: 'h2' | 'h3'; compact?: boolean }) {
   const a = accentStyles[service.accent]
   const Heading = headingLevel
   return (
-    <article className="card card-hover relative flex flex-col overflow-hidden p-7 md:p-8">
+    <article className={`card card-hover relative flex flex-col overflow-hidden ${compact ? 'p-5 sm:p-7 md:p-8' : 'p-7 md:p-8'}`}>
       <div aria-hidden="true" className={`absolute inset-x-0 top-0 h-[3px] ${a.bar}`} />
-      <div className="mb-5 flex items-center justify-between gap-3">
+      <div className={`flex items-center justify-between gap-3 ${compact ? 'mb-3 sm:mb-5' : 'mb-5'}`}>
         <span className={`flex h-12 w-12 items-center justify-center rounded-xl ${a.iconBg}`}>
           <Icon name={service.icon} className="h-6 w-6" />
         </span>
@@ -41,8 +45,8 @@ export function ServiceCard({ service, headingLevel = 'h3' }: { service: Service
           {service.name}
         </Link>
       </Heading>
-      <p className={`mb-3 text-sm font-medium ${a.text}`}>{service.promise}</p>
-      <p className="mb-6 flex-1 text-[14.5px] leading-relaxed text-txt-secondary">{fr(service.summary)}</p>
+      <p className={`text-sm font-medium ${a.text} ${compact ? 'mb-4 flex-1 sm:mb-3 sm:flex-none' : 'mb-3'}`}>{service.promise}</p>
+      <p className={`mb-6 flex-1 text-[14.5px] leading-relaxed text-txt-secondary ${compact ? 'hidden sm:block' : ''}`}>{fr(service.summary)}</p>
       <div className="flex items-center justify-between gap-3 border-t border-bord pt-4">
         <span className="text-sm font-semibold text-txt-primary">{fr(service.priceLabel)}</span>
         <span className={`inline-flex items-center gap-1 text-[13px] font-medium ${a.text}`}>

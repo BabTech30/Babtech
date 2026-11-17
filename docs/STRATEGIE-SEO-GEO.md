@@ -125,7 +125,7 @@ Chaque article : une vraie question de client, une réponse dès le premier para
 
 | Mois | Articles proposés |
 |---|---|
-| 1 | Site vitrine ou page Facebook : que choisir pour un artisan ? · 10 erreurs qui empêchent un site d'apparaître sur Google |
+| 1 | ✅ publiés le 17 novembre 2026 : Site vitrine ou page Facebook : que choisir pour un artisan ? · 10 erreurs qui empêchent un site d'apparaître sur Google |
 | 2 | QR menu pour restaurant : mode d'emploi · Comment rédiger la description de sa fiche Google Business Profile |
 | 3 | Facturation électronique : ce qui change pour les TPE (avec un expert-comptable invité) · Relancer ses devis automatiquement |
 | 4 | ChatGPT, Claude, Gemini, Le Chat : lequel choisir pour une TPE ? · Compte rendu du premier atelier de la communauté |
@@ -137,6 +137,14 @@ Chaque article : une vraie question de client, une réponse dès le premier para
 | 10 | Les métiers du BTP face à l'IA : ce qui change vraiment · Tableau de bord : les 5 chiffres qu'un artisan doit suivre |
 | 11 | GEO : bilan d'un an de tests dans les assistants IA · Refonte de site : quand et comment |
 | 12 | Le guide 2027 du digital pour les TPE de l'Hérault et du Gard (article pilier, mis à jour chaque année) |
+
+### Faire vivre le forum (contenu créé par les membres)
+
+Un forum vide n'apporte rien au référencement ; un forum actif crée chaque semaine des pages que personne d'autre ne peut
+écrire. Ce qui est en place : tant qu'un thème compte moins de 5 sujets, sa page propose trois idées de questions (un clic
+préremplit le titre) et renvoie vers les guides du blog sur le même thème (`starters` et `guides` dans `src/data/forum.ts`).
+Ce qui dépend de toi : ouvrir toi-même un sujet par thème, répondre vite aux premiers messages, et citer le forum à la fin
+de chaque rendez-vous.
 
 ## 8. Indicateurs à suivre chaque mois
 

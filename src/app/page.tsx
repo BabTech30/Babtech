@@ -155,9 +155,9 @@ export default function Home() {
       </section>
 
       {/* Services */}
-      <section className="border-y border-bord bg-nuit-light py-20 md:py-24" aria-labelledby="services-titre">
+      <section className="border-y border-bord bg-nuit-light py-14 md:py-24" aria-labelledby="services-titre">
         <div className="container-b">
-          <div className="mb-12 max-w-[720px]">
+          <div className="mb-8 md:mb-12 max-w-[720px]">
             <p className="section-tag text-emerald-b">Ce que je fais</p>
             <h2 id="services-titre" className="section-title mb-4">
               3 niveaux pour avancer à ton rythme
@@ -168,21 +168,21 @@ export default function Home() {
           </div>
           <div className="grid gap-5 md:grid-cols-3">
             {levels.map((s) => (
-              <ServiceCard key={s.slug} service={s} />
+              <ServiceCard key={s.slug} service={s} compact />
             ))}
           </div>
           <div className="mt-5 grid gap-5 md:grid-cols-3">
             {[...turnkey, ...transversal].map((s) => (
-              <ServiceCard key={s.slug} service={s} />
+              <ServiceCard key={s.slug} service={s} compact />
             ))}
           </div>
         </div>
       </section>
 
       {/* Pourquoi BabTech */}
-      <section className="py-20 md:py-24" aria-labelledby="pourquoi-titre">
+      <section className="py-14 md:py-24" aria-labelledby="pourquoi-titre">
         <div className="container-b">
-          <div className="mb-12 max-w-[720px]">
+          <div className="mb-8 md:mb-12 max-w-[720px]">
             <p className="section-tag text-bronze">Pourquoi BabTech</p>
             <h2 id="pourquoi-titre" className="section-title">
               Le digital pensé par quelqu&apos;un qui connaît ta réalité
@@ -190,12 +190,15 @@ export default function Home() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {reasons.map((r) => (
-              <div key={r.title} className="card p-7">
-                <span className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-white/[0.05] text-emerald-b">
+              // Téléphone : icône à gauche du texte (carte moins haute) ; tablette et plus : icône au-dessus.
+              <div key={r.title} className="card flex gap-4 p-5 sm:block sm:p-7">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/[0.05] text-emerald-b sm:mb-5">
                   <Icon name={r.icon} className="h-[22px] w-[22px]" />
                 </span>
-                <h3 className="mb-2.5 font-outfit text-lg font-semibold tracking-tight text-white">{r.title}</h3>
-                <p className="text-[14.5px] leading-relaxed text-txt-secondary">{fr(r.desc)}</p>
+                <div>
+                  <h3 className="mb-1.5 font-outfit text-lg font-semibold tracking-tight text-white sm:mb-2.5">{r.title}</h3>
+                  <p className="text-[14.5px] leading-relaxed text-txt-secondary">{fr(r.desc)}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -203,7 +206,7 @@ export default function Home() {
       </section>
 
       {/* GEO */}
-      <section className="relative overflow-hidden border-y border-bord bg-nuit-deep py-20 md:py-24" aria-labelledby="geo-titre">
+      <section className="relative overflow-hidden border-y border-bord bg-nuit-deep py-14 md:py-24" aria-labelledby="geo-titre">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -left-40 top-10 h-[520px] w-[520px]"
@@ -259,9 +262,9 @@ export default function Home() {
       </section>
 
       {/* Méthode */}
-      <section className="py-20 md:py-24" aria-labelledby="methode-titre">
+      <section className="py-14 md:py-24" aria-labelledby="methode-titre">
         <div className="container-b">
-          <div className="mb-12 max-w-[720px]">
+          <div className="mb-8 md:mb-12 max-w-[720px]">
             <p className="section-tag text-emerald-b">Ma méthode</p>
             <h2 id="methode-titre" className="section-title">
               Simple. Efficace. Sans jargon.
@@ -272,9 +275,9 @@ export default function Home() {
       </section>
 
       {/* Réalisations */}
-      <section className="border-y border-bord bg-nuit-light py-20 md:py-24" aria-labelledby="realisations-titre">
+      <section className="border-y border-bord bg-nuit-light py-14 md:py-24" aria-labelledby="realisations-titre">
         <div className="container-b">
-          <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
+          <div className="mb-8 md:mb-12 flex flex-wrap items-end justify-between gap-6">
             <div className="max-w-[640px]">
               <p className="section-tag text-bronze">Réalisations</p>
               <h2 id="realisations-titre" className="section-title">
@@ -301,7 +304,7 @@ export default function Home() {
       </section>
 
       {/* Zones */}
-      <section className="py-20 md:py-24" aria-labelledby="zones-titre">
+      <section className="py-14 md:py-24" aria-labelledby="zones-titre">
         <div className="container-b grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:items-center">
           <div>
             <p className="section-tag text-emerald-b">Local</p>
@@ -343,7 +346,7 @@ export default function Home() {
       </section>
 
       {/* Communauté */}
-      <section className="border-y border-bord bg-nuit-deep py-20 md:py-24" aria-labelledby="communaute-titre">
+      <section className="border-y border-bord bg-nuit-deep py-14 md:py-24" aria-labelledby="communaute-titre">
         <div className="container-b">
           <div className="card relative overflow-hidden p-8 md:p-12">
             <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-bronze via-emerald-b to-bronze" />
@@ -376,9 +379,9 @@ export default function Home() {
 
       {/* Blog */}
       {posts.length > 0 && (
-        <section className="py-20 md:py-24" aria-labelledby="blog-titre">
+        <section className="py-14 md:py-24" aria-labelledby="blog-titre">
           <div className="container-b">
-            <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
+            <div className="mb-8 md:mb-12 flex flex-wrap items-end justify-between gap-6">
               <div className="max-w-[640px]">
                 <p className="section-tag text-emerald-b">Le blog</p>
                 <h2 id="blog-titre" className="section-title">
@@ -391,7 +394,7 @@ export default function Home() {
             </div>
             <div className="grid gap-5 md:grid-cols-3">
               {posts.map((p) => (
-                <PostCard key={p.slug} post={p} />
+                <PostCard key={p.slug} post={p} compact />
               ))}
             </div>
           </div>
@@ -399,7 +402,7 @@ export default function Home() {
       )}
 
       {/* FAQ */}
-      <section className="border-t border-bord bg-nuit-light py-20 md:py-24" aria-labelledby="faq-titre">
+      <section className="border-t border-bord bg-nuit-light py-14 md:py-24" aria-labelledby="faq-titre">
         <div className="container-b grid gap-10 lg:grid-cols-[1fr_1.6fr]">
           <div>
             <p className="section-tag text-emerald-b">Questions fréquentes</p>

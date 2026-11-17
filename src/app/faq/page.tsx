@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { CtaSection } from '@/components/CtaSection'
 import { FaqList } from '@/components/FaqList'
+import { FaqSearch } from '@/components/FaqSearch'
 import { JsonLd } from '@/components/JsonLd'
 import { PageHero } from '@/components/PageHero'
 import { allFaqItems, faqGroups } from '@/data/faq'
@@ -30,7 +31,7 @@ export default function FAQ() {
       />
 
       <nav aria-label="Rubriques de la FAQ" className="border-t border-bord">
-        <ul className="container-b flex flex-wrap gap-2.5 py-8">
+        <ul className="container-b flex flex-wrap gap-2.5 pb-6 pt-8">
           {faqGroups.map((g) => (
             <li key={g.id}>
               <a
@@ -42,12 +43,14 @@ export default function FAQ() {
             </li>
           ))}
         </ul>
+        <FaqSearch total={allFaqItems.length} />
       </nav>
 
       {faqGroups.map((group, i) => (
         <section
           key={group.id}
           id={group.id}
+          data-faq-group
           aria-labelledby={`${group.id}-titre`}
           className={`scroll-mt-24 border-t border-bord py-14 md:py-16 ${i % 2 === 0 ? 'bg-nuit-light' : ''}`}
         >

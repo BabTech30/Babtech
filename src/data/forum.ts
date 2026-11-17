@@ -4,7 +4,19 @@ import type { IconName } from '@/components/Icon'
  * Forum de la communauté : catégories (les thèmes de la communauté), règles de saisie et limites anti-abus.
  * Les sujets et les réponses sont dans la base MySQL (src/lib/community), pas ici.
  */
-export type ForumCategory = { slug: string; name: string; description: string; icon: IconName }
+export type ForumCategory = {
+  slug: string
+  name: string
+  description: string
+  icon: IconName
+  /** Idées de questions proposées tant que le thème compte peu de sujets : un clic préremplit le titre du nouveau sujet. */
+  starters: string[]
+  /** Pages du site à lire sur ce thème (guides du blog, services) : chaque adresse doit exister. */
+  guides: { href: string; label: string }[]
+}
+
+/** En dessous de ce nombre de sujets, la page d'un thème propose ses idées de questions. */
+export const STARTERS_UNTIL = 5
 
 /** Ordre d'affichage. Un slug ne doit jamais valoir « sujet », « nouveau » ni « modifier » (adresses réservées). */
 export const forumCategories: ForumCategory[] = [
@@ -13,36 +25,93 @@ export const forumCategories: ForumCategory[] = [
     name: "L'IA au quotidien",
     description: 'ChatGPT, Claude, Gemini, Le Chat : ce qui marche vraiment dans ton métier, les bons réflexes et les limites.',
     icon: 'sparkles',
+    starters: [
+      'Quel assistant IA utilises-tu au quotidien, et pour quelles tâches ?',
+      "Comment vérifies-tu une réponse d'IA avant de l'envoyer à un client ?",
+      'Quelles informations ne donnes-tu jamais à une IA ?',
+    ],
+    guides: [
+      { href: '/blog/ia-generative-tpe-par-ou-commencer', label: 'IA générative en TPE : par où commencer' },
+      { href: '/services/accompagnement-formation-ia', label: "La formation pratique à l'IA" },
+    ],
   },
   {
     slug: 'automatisation',
     name: 'Automatiser ses tâches',
     description: "Devis, relances, factures, rendez-vous : les outils (n8n, Make, Zapier…) et les retours d'expérience pour gagner du temps.",
     icon: 'zap',
+    starters: [
+      'Quelle tâche répétitive aimerais-tu ne plus faire à la main ?',
+      'n8n, Make ou Zapier : lequel as-tu essayé, et pour quoi faire ?',
+      'Comment relances-tu tes devis sans y passer tes soirées ?',
+    ],
+    guides: [
+      { href: '/blog/automatisations-ia-tpe-artisans', label: '7 automatisations concrètes pour une TPE' },
+      { href: '/services/automatisation-ia', label: "L'automatisation et l'intégration d'IA" },
+    ],
   },
   {
     slug: 'visibilite-google-ia',
     name: 'Être visible sur Google et les IA',
     description: 'Fiche Google, avis, référencement local et GEO : se faire trouver par les clients du coin.',
     icon: 'search',
+    starters: [
+      "Comment obtenir plus d'avis Google sans gêner ses clients ?",
+      'Ma fiche Google est créée : que faire ensuite ?',
+      'As-tu déjà demandé à une IA de recommander un pro de ton métier dans ta ville ?',
+    ],
+    guides: [
+      { href: '/blog/seo-local-montpellier-google-business-profile', label: 'SEO local : être trouvé sur Google Maps' },
+      { href: '/blog/geo-referencement-ia-chatgpt-perplexity-gemini', label: 'GEO : être recommandé par les assistants IA' },
+      { href: '/blog/erreurs-site-invisible-google', label: '10 erreurs qui rendent un site invisible sur Google' },
+    ],
   },
   {
     slug: 'site-internet',
     name: 'Créer et faire vivre son site',
     description: 'Contenus, photos, réservation en ligne, sites de location saisonnière : créer un site utile et le garder à jour.',
     icon: 'globe',
+    starters: [
+      "Quelles pages sont vraiment utiles sur le site d'un artisan ?",
+      'Site de réservation en direct : ça change quoi par rapport à Airbnb ou Booking.com ?',
+      'Qui met ton site à jour, et à quelle fréquence ?',
+    ],
+    guides: [
+      { href: '/blog/site-vitrine-ou-page-facebook-artisan', label: 'Site vitrine ou page Facebook : que choisir ?' },
+      { href: '/blog/prix-site-internet-tpe-montpellier', label: "Combien coûte un site internet pour une TPE" },
+      { href: '/services/site-reservation-location-saisonniere', label: 'Le site de réservation pour locations saisonnières' },
+    ],
   },
   {
     slug: 'outils-gestion',
     name: 'Outils et gestion',
     description: "Applications, no-code, tableaux de bord, facturation : bien s'équiper et piloter son activité avec ses chiffres.",
     icon: 'app',
+    starters: [
+      "Quel outil a remplacé ton tableur, et qu'est-ce que ça a changé ?",
+      'Quels chiffres suis-tu chaque semaine pour piloter ton activité ?',
+      'Logiciel du marché ou outil sur mesure : comment as-tu choisi ?',
+    ],
+    guides: [
+      { href: '/blog/application-metier-sur-mesure-ou-logiciel', label: 'Application sur mesure ou logiciel du marché' },
+      { href: '/services/application-metier', label: 'Les applications métier sur mesure' },
+    ],
   },
   {
     slug: 'entraide',
     name: 'Entraide entre entrepreneurs',
     description: "Questions libres, bons plans, recherche d'un partenaire ou d'un prestataire dans l'Hérault et le Gard.",
     icon: 'handshake',
+    starters: [
+      'Présente ton activité et ce que tu cherches en ce moment',
+      'Quel prestataire du coin recommanderais-tu, et pourquoi ?',
+      "Quelle a été ta meilleure décision digitale de l'année ?",
+    ],
+    guides: [
+      { href: '/blog/digitaliser-entreprise-artisanale-par-ou-commencer', label: 'Digitaliser son entreprise : par où commencer' },
+      { href: '/communaute/projets', label: 'Les projets des membres' },
+      { href: '/communaute/groupes', label: 'Les groupes de la communauté' },
+    ],
   },
 ]
 

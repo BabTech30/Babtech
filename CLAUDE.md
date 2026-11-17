@@ -80,6 +80,9 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
 - Mots de passe hachés (`src/lib/password.ts`), liens et sessions stockés sous forme d'empreinte, réponses identiques que
   l'adresse existe ou non. Fin d'une Server Action qui écrit : `goTo()` (`src/lib/community/redirect.ts`, `refresh()` puis
   `redirect()`), sinon l'ancienne version de la page peut rester affichée ; adresse de retour d'un formulaire : `safeReturn()`.
+- Thème peu fourni (moins de `STARTERS_UNTIL` sujets) : sa page propose les idées de questions `starters` (lien vers le
+  nouveau sujet avec `?titre=` prérempli, conservé après la connexion) ; chaque thème renvoie vers ses `guides`
+  (`src/data/forum.ts`) : toute adresse citée doit exister.
 - Pages de compte et formulaires (nouveau projet, proposer ou modifier un groupe) en `noindex` (liste `MEMBER_PAGES` de
   `check-build.mjs`) ; forum, thèmes, sujets, projets et groupes indexables (JSON-LD `CollectionPage`,
   `DiscussionForumPosting`), listes filtrées en `noindex` ; accueil du forum, thèmes, projets, groupes et charte dans le sitemap.
@@ -110,5 +113,9 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
 - Ajouter la page au sitemap (`src/app/sitemap.ts`) si elle n'est pas générée depuis les données.
 - Exception : les pages partagées par lien ou QR code, `/bastien/` (présentation) et `/carte/` (carte de visite, fiche
   `/carte/bastien-ferrer.vcf`), sont en `noindex`, hors du sitemap et du menu (liste `NOINDEX_PAGES` de `check-build.mjs`).
+- Téléphone : l'accueil utilise les cartes `compact` (`ServiceCard`, `PostCard` : résumé masqué sous 640 px) ; la barre
+  `MobileActionBar` (Appeler / Réserver un appel) s'affiche après le haut de page, sauf sur les pages listées dans le
+  composant. La FAQ se filtre avec `FaqSearch` : les questions restent toutes dans le HTML.
+- Reprendre cette base pour un autre projet : `docs/DUPLIQUER.md`.
 - Un seul `<h1>` par page. Accessibilité : contrastes AA (utiliser `txt-secondary` / `txt-muted`, jamais plus sombre),
   libellés de formulaire associés, zones défilantes focusables.

@@ -159,6 +159,7 @@ de bord (Chrome, Edge, Android), ou **Réglages → Application** pour la marche
 
 - [`docs/DEPLOIEMENT.md`](docs/DEPLOIEMENT.md) — mise en ligne sur Hostinger (Node.js) et check-list après la mise en ligne
 - [`docs/STRATEGIE-SEO-GEO.md`](docs/STRATEGIE-SEO-GEO.md) — positionnement, mots-clés, plan local, GEO, calendrier éditorial
+- [`docs/DUPLIQUER.md`](docs/DUPLIQUER.md) — reprendre cette structure pour un autre projet : les trois couches, les modules, la marche à suivre
 - [`docs/COMMUNAUTE.md`](docs/COMMUNAUTE.md) — la communauté : comptes, forum, projets et groupes en place, feuille de route, étape suivante (événements)
 
 ## Structure

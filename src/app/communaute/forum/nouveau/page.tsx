@@ -5,7 +5,7 @@ import { publishTopic } from '@/app/communaute/forum/actions'
 import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { ActionForm } from '@/components/community/ActionForm'
 import { TopicFields } from '@/components/community/TopicFields'
-import { FORUM_PATH, getForumCategory, groupPath, GROUPS_PATH } from '@/data/forum'
+import { FORUM_PATH, getForumCategory, groupPath, GROUPS_PATH, LIMITS } from '@/data/forum'
 import { getGroup, membership } from '@/lib/community/groups'
 import { currentMember } from '@/lib/community/members'
 import { pageMetadata } from '@/lib/seo'
@@ -22,10 +22,17 @@ export const metadata: Metadata = pageMetadata({
   noindex: true,
 })
 
-export default async function NewTopicPage({ searchParams }: { searchParams: Promise<{ categorie?: string; groupe?: string }> }) {
-  const { categorie = '', groupe = '' } = await searchParams
+export default async function NewTopicPage({ searchParams }: { searchParams: Promise<{ categorie?: string; groupe?: string; titre?: string }> }) {
+  const { categorie = '', groupe = '', titre = '' } = await searchParams
   const member = await currentMember()
-  if (!member) redirect(`/communaute/connexion/?suite=${encodeURIComponent(`${PATH}/${groupe ? `?groupe=${groupe}` : ''}`)}`)
+  if (!member) {
+    // Après la connexion, on revient ici avec le thème et l'idée de question choisis.
+    // Espaces en « %20 » (et non « + ») : l'adresse de retour n'accepte que les caractères d'une adresse de la communauté.
+    const query = new URLSearchParams({ ...(groupe ? { groupe } : {}), ...(categorie ? { categorie } : {}), ...(titre ? { titre } : {}) })
+      .toString()
+      .replace(/\+/g, '%20')
+    redirect(`/communaute/connexion/?suite=${encodeURIComponent(`${PATH}/${query ? `?${query}` : ''}`)}`)
+  }
   // Sujet ouvert dans un groupe : réservé à ses membres (sinon, retour à la page du groupe pour le rejoindre).
   const groupId = Number(groupe)
   const group = Number.isInteger(groupId) && groupId > 0 ? await getGroup(groupId) : undefined
@@ -63,7 +70,7 @@ export default async function NewTopicPage({ searchParams }: { searchParams: Pro
       <div className="card p-6 md:p-8">
         <ActionForm action={publishTopic} submit="Publier mon sujet" pending="Publication…">
           {group && <input type="hidden" name="groupe" value={group.id} />}
-          <TopicFields category={getForumCategory(categorie) ? categorie : (group?.category ?? '')} />
+          <TopicFields category={getForumCategory(categorie) ? categorie : (group?.category ?? '')} title={titre.trim().slice(0, LIMITS.title.max)} />
         </ActionForm>
       </div>
     </div>

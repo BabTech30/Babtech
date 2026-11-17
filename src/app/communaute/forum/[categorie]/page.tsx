@@ -8,7 +8,7 @@ import { TopicList } from '@/components/community/TopicList'
 import { Icon } from '@/components/Icon'
 import { JsonLd } from '@/components/JsonLd'
 import { PageHero } from '@/components/PageHero'
-import { FORUM_PATH, forumCategories, getForumCategory, TOPICS_PER_PAGE, topicPath } from '@/data/forum'
+import { FORUM_PATH, forumCategories, getForumCategory, STARTERS_UNTIL, TOPICS_PER_PAGE, topicPath } from '@/data/forum'
 import { topicsInCategory } from '@/lib/community/forum'
 import { currentMember } from '@/lib/community/members'
 import { dbConfigured } from '@/lib/db'
@@ -125,6 +125,28 @@ export default async function ForumCategoryPage({ params, searchParams }: Props)
             <p className="card p-6 text-txt-secondary">{fr("Aucun sujet dans ce thème pour l'instant : lance le premier !")}</p>
           )}
 
+          {/* Thème encore peu fourni : des idées de questions, un clic préremplit le titre du nouveau sujet. */}
+          {list && page === 1 && list.total < STARTERS_UNTIL && (
+            <div className="mt-8">
+              <h3 className="mb-1.5 font-outfit text-lg font-semibold tracking-tight text-white">Une idée pour lancer la discussion&nbsp;?</h3>
+              <p className="mb-4 text-sm text-txt-secondary">Choisis une question, adapte-la à ton métier et publie&nbsp;: les réponses des autres entrepreneurs suivront.</p>
+              <ul className="grid gap-3 md:grid-cols-3">
+                {category.starters.map((question) => (
+                  <li key={question}>
+                    <Link
+                      href={`/communaute/forum/nouveau/?${new URLSearchParams({ categorie: category.slug, titre: question }).toString()}`}
+                      rel="nofollow"
+                      className="card card-hover flex h-full items-start gap-3 p-5 text-[15px] leading-snug text-txt-primary"
+                    >
+                      <Icon name="arrow-right" className="mt-0.5 h-4 w-4 shrink-0 text-bronze" />
+                      {fr(question)}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {pages > 1 && (
             <nav aria-label="Pages" className="mt-8 flex flex-wrap gap-2">
               {Array.from({ length: pages }, (_, i) => i + 1).map((n) => (
@@ -140,7 +162,26 @@ export default async function ForumCategoryPage({ params, searchParams }: Props)
             </nav>
           )}
 
-          <p className="mt-12 text-sm text-txt-muted">
+          {page === 1 && (
+            <div className="mt-12">
+              <h3 className="mb-4 font-outfit text-lg font-semibold tracking-tight text-white">À lire sur ce thème</h3>
+              <ul className="flex flex-wrap gap-2.5">
+                {category.guides.map((guide) => (
+                  <li key={guide.href}>
+                    <Link
+                      href={guide.href}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-bord bg-white/[0.03] px-4 py-2 text-sm text-txt-secondary transition-colors hover:border-white/20 hover:text-white"
+                    >
+                      {fr(guide.label)}
+                      <Icon name="arrow-right" className="h-3.5 w-3.5" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <p className="mt-10 text-sm text-txt-muted">
             Autres thèmes&nbsp;:{' '}
             {forumCategories
               .filter((c) => c.slug !== category.slug)

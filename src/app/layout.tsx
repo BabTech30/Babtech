@@ -5,6 +5,7 @@ import { Analytics } from '@/components/Analytics'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import { JsonLd } from '@/components/JsonLd'
+import { MobileActionBar } from '@/components/MobileActionBar'
 import { PublicOnly } from '@/components/PublicOnly'
 import { founderNode, graph, organizationNode, websiteNode } from '@/lib/schema'
 import { absoluteUrl, site, SITE_URL } from '@/lib/site'
@@ -87,6 +88,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </main>
         <PublicOnly>
           <Footer />
+          <MobileActionBar />
           <Analytics />
         </PublicOnly>
       </body>
