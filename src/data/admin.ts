@@ -22,7 +22,7 @@ export type AdminTask = {
   auto?: 'password-changed'
 }
 
-export const adminUpdatedAt = '2026-10-04'
+export const adminUpdatedAt = '2026-11-17'
 
 export const adminPhases: AdminPhase[] = [
   { id: 'site', title: 'Site prêt' },
@@ -477,6 +477,10 @@ export const adminDecisions = [
   {
     date: '2026-10-04',
     text: "Nouveau portrait (photo en voiture, de profil) partout : accueil, À propos, /bastien/, carte de visite, fiche contact .vcf et images de partage. La photo au sommet de la montagne reste sur /bastien/.",
+  },
+  {
+    date: '2026-11-17',
+    text: "Sécurité : Next.js, nodemailer, zod et sharp mis à jour (alertes de Hostinger corrigées, avec le fichier de verrouillage). Le navigateur refuse désormais tout contenu venu d'ailleurs que du site (politique CSP), sauf la vidéo YouTube. La « correction automatique » de Hostinger ne suffit pas : elle ne change pas la version réellement installée.",
   },
 ]
 

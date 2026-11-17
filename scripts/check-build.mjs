@@ -350,6 +350,17 @@ if (!/<meta name="robots" content="noindex, nofollow/.test(login.body)) errors.p
 if (!(login.headers.get('x-robots-tag') ?? '').includes('noindex')) errors.push('/admin/connexion/ : en-tête X-Robots-Tag noindex absent')
 if (/<header[\s>][\s\S]*?href="\/services\/"/.test(login.body)) errors.push("/admin/connexion/ : le menu du site public s'affiche")
 
+// En-têtes de sécurité (next.config.js) : présents sur le site public comme sur l'espace privé.
+for (const [page, res] of [['/', await get('/')], ['/admin/connexion/', login]]) {
+  const csp = res.headers.get('content-security-policy') ?? ''
+  for (const rule of ["default-src 'self'", "object-src 'none'", "base-uri 'self'", "form-action 'self'", "frame-ancestors 'none'"]) {
+    if (!csp.includes(rule)) errors.push(`${page} : Content-Security-Policy sans « ${rule} »`)
+  }
+  if (res.headers.get('x-content-type-options') !== 'nosniff') errors.push(`${page} : en-tête X-Content-Type-Options absent`)
+  if (!(res.headers.get('strict-transport-security') ?? '').includes('max-age=')) errors.push(`${page} : en-tête Strict-Transport-Security absent`)
+  if (res.headers.get('x-powered-by')) errors.push(`${page} : l'en-tête X-Powered-By révèle la technologie du site`)
+}
+
 /* ---------- Tableau de bord installable (PWA) ---------- */
 if (!login.body.includes('<link rel="manifest" href="/admin/manifest.webmanifest"')) errors.push('/admin/connexion/ : manifeste du tableau de bord non lié')
 const home = await get('/')

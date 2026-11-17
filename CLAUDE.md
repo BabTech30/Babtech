@@ -9,7 +9,9 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
   chose à chaque envoi.
 - Mise en ligne : Hostinger (application Node.js, Node 22) construit la branche `main` (`npm run build`, puis serveur
   Next.js « standalone » imposé par Hostinger). Les modifications validées vont dans `main` ; l'utilisateur déploie
-  ensuite lui-même, à la main, depuis hPanel. Ne jamais accepter la « correction » automatique de Hostinger.
+  ensuite lui-même, à la main, depuis hPanel. Ne jamais accepter la « correction » automatique de Hostinger : elle ne
+  modifie que `package.json`, pas `package-lock.json` (la version installée ne change pas). Pour une alerte de sécurité :
+  `npm install paquet@version` puis `npm audit`, `npm run verify`, et fermer la demande de Hostinger.
 - Construction avec webpack (`next build --webpack`), pas Turbopack : Turbopack demande environ 1,5 Go de mémoire et
   échoue chez Hostinger ; webpack passe avec environ 1,2 Go. Surveiller ce qui alourdit la construction (images générées).
 - Manifestes déclarés par `metadata.manifest` : site `/manifest.webmanifest` (route `src/app/manifest.webmanifest`),
@@ -17,6 +19,9 @@ React 19, Tailwind CSS 3, TypeScript. Voir `README.md` pour les commandes et `do
 - Domaine défini par `DEFAULT_SITE_URL` dans `src/lib/site.ts`. `trailingSlash: true` : toutes les URL de pages finissent
   par « / » — construire les URL avec `absoluteUrl()` / `withTrailingSlash()` (`src/lib/site.ts`). En-têtes de sécurité,
   redirection www → domaine principal et favicon : `next.config.js`.
+- Politique de sécurité du contenu (CSP) dans `next.config.js` : tout vient du site, sauf la vidéo YouTube et la mesure
+  d'audience si elle est configurée. Toute nouvelle ressource externe (script, image, police, iframe, appel réseau) doit
+  y être ajoutée, sinon le navigateur la bloque ; `check-build.mjs` contrôle la présence des en-têtes.
 - Ne pas créer de route sous `/icons/` : ce chemin est réservé par beaucoup de serveurs Apache/LiteSpeed (d'où `/brand/`).
 - Pages publiques : toutes prérendues, sans API routes, middleware ni ISR. Les routes générées (sitemap, robots, llms.txt,
   RSS, images OG, fiche .vcf) utilisent `dynamic = 'force-static'`, les routes dynamiques `dynamicParams = false`.
